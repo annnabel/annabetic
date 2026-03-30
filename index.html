@@ -528,12 +528,12 @@ function inferCause(event, entries) {
     const mealConf = Math.min(0.9, 0.5 + sameTimeSpikes.length * 0.12);
     const mealName = hour<10 ? 'breakfast' : hour<15 ? 'lunch' : 'dinner';
     return {cause:`Likely ${mealName}`, icon:'🍽️', confidence:mealConf,
-      text:`This rise matches your typical ${mealName} pattern${sameTimeSpikes.length>1?' — you've had similar responses at this time before':''}.`};
+      text:`This rise matches your typical ${mealName} pattern${sameTimeSpikes.length>1?' \u2014 you\u2019ve had similar responses at this time before':''}.`};
   }
 
   if (event.type === 'spike' && !mealWindow) {
     return {cause:'Possible stress spike', icon:'⚡', confidence:0.55,
-      text:"This rise isn't during a typical meal window — it could be related to stress, hormones, or low activity. Nothing to worry about, just worth noting."};
+      text:"This rise isn\u2019t during a typical meal window \u2014 it could be related to stress, hormones, or low activity. Nothing to worry about, just worth noting."};
   }
 
   if (event.type === 'drop') {
@@ -615,7 +615,7 @@ function analysePatterns(entries) {
       patterns.push({
         icon:'🌅', title:'Dawn phenomenon detected',
         sub:`Avg ${fmt1(dawnAvg)} mmol/L at 5–7am`,
-        body:"Your glucose rises in the early morning before you wake. This is caused by hormones like cortisol and growth hormone — it's very common and not your fault.",
+        body:"Your glucose rises in the early morning before you wake. This is caused by hormones like cortisol and growth hormone \u2014 it\u2019s very common and not your fault.",
         confidence:0.75,
         dots:4
       });
@@ -628,7 +628,7 @@ function analysePatterns(entries) {
   patterns.push({
     icon:'🎯', title:`${tir}% time in range`,
     sub:`Over ${Math.ceil(entries.length*5/60/24)} days of data`,
-    body:`${tir >= 70 ? `You're hitting the recommended target of 70%+ in range — excellent work.` : tir >= 50 ? `You're spending ${tir}% of your time in range. The recommended target is 70% — you're making progress.` : `You're at ${tir}% time in range. Small consistent changes — especially around food timing and movement — can meaningfully improve this.`}`,
+    body: tir >= 70 ? "You\u2019re hitting the recommended target of 70%+ in range \u2014 excellent work." : tir >= 50 ? "You\u2019re spending "+tir+"% of your time in range. The recommended target is 70% \u2014 you\u2019re making progress." : "You\u2019re at "+tir+"% time in range. Small consistent changes \u2014 especially around food timing and movement \u2014 can meaningfully improve this.",
     confidence:0.95,
     dots:5
   });
