@@ -2,598 +2,1033 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Annabetic</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0E0F0C;
+  --bg2:#151612;
+  --bg3:#1C1D19;
+  --surface:#222420;
+  --surface2:#2A2C27;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --text:#F0EDE6;
+  --text2:#9A9890;
+  --text3:#5C5B56;
+  --green:#7EC8A0;
+  --green-bg:rgba(126,200,160,0.1);
+  --green-border:rgba(126,200,160,0.2);
+  --amber:#E8A84C;
+  --amber-bg:rgba(232,168,76,0.1);
+  --amber-border:rgba(232,168,76,0.2);
+  --red:#E07070;
+  --red-bg:rgba(224,112,112,0.1);
+  --red-border:rgba(224,112,112,0.2);
+  --blue:#6EA8D8;
+  --blue-bg:rgba(110,168,216,0.1);
+  --blue-border:rgba(110,168,216,0.2);
+  --radius:18px;
+  --radius-sm:12px;
+  --radius-xs:8px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-  :root {
-    --bg: #F6F4EF;
-    --surface: #FFFFFF;
-    --surface2: #EEECEA;
-    --text: #1A1814;
-    --text2: #6B6760;
-    --text3: #B0ADA8;
-    --accent: #2D6A4F;
-    --accent-mid: #52997A;
-    --accent-light: #E4F2EB;
-    --danger: #B83232;
-    --danger-light: #FBEAEA;
-    --warn: #C06010;
-    --warn-light: #FEF0E0;
-    --low: #1A5A8A;
-    --low-light: #E3EEF8;
-    --border: rgba(26,24,20,0.09);
-    --border-med: rgba(26,24,20,0.14);
-    --radius: 20px;
-    --radius-sm: 12px;
-    --radius-xs: 8px;
-  }
+/* ── LAYOUT ── */
+.app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+.scroll-body{flex:1;overflow-y:auto;padding:0 0 100px;scroll-behavior:smooth}
+.scroll-body::-webkit-scrollbar{display:none}
 
-  html, body {
-    height: 100%;
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-  }
+/* ── NAV ── */
+.nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;
+  background:rgba(14,15,12,0.92);
+  backdrop-filter:blur(20px);
+  border-top:0.5px solid var(--border);
+  display:flex;padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+  z-index:100;
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:6px 4px;border:none;background:none;cursor:pointer;
+  border-radius:var(--radius-xs);transition:background 0.15s;
+}
+.nav-btn:active{background:var(--surface)}
+.nav-icon{font-size:20px;line-height:1}
+.nav-lbl{font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);transition:color 0.15s}
+.nav-btn.active .nav-lbl{color:var(--green)}
 
-  .app {
-    max-width: 430px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+/* ── PAGES ── */
+.page{display:none;animation:fadeIn 0.25s ease both}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
-  /* ── HEADER ── */
-  .header {
-    padding: 52px 22px 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
+/* ── HEADER ── */
+.header{padding:54px 20px 0;display:flex;align-items:flex-start;justify-content:space-between}
+.header-left .sub{font-size:12px;color:var(--text3);font-weight:400;letter-spacing:0.04em;margin-bottom:3px}
+.header-left .title{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--text)}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--green-bg);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--green);flex-shrink:0;margin-top:2px}
 
-  .greeting { font-size: 13px; color: var(--text3); font-weight: 400; letter-spacing: 0.01em; margin-bottom: 2px; }
-  .name { font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -0.04em; }
+/* ── HERO ── */
+.hero{
+  margin:18px 20px 0;
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:24px;
+  border:0.5px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;top:-60px;right:-60px;
+  width:180px;height:180px;border-radius:50%;
+  background:var(--green);opacity:0.04;
+  transition:background 0.5s,opacity 0.5s;
+  pointer-events:none;
+}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.hero-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;letter-spacing:0.02em;
+  background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-border);
+  transition:all 0.4s;
+}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero-main{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.hero-val{
+  font-family:'DM Mono',monospace;
+  font-size:72px;font-weight:300;
+  letter-spacing:-0.05em;line-height:1;
+  color:var(--text);transition:color 0.4s;
+}
+.hero-unit{font-size:16px;color:var(--text3);font-weight:400}
+.hero-arrow{font-size:32px;line-height:1;margin-left:2px}
+.hero-event{
+  font-size:13px;font-weight:600;color:var(--text2);
+  margin-bottom:18px;letter-spacing:-0.01em;
+}
+.hero-footer{display:flex;align-items:center;justify-content:space-between}
+.hero-time{font-size:11px;color:var(--text3)}
+.hero-delta{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3)}
 
-  .avatar {
-    width: 42px; height: 42px; border-radius: 50%;
-    background: var(--accent-light);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 600; color: var(--accent);
-    border: 1.5px solid rgba(45,106,79,0.15);
-    flex-shrink: 0;
-    margin-top: 4px;
-  }
+/* ── CHART ── */
+.chart-card{margin:12px 20px 0;background:var(--surface);border-radius:var(--radius);padding:18px 18px 12px;border:0.5px solid var(--border)}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-ttl{font-size:13px;font-weight:700;letter-spacing:-0.01em}
+.chart-range{font-size:10px;color:var(--text3);font-weight:400}
+.chart-wrap{height:100px;position:relative}
+#chart-svg{width:100%;height:100%;overflow:visible}
 
-  /* ── HERO ── */
-  .hero-card {
-    margin: 20px 22px 0;
-    background: var(--accent);
-    border-radius: var(--radius);
-    padding: 26px 26px 22px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
-  }
+/* ── INFERENCE CARD ── */
+.inference-card{
+  margin:12px 20px 0;
+  border-radius:var(--radius);
+  padding:18px;
+  border:0.5px solid var(--amber-border);
+  background:var(--amber-bg);
+}
+.inf-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.inf-icon{font-size:18px}
+.inf-title{font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--amber)}
+.inf-text{font-size:14px;font-weight:400;color:var(--text);line-height:1.5;margin-bottom:10px}
+.conf-bar-wrap{display:flex;align-items:center;gap:8px}
+.conf-label{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+.conf-bar{flex:1;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.conf-fill{height:100%;background:var(--amber);border-radius:2px;transition:width 0.6s ease}
 
-  .hero-orb1 {
-    position: absolute; top: -50px; right: -50px;
-    width: 160px; height: 160px; border-radius: 50%;
-    background: rgba(255,255,255,0.07);
-  }
-  .hero-orb2 {
-    position: absolute; bottom: -30px; right: 40px;
-    width: 90px; height: 90px; border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-  }
+/* ── ACTION CARD ── */
+.action-card{
+  margin:12px 20px 0;
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:18px;
+  border:0.5px solid var(--border);
+}
+.action-ttl{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.action-btns{display:flex;flex-direction:column;gap:8px}
+.action-btn{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg3);border:0.5px solid var(--border2);
+  border-radius:var(--radius-sm);padding:14px 16px;
+  cursor:pointer;transition:all 0.15s;
+  font-family:'Syne',sans-serif;
+}
+.action-btn:active{transform:scale(0.98);background:var(--surface2)}
+.action-btn-icon{font-size:22px;flex-shrink:0}
+.action-btn-body{flex:1;text-align:left}
+.action-btn-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-0.01em}
+.action-btn-sub{font-size:11px;color:var(--text3);margin-top:2px;font-weight:400}
+.action-btn-check{font-size:18px;color:var(--text3)}
+.action-btn.done{border-color:var(--green-border);background:var(--green-bg)}
+.action-btn.done .action-btn-check{color:var(--green)}
 
-  .hero-label {
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    opacity: 0.65; margin-bottom: 10px;
-  }
+/* ── GOAL CARD ── */
+.goal-card{margin:12px 20px 0;background:var(--surface);border-radius:var(--radius);padding:18px;border:0.5px solid var(--border)}
+.goal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.goal-text{font-size:15px;font-weight:600;letter-spacing:-0.02em;line-height:1.35;max-width:220px}
+.goal-pct{font-family:'DM Mono',monospace;font-size:28px;font-weight:400;color:var(--green);letter-spacing:-0.04em}
+.tir-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.tir-fill{height:100%;border-radius:3px;background:var(--green);transition:width 1s cubic-bezier(.4,0,.2,1)}
+.tir-labels{display:flex;justify-content:space-between}
+.tir-lbl{font-size:10px;color:var(--text3);font-weight:500}
 
-  .hero-value-row {
-    display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
-  }
+/* ── SECTIONS ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;padding:24px 20px 10px}
+.section-ttl{font-size:13px;font-weight:700;letter-spacing:-0.01em}
+.section-sub{font-size:11px;color:var(--text3);font-weight:400}
 
-  .hero-number {
-    font-family: 'DM Mono', monospace;
-    font-size: 64px; font-weight: 400;
-    letter-spacing: -0.05em; line-height: 1;
-    transition: opacity 0.3s;
-  }
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 20px}
+.stat-card{background:var(--surface);border-radius:var(--radius-sm);padding:14px 10px;border:0.5px solid var(--border);text-align:center}
+.stat-num{font-family:'DM Mono',monospace;font-size:20px;font-weight:400;letter-spacing:-0.03em;line-height:1}
+.stat-lbl{font-size:9px;color:var(--text3);margin-top:4px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase}
 
-  .hero-unit { font-size: 18px; opacity: 0.6; font-weight: 300; }
+/* ── PATTERN PAGE ── */
+.pattern-card{
+  margin:0 20px 12px;
+  background:var(--surface);border-radius:var(--radius);
+  padding:18px;border:0.5px solid var(--border);
+}
+.pattern-card:first-of-type{margin-top:0}
+.pat-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.pat-icon-wrap{width:40px;height:40px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pat-title{font-size:14px;font-weight:700;letter-spacing:-0.02em}
+.pat-sub{font-size:11px;color:var(--text3);margin-top:2px;font-weight:400}
+.pat-body{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:12px}
+.pat-conf{display:flex;align-items:center;gap:8px}
+.pat-conf-dots{display:flex;gap:3px}
+.pat-dot{width:8px;height:8px;border-radius:50%;background:var(--surface2)}
+.pat-dot.filled{background:var(--green)}
+.pat-conf-lbl{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:0.04em}
 
-  .hero-trend {
-    font-size: 28px; line-height: 1;
-    margin-left: 4px;
-  }
+/* ── INSIGHTS PAGE ── */
+.insight-card{
+  margin:0 20px 12px;
+  border-radius:var(--radius);padding:18px;
+  border:0.5px solid var(--border);
+  background:var(--surface);
+}
+.ins-tag{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.ins-body{font-size:15px;font-weight:600;letter-spacing:-0.02em;line-height:1.4;margin-bottom:10px}
+.ins-detail{font-size:12px;color:var(--text2);line-height:1.5}
+.ins-chart{margin-top:14px;height:50px}
+.ins-chart svg{width:100%;height:100%}
 
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 30px;
-    padding: 5px 12px;
-    font-size: 12px; font-weight: 500;
-    backdrop-filter: blur(4px);
-  }
+/* ── LOADING ── */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px}
+.spin{width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);border-top-color:var(--green);animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:13px;color:var(--text3)}
 
-  .badge-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #69F0AE;
-    transition: background 0.3s;
-  }
-
-  .hero-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 18px;
-  }
-
-  .hero-time { font-size: 11px; opacity: 0.45; }
-
-  .hero-delta {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px; opacity: 0.7;
-  }
-
-  /* ── CHART ── */
-  .chart-card {
-    margin: 14px 22px 0;
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 20px 20px 14px;
-    border: 0.5px solid var(--border);
-  }
-
-  .card-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 14px;
-  }
-
-  .card-title {
-    font-size: 14px; font-weight: 600;
-    letter-spacing: -0.02em; color: var(--text);
-  }
-
-  .range-info {
-    font-size: 11px; color: var(--text3); font-weight: 400;
-  }
-
-  .chart-wrap { position: relative; height: 110px; }
-  #chart-svg { width: 100%; height: 100%; overflow: visible; }
-
-  /* ── STATS ── */
-  .stats-row {
-    margin: 14px 22px 0;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border-radius: var(--radius-sm);
-    padding: 14px 12px;
-    border: 0.5px solid var(--border);
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 20px; font-weight: 500;
-    letter-spacing: -0.03em; color: var(--text);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 10px; color: var(--text3);
-    margin-top: 4px; font-weight: 500;
-    letter-spacing: 0.05em; text-transform: uppercase;
-  }
-
-  /* ── LOG ── */
-  .log-section { margin: 16px 22px 0; flex: 1; }
-
-  .log-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .refresh-btn {
-    font-size: 11px; color: var(--accent); font-weight: 500;
-    cursor: pointer; background: none; border: none;
-    font-family: 'DM Sans', sans-serif;
-    padding: 4px 0;
-  }
-
-  .refresh-btn:active { opacity: 0.6; }
-
-  .log-list { display: flex; flex-direction: column; gap: 8px; }
-
-  .log-entry {
-    background: var(--surface);
-    border-radius: var(--radius-sm);
-    padding: 13px 15px;
-    border: 0.5px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
-    animation: fadeUp 0.3s ease both;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .log-icon {
-    width: 38px; height: 38px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px; flex-shrink: 0;
-  }
-
-  .log-icon.in  { background: var(--accent-light); }
-  .log-icon.hi  { background: var(--danger-light); }
-  .log-icon.lo  { background: var(--low-light); }
-  .log-icon.warn { background: var(--warn-light); }
-
-  .log-info { flex: 1; min-width: 0; }
-
-  .log-ctx {
-    font-size: 13px; font-weight: 500; color: var(--text);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-
-  .log-time { font-size: 11px; color: var(--text3); margin-top: 2px; }
-
-  .log-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 19px; font-weight: 500;
-    letter-spacing: -0.02em; flex-shrink: 0;
-  }
-
-  .log-val.in   { color: var(--accent); }
-  .log-val.hi   { color: var(--danger); }
-  .log-val.lo   { color: var(--low); }
-  .log-val.warn { color: var(--warn); }
-
-  /* ── BOTTOM PADDING ── */
-  .bottom-space { height: 32px; }
-
-  /* ── LOADING / ERROR ── */
-  .state-msg {
-    text-align: center; padding: 32px 20px;
-    color: var(--text3); font-size: 14px;
-  }
-
-  .spinner {
-    width: 24px; height: 24px; border-radius: 50%;
-    border: 2px solid var(--border-med);
-    border-top-color: var(--accent);
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto 12px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── STAGGER ANIMATIONS ── */
-  .hero-card   { animation: fadeUp 0.4s 0.05s ease both; }
-  .chart-card  { animation: fadeUp 0.4s 0.12s ease both; }
-  .stats-row   { animation: fadeUp 0.4s 0.18s ease both; }
-  .log-section { animation: fadeUp 0.4s 0.24s ease both; }
+/* ── ANIMATIONS ── */
+.card-enter{animation:cardIn 0.35s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.stagger-1{animation-delay:0.05s}
+.stagger-2{animation-delay:0.1s}
+.stagger-3{animation-delay:0.15s}
+.stagger-4{animation-delay:0.2s}
+.stagger-5{animation-delay:0.25s}
 </style>
 </head>
 <body>
 <div class="app">
+  <div class="scroll-body" id="scroll-body">
 
-  <div class="header">
-    <div>
-      <div class="greeting" id="greeting">Good morning</div>
-      <div class="name">Anna</div>
-    </div>
-    <div class="avatar">AN</div>
-  </div>
+    <!-- ══ HOME PAGE ══ -->
+    <div class="page active" id="page-home">
+      <div class="header">
+        <div class="header-left">
+          <div class="sub" id="greeting">Good morning</div>
+          <div class="title">Anna</div>
+        </div>
+        <div class="avatar">AN</div>
+      </div>
 
-  <!-- HERO -->
-  <div class="hero-card" id="hero-card">
-    <div class="hero-orb1"></div>
-    <div class="hero-orb2"></div>
-    <div class="hero-label">Current glucose</div>
-    <div class="hero-value-row">
-      <div class="hero-number" id="hero-val">—</div>
-      <div class="hero-unit">mmol/L</div>
-      <div class="hero-trend" id="hero-trend"></div>
-    </div>
-    <div class="hero-badge">
-      <div class="badge-dot" id="badge-dot"></div>
-      <span id="badge-text">Loading…</span>
-    </div>
-    <div class="hero-footer">
-      <div class="hero-time" id="hero-time"></div>
-      <div class="hero-delta" id="hero-delta"></div>
-    </div>
-  </div>
+      <!-- Hero -->
+      <div class="hero card-enter stagger-1" id="hero">
+        <div class="hero-glow" id="hero-glow"></div>
+        <div class="hero-top">
+          <div class="hero-label">Glucose now</div>
+          <div class="hero-badge" id="hero-badge"><span class="dot"></span><span id="badge-txt">—</span></div>
+        </div>
+        <div class="hero-main">
+          <div class="hero-val" id="hero-val">—</div>
+          <div class="hero-unit">mmol/L</div>
+          <div class="hero-arrow" id="hero-arrow"></div>
+        </div>
+        <div class="hero-event" id="hero-event">Loading…</div>
+        <div class="hero-footer">
+          <div class="hero-time" id="hero-time"></div>
+          <div class="hero-delta" id="hero-delta"></div>
+        </div>
+      </div>
 
-  <!-- CHART -->
-  <div class="chart-card">
-    <div class="card-header">
-      <div class="card-title">Today's trend</div>
-      <div class="range-info">Target 3.9 – 10 mmol/L</div>
-    </div>
-    <div class="chart-wrap">
-      <svg id="chart-svg" viewBox="0 0 360 110" preserveAspectRatio="none"></svg>
-    </div>
-  </div>
+      <!-- Chart -->
+      <div class="chart-card card-enter stagger-2">
+        <div class="card-hdr">
+          <div class="card-ttl">Today's trend</div>
+          <div class="chart-range">3.9 – 10 mmol/L</div>
+        </div>
+        <div class="chart-wrap">
+          <svg id="chart-svg" viewBox="0 0 360 100" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
 
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-num" id="stat-tir">—</div>
-      <div class="stat-label">In range</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="stat-avg">—</div>
-      <div class="stat-label">Avg today</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="stat-readings">—</div>
-      <div class="stat-label">Readings</div>
-    </div>
-  </div>
+      <!-- Inference card -->
+      <div class="inference-card card-enter stagger-3" id="inference-card" style="display:none">
+        <div class="inf-hdr">
+          <div class="inf-icon" id="inf-icon">🔍</div>
+          <div class="inf-title">What's happening</div>
+        </div>
+        <div class="inf-text" id="inf-text">Analysing your pattern…</div>
+        <div class="conf-bar-wrap">
+          <div class="conf-label">Confidence</div>
+          <div class="conf-bar"><div class="conf-fill" id="conf-fill" style="width:0%"></div></div>
+        </div>
+      </div>
 
-  <!-- LOG -->
-  <div class="log-section">
-    <div class="log-header">
-      <div class="card-title">Recent readings</div>
-      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
-    </div>
-    <div class="log-list" id="log-list">
-      <div class="state-msg"><div class="spinner"></div>Fetching your data…</div>
-    </div>
-  </div>
+      <!-- Action card -->
+      <div class="action-card card-enter stagger-4" id="action-card" style="display:none">
+        <div class="action-ttl">Quick action</div>
+        <div class="action-btns" id="action-btns"></div>
+      </div>
 
-  <div class="bottom-space"></div>
+      <!-- Goal card -->
+      <div class="goal-card card-enter stagger-5">
+        <div class="goal-hdr">
+          <div class="goal-text" id="goal-text">Loading goal…</div>
+          <div class="goal-pct" id="goal-pct">—</div>
+        </div>
+        <div class="tir-track"><div class="tir-fill" id="tir-fill" style="width:0%"></div></div>
+        <div class="tir-labels">
+          <div class="tir-lbl">Time in range today</div>
+          <div class="tir-lbl" id="tir-target"></div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="section-hdr"><div class="section-ttl">Today at a glance</div></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="s-avg">—</div><div class="stat-lbl">Avg</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-low">—</div><div class="stat-lbl">Low</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-high">—</div><div class="stat-lbl">High</div></div>
+      </div>
+    </div>
+
+    <!-- ══ PATTERNS PAGE ══ -->
+    <div class="page" id="page-patterns">
+      <div class="header">
+        <div class="header-left">
+          <div class="sub">Your body</div>
+          <div class="title">Patterns</div>
+        </div>
+      </div>
+      <div class="section-hdr">
+        <div class="section-ttl">What we've learned</div>
+        <div class="section-sub" id="pat-days">—</div>
+      </div>
+      <div id="pattern-list">
+        <div class="loading"><div class="spin"></div><div class="load-txt">Analysing your data…</div></div>
+      </div>
+    </div>
+
+    <!-- ══ INSIGHTS PAGE ══ -->
+    <div class="page" id="page-insights">
+      <div class="header">
+        <div class="header-left">
+          <div class="sub">Deep dive</div>
+          <div class="title">Insights</div>
+        </div>
+      </div>
+      <div class="section-hdr">
+        <div class="section-ttl">Recent observations</div>
+      </div>
+      <div id="insight-list">
+        <div class="loading"><div class="spin"></div><div class="load-txt">Building insights…</div></div>
+      </div>
+    </div>
+
+  </div><!-- end scroll-body -->
+
+  <!-- Bottom nav -->
+  <nav class="nav">
+    <button class="nav-btn active" data-page="home" onclick="showPage('home',this)">
+      <div class="nav-icon">◉</div>
+      <div class="nav-lbl">Home</div>
+    </button>
+    <button class="nav-btn" data-page="patterns" onclick="showPage('patterns',this)">
+      <div class="nav-icon">◈</div>
+      <div class="nav-lbl">Patterns</div>
+    </button>
+    <button class="nav-btn" data-page="insights" onclick="showPage('insights',this)">
+      <div class="nav-icon">◇</div>
+      <div class="nav-lbl">Insights</div>
+    </button>
+  </nav>
 </div>
 
 <script>
-const NS = 'https://annabetic.10be.de';
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const NS    = 'https://annabetic.10be.de';
 const TOKEN = 'htmlwrap-2d9323159618ba54';
-const LOW = 3.9, HIGH = 10;
-const W = 360, H = 110, PAD_X = 28, PAD_Y = 10;
+const LOW   = 3.9, HIGH = 10.0;
+const SPIKE_THRESH = 1.7, DROP_THRESH = 1.1;
+const SPIKE_WINDOW = 45 * 60000, DROP_WINDOW = 35 * 60000;
 
-// Greeting
-const h = new Date().getHours();
-document.getElementById('greeting').textContent =
-  h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let allEntries = [];
+let actionsDone = {};
 
-function sgvToMmol(v) { return Math.round((v / 18) * 10) / 10; }
-
-function trendArrow(dir) {
-  const map = {
-    'DoubleUp':'↑↑', 'SingleUp':'↑', 'FortyFiveUp':'↗',
-    'Flat':'→', 'FortyFiveDown':'↘', 'SingleDown':'↓',
-    'DoubleDown':'↓↓', 'NONE':'', 'NOT COMPUTABLE':''
-  };
-  return map[dir] || '';
-}
-
-function statusFor(v) {
-  if (v < 3.0) return { cls:'lo', label:'Very low', dot:'#2196F3' };
-  if (v < LOW) return { cls:'lo', label:'Low', dot:'#42A5F5' };
-  if (v > 16)  return { cls:'hi', label:'Very high', dot:'#EF5350' };
-  if (v > HIGH)return { cls:'hi', label:'High', dot:'#FF7043' };
-  if (v > 8.5) return { cls:'warn', label:'Borderline', dot:'#FFA726' };
-  return { cls:'in', label:'In range', dot:'#69F0AE' };
-}
-
-function iconFor(cls) {
-  if (cls === 'hi')   return '🔴';
-  if (cls === 'lo')   return '🔵';
-  if (cls === 'warn') return '🟡';
-  return '🟢';
-}
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+const toMmol = v => Math.round((v / 18) * 10) / 10;
+const fmt1   = v => v.toFixed(1);
 
 function timeAgo(ms) {
-  const diff = Math.round((Date.now() - ms) / 60000);
-  if (diff < 1)  return 'just now';
-  if (diff === 1) return '1 min ago';
-  if (diff < 60) return `${diff} min ago`;
-  const hh = Math.floor(diff / 60);
-  return hh === 1 ? '1 hr ago' : `${hh} hrs ago`;
+  const d = Math.round((Date.now() - ms) / 60000);
+  if (d < 1) return 'just now';
+  if (d < 60) return `${d} min ago`;
+  return `${Math.floor(d/60)}h ${d%60}m ago`;
 }
-
 function fmtTime(ms) {
-  return new Date(ms).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  return new Date(ms).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+function fmtHour(ms) {
+  return new Date(ms).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12:true});
+}
+function safeArr(d) {
+  if (Array.isArray(d)) return d.filter(e => e && typeof e.sgv === 'number');
+  if (d && typeof d.sgv === 'number') return [d];
+  return [];
+}
+async function nsGet(path) {
+  const sep = path.includes('?') ? '&' : '?';
+  const r = await fetch(`${NS}${path}${sep}token=${TOKEN}`,{mode:'cors',headers:{'Accept':'application/json'}});
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
 }
 
-function drawChart(entries) {
-  const svg = document.getElementById('chart-svg');
-  svg.innerHTML = '';
+function trendArrow(dir) {
+  return {DoubleUp:'↑↑',SingleUp:'↑',FortyFiveUp:'↗',Flat:'→',
+    FortyFiveDown:'↘',SingleDown:'↓',DoubleDown:'↓↓'}[dir] || '→';
+}
+function statusFor(v) {
+  if (v < 3.0)  return {cls:'lo',   col:'var(--blue)',  bg:'var(--blue-bg)',  border:'var(--blue-border)',  label:'Very low'};
+  if (v < LOW)  return {cls:'lo',   col:'var(--blue)',  bg:'var(--blue-bg)',  border:'var(--blue-border)',  label:'Low'};
+  if (v > 16)   return {cls:'hi',   col:'var(--red)',   bg:'var(--red-bg)',   border:'var(--red-border)',   label:'Very high'};
+  if (v > HIGH) return {cls:'hi',   col:'var(--red)',   bg:'var(--red-bg)',   border:'var(--red-border)',   label:'High'};
+  if (v > 8.5)  return {cls:'warn', col:'var(--amber)', bg:'var(--amber-bg)', border:'var(--amber-border)', label:'Borderline'};
+  return           {cls:'in',   col:'var(--green)', bg:'var(--green-bg)', border:'var(--green-border)', label:'In range'};
+}
 
-  if (!entries.length) return;
+// ═══════════════════════════════════════
+// EVENT DETECTION
+// ═══════════════════════════════════════
+function detectEvent(entries) {
+  if (entries.length < 3) return {type:'stable',magnitude:'mild',confidence:0.3};
+  const recent = [...entries].sort((a,b)=>b.date-a.date).slice(0,12);
+  const now    = recent[0];
+  const oldest = recent[recent.length-1];
+  const span   = now.date - oldest.date;
+  const delta  = toMmol(now.sgv) - toMmol(oldest.sgv);
+  const rate   = delta / (span / 60000); // mmol per min
 
-  // Sort oldest → newest
-  const sorted = [...entries].sort((a,b) => a.date - b.date);
-  const times  = sorted.map(e => e.date);
-  const vals   = sorted.map(e => sgvToMmol(e.sgv));
+  // Check spike in 45min window
+  const window45 = recent.filter(e => now.date - e.date <= SPIKE_WINDOW);
+  const spike45  = window45.length >= 2
+    ? toMmol(now.sgv) - toMmol(window45[window45.length-1].sgv)
+    : 0;
 
-  const tMin = times[0], tMax = times[times.length-1];
-  const vMin = 2, vMax = 18;
+  // Check drop in 35min window
+  const window35 = recent.filter(e => now.date - e.date <= DROP_WINDOW);
+  const drop35   = window35.length >= 2
+    ? toMmol(window35[window35.length-1].sgv) - toMmol(now.sgv)
+    : 0;
 
-  const tx = t => PAD_X + ((t - tMin) / (tMax - tMin || 1)) * (W - PAD_X * 2);
-  const ty = v => PAD_Y + (1 - (v - vMin) / (vMax - vMin)) * (H - PAD_Y * 2 - 14);
-
-  const ns = 'http://www.w3.org/2000/svg';
-  function el(tag, attrs) {
-    const e = document.createElementNS(ns, tag);
-    Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
-    return e;
+  if (spike45 >= SPIKE_THRESH || rate >= 0.03) {
+    const mag = spike45 >= 3.5 ? 'high' : spike45 >= 2.2 ? 'moderate' : 'mild';
+    return {type:'spike', magnitude:mag, delta:spike45, rate, confidence:Math.min(0.95, 0.6 + spike45*0.1)};
+  }
+  if (drop35 >= DROP_THRESH) {
+    const mag = drop35 >= 2.5 ? 'high' : drop35 >= 1.7 ? 'moderate' : 'mild';
+    return {type:'drop', magnitude:mag, delta:drop35, rate, confidence:Math.min(0.95, 0.6 + drop35*0.1)};
   }
 
-  // Target range band
-  svg.appendChild(el('rect', {
-    x: PAD_X, y: ty(HIGH),
-    width: W - PAD_X*2,
-    height: ty(LOW) - ty(HIGH),
-    fill:'#2D6A4F', opacity:'0.08', rx:'2'
-  }));
+  // Variance check for stability
+  const vals = recent.map(e=>toMmol(e.sgv));
+  const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
+  const variance = vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length;
+  const conf = Math.min(0.95, 0.5 + (1/(variance+0.1))*0.1);
+  return {type:'stable', magnitude:'mild', variance, confidence:conf};
+}
 
-  // Range labels
-  [{ v:LOW, lbl:'3.9'}, {v:HIGH, lbl:'10'}].forEach(({v,lbl}) => {
-    const t = el('text', {
-      x: 2, y: ty(v)+3,
-      'font-family':'DM Mono,monospace', 'font-size':'8',
-      fill:'#2D6A4F', opacity:'0.55'
+function eventLabel(event, currentVal) {
+  if (event.type === 'spike') {
+    if (event.magnitude === 'high')     return 'Rising sharply';
+    if (event.magnitude === 'moderate') return 'Rising steadily';
+    return 'Rising slightly';
+  }
+  if (event.type === 'drop') {
+    if (event.magnitude === 'high')     return 'Dropping fast';
+    if (event.magnitude === 'moderate') return 'Dropping steadily';
+    return 'Easing down';
+  }
+  if (currentVal < LOW)  return 'Holding low — watch closely';
+  if (currentVal > HIGH) return 'Elevated — staying high';
+  return 'Holding steady ✓';
+}
+
+// ═══════════════════════════════════════
+// MEAL / CAUSE INFERENCE
+// ═══════════════════════════════════════
+function inferCause(event, entries) {
+  if (event.type === 'stable') return null;
+
+  const now    = new Date();
+  const hour   = now.getHours();
+  const recent = [...entries].sort((a,b)=>b.date-a.date);
+
+  // Dawn phenomenon: rise 4–8am, no prior drop
+  if (event.type === 'spike' && hour >= 4 && hour <= 8) {
+    const priorDrop = recent.slice(1,6).some(e => toMmol(e.sgv) < LOW);
+    if (!priorDrop) {
+      return {cause:'Dawn phenomenon', icon:'🌅', confidence:0.72,
+        text:"Your glucose is rising in the early morning — this is likely the dawn phenomenon, where your body naturally releases hormones before waking."};
+    }
+  }
+
+  // Meal windows
+  const mealWindow = (hour>=6&&hour<10)||(hour>=11&&hour<15)||(hour>=18&&hour<22);
+
+  if (event.type === 'spike' && mealWindow) {
+    // Check if similar spike happened same time in prior days
+    const spikeHour = now.getHours();
+    const pastDays = entries.filter(e => {
+      const age = Date.now() - e.date;
+      return age > 86400000 && age < 7*86400000;
     });
-    t.textContent = lbl;
-    svg.appendChild(t);
+    const sameTimeSpikes = pastDays.filter(e => {
+      const h = new Date(e.date).getHours();
+      return Math.abs(h - spikeHour) <= 1 && toMmol(e.sgv) > HIGH * 0.85;
+    });
+    const mealConf = Math.min(0.9, 0.5 + sameTimeSpikes.length * 0.12);
+    const mealName = hour<10 ? 'breakfast' : hour<15 ? 'lunch' : 'dinner';
+    return {cause:`Likely ${mealName}`, icon:'🍽️', confidence:mealConf,
+      text:`This rise matches your typical ${mealName} pattern${sameTimeSpikes.length>1?' — you've had similar responses at this time before':''}.`};
+  }
+
+  if (event.type === 'spike' && !mealWindow) {
+    return {cause:'Possible stress spike', icon:'⚡', confidence:0.55,
+      text:"This rise isn't during a typical meal window — it could be related to stress, hormones, or low activity. Nothing to worry about, just worth noting."};
+  }
+
+  if (event.type === 'drop') {
+    return {cause:'Natural drop', icon:'📉', confidence:0.65,
+      text:"Your glucose is coming down. This could follow a meal response, exercise, or your body's natural cycle."};
+  }
+
+  return null;
+}
+
+// ═══════════════════════════════════════
+// ACTION ENGINE
+// ═══════════════════════════════════════
+function getActions(event, currentVal) {
+  const actions = [];
+
+  if (event.type === 'spike') {
+    if (currentVal > 10.0) {
+      actions.push({id:'walk', icon:'🚶', title:'Take a 10-min walk', sub:'Movement is the fastest natural reducer', impact:'Could reduce by 1–2 mmol/L'});
+      actions.push({id:'water', icon:'💧', title:'Drink a glass of water', sub:'Hydration helps your kidneys process glucose', impact:'Mild but immediate benefit'});
+    } else if (currentVal > 8.5) {
+      actions.push({id:'walk', icon:'🚶', title:'Short walk or stretch', sub:'Even 5 minutes helps flatten the curve', impact:'Could reduce by 0.5–1 mmol/L'});
+      actions.push({id:'water', icon:'💧', title:'Stay hydrated', sub:'Sip water steadily over the next hour', impact:'Supports natural regulation'});
+    }
+  } else if (event.type === 'drop') {
+    if (currentVal < 4.5) {
+      actions.push({id:'carbs', icon:'🍊', title:'Consider fast-acting carbs', sub:'15g — juice, glucose tabs, or fruit', impact:'Should raise by 2–3 mmol/L in 15 min'});
+    } else {
+      actions.push({id:'monitor', icon:'👁️', title:'Keep an eye on it', sub:'You\'re trending down — check again soon', impact:'No action needed yet'});
+    }
+  } else {
+    // Stable + in range
+    if (currentVal >= LOW && currentVal <= HIGH) {
+      actions.push({id:'great', icon:'✓', title:'You\'re in a great range', sub:'Keep doing what you\'re doing', impact:'Goal: stay here as long as possible'});
+    }
+  }
+
+  return actions.slice(0, 2);
+}
+
+// ═══════════════════════════════════════
+// PATTERN ANALYSIS
+// ═══════════════════════════════════════
+function analysePatterns(entries) {
+  const patterns = [];
+  if (entries.length < 24) return patterns;
+
+  // Group by hour
+  const byHour = {};
+  entries.forEach(e => {
+    const h = new Date(e.date).getHours();
+    if (!byHour[h]) byHour[h] = [];
+    byHour[h].push(toMmol(e.sgv));
   });
 
-  // Build path
-  const pts = sorted.map((e,i) => `${tx(e.date)},${ty(vals[i])}`);
-  const lineD = `M${pts.join(' L')}`;
-  const areaD = `M${pts[0]} L${pts.join(' L')} L${tx(tMax)},${H-14} L${tx(tMin)},${H-14} Z`;
+  // Find peak hour
+  const hourAvgs = Object.entries(byHour).map(([h,vals])=>({
+    hour:+h, avg:vals.reduce((a,b)=>a+b,0)/vals.length, count:vals.length
+  })).filter(x=>x.count>=2);
 
-  // Defs gradient
-  const defs = el('defs', {});
-  const grad = el('linearGradient', { id:'g1', x1:'0', y1:'0', x2:'0', y2:'1' });
-  const s1 = el('stop', { offset:'0%', 'stop-color':'#2D6A4F', 'stop-opacity':'0.18' });
-  const s2 = el('stop', { offset:'100%', 'stop-color':'#2D6A4F', 'stop-opacity':'0' });
-  grad.appendChild(s1); grad.appendChild(s2); defs.appendChild(grad);
-  svg.appendChild(defs);
+  const peakHour = hourAvgs.sort((a,b)=>b.avg-a.avg)[0];
+  if (peakHour && peakHour.avg > HIGH * 0.9) {
+    const h = peakHour.hour;
+    const label = h<12 ? `${h}am` : h===12 ? '12pm' : `${h-12}pm`;
+    patterns.push({
+      icon:'📈', title:`Peak around ${label}`,
+      sub:`Avg ${fmt1(peakHour.avg)} mmol/L`,
+      body:`Your glucose tends to be highest around ${label}. ${h>=6&&h<10?'This often follows breakfast — the first meal of the day has the biggest impact for many people.':h>=11&&h<15?'This is a common lunch response window.':'Consider what\'s happening at this time of day.'}`,
+      confidence: Math.min(1, peakHour.count / 8),
+      dots: Math.round(Math.min(5, peakHour.count / 3))
+    });
+  }
 
-  svg.appendChild(el('path', { d:areaD, fill:'url(#g1)' }));
-  svg.appendChild(el('path', { d:lineD, fill:'none', stroke:'#2D6A4F', 'stroke-width':'1.8', 'stroke-linecap':'round', 'stroke-linejoin':'round' }));
+  // Dawn phenomenon detection
+  const dawnVals = (byHour[5]||[]).concat(byHour[6]||[]).concat(byHour[7]||[]);
+  if (dawnVals.length >= 3) {
+    const dawnAvg = dawnVals.reduce((a,b)=>a+b,0)/dawnVals.length;
+    if (dawnAvg > 7.5) {
+      patterns.push({
+        icon:'🌅', title:'Dawn phenomenon detected',
+        sub:`Avg ${fmt1(dawnAvg)} mmol/L at 5–7am`,
+        body:"Your glucose rises in the early morning before you wake. This is caused by hormones like cortisol and growth hormone — it's very common and not your fault.",
+        confidence:0.75,
+        dots:4
+      });
+    }
+  }
+
+  // TIR pattern
+  const inRange = entries.filter(e=>toMmol(e.sgv)>=LOW&&toMmol(e.sgv)<=HIGH).length;
+  const tir = Math.round((inRange/entries.length)*100);
+  patterns.push({
+    icon:'🎯', title:`${tir}% time in range`,
+    sub:`Over ${Math.ceil(entries.length*5/60/24)} days of data`,
+    body:`${tir >= 70 ? `You're hitting the recommended target of 70%+ in range — excellent work.` : tir >= 50 ? `You're spending ${tir}% of your time in range. The recommended target is 70% — you're making progress.` : `You're at ${tir}% time in range. Small consistent changes — especially around food timing and movement — can meaningfully improve this.`}`,
+    confidence:0.95,
+    dots:5
+  });
+
+  // Low frequency
+  const lowEvents = entries.filter(e=>toMmol(e.sgv)<LOW).length;
+  const lowPct = Math.round((lowEvents/entries.length)*100);
+  if (lowPct > 3) {
+    patterns.push({
+      icon:'🔵', title:`${lowPct}% time below range`,
+      sub:`${lowEvents} readings under 3.9 mmol/L`,
+      body:"You've had some time below range. Lows often happen after delayed meal response, exercise, or overnight. The app will flag these as they happen.",
+      confidence:0.9,
+      dots:4
+    });
+  }
+
+  return patterns;
+}
+
+// ═══════════════════════════════════════
+// BUILD INSIGHTS
+// ═══════════════════════════════════════
+function buildInsights(entries) {
+  const insights = [];
+  if (entries.length < 12) return insights;
+
+  const byDay = {};
+  entries.forEach(e => {
+    const day = new Date(e.date).toDateString();
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push(e);
+  });
+
+  const days = Object.values(byDay);
+
+  // Best day
+  if (days.length >= 2) {
+    const dayTIRs = days.map(d => {
+      const inR = d.filter(e=>toMmol(e.sgv)>=LOW&&toMmol(e.sgv)<=HIGH).length;
+      return {date:d[0].date, tir:inR/d.length, entries:d};
+    });
+    const best = dayTIRs.sort((a,b)=>b.tir-a.tir)[0];
+    const bestPct = Math.round(best.tir*100);
+    const dayName = new Date(best.date).toLocaleDateString([],{weekday:'long'});
+    insights.push({
+      tag:'Best day', tagColor:'var(--green)',
+      body:`${dayName} was your best day — ${bestPct}% in range`,
+      detail:`Your glucose stayed between 3.9–10 mmol/L for ${bestPct}% of the day. Understanding what made that day different can help you replicate it.`,
+      sparkData: best.entries.sort((a,b)=>a.date-b.date).map(e=>toMmol(e.sgv))
+    });
+  }
+
+  // Overnight stability
+  const overnight = entries.filter(e => {
+    const h = new Date(e.date).getHours();
+    return h >= 22 || h < 6;
+  });
+  if (overnight.length >= 6) {
+    const oVals = overnight.map(e=>toMmol(e.sgv));
+    const oMean = oVals.reduce((a,b)=>a+b,0)/oVals.length;
+    const oVar  = oVals.reduce((a,b)=>a+(b-oMean)**2,0)/oVals.length;
+    const stable = oVar < 0.8;
+    insights.push({
+      tag:'Overnight', tagColor: stable ? 'var(--green)' : 'var(--amber)',
+      body: stable ? 'Your overnight glucose is fairly stable' : 'Some overnight variability detected',
+      detail: stable
+        ? `Overnight average: ${fmt1(oMean)} mmol/L with low variability. Your basal levels look consistent during sleep.`
+        : `Overnight average: ${fmt1(oMean)} mmol/L with moderate swings. This could be from delayed meal response, dawn phenomenon, or overnight insulin patterns.`,
+      sparkData: oVals.slice(0, 20)
+    });
+  }
+
+  // Most common event time
+  const spikes = [];
+  const sorted = [...entries].sort((a,b)=>a.date-b.date);
+  for (let i=2; i<sorted.length; i++) {
+    const span = sorted[i].date - sorted[i-4<0?0:i-4].date;
+    const delta = toMmol(sorted[i].sgv) - toMmol(sorted[Math.max(0,i-4)].sgv);
+    if (delta >= SPIKE_THRESH && span <= SPIKE_WINDOW*1.5) {
+      spikes.push(new Date(sorted[i].date).getHours());
+    }
+  }
+  if (spikes.length >= 2) {
+    const freq = {};
+    spikes.forEach(h => freq[h]=(freq[h]||0)+1);
+    const topHour = Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
+    const h = +topHour[0];
+    const label = h<12?`${h}am`:h===12?'12pm':`${h-12}pm`;
+    insights.push({
+      tag:'Pattern', tagColor:'var(--amber)',
+      body:`You often spike around ${label}`,
+      detail:`${topHour[1]} rise${topHour[1]>1?'s':''} detected around this time. ${h>=6&&h<=10?'Morning spikes often reflect breakfast response or dawn phenomenon.':h>=11&&h<=15?'This could be your lunchtime response.':'Evening spikes may follow dinner or stress.'}`,
+      sparkData: null
+    });
+  }
+
+  return insights;
+}
+
+// ═══════════════════════════════════════
+// DRAW CHART
+// ═══════════════════════════════════════
+function drawChart(entries, svgId='chart-svg', h=100) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+  if (!entries.length) return;
+
+  const W=360, H=h, PX=24, PY=8;
+  const sorted = [...entries].sort((a,b)=>a.date-b.date);
+  const times  = sorted.map(e=>e.date);
+  const vals   = sorted.map(e=>toMmol(e.sgv));
+  const tMin=times[0], tMax=times[times.length-1];
+  const vMin=2, vMax=16;
+  const tx = t => PX+((t-tMin)/(tMax-tMin||1))*(W-PX*2);
+  const ty = v => PY+(1-(v-vMin)/(vMax-vMin))*(H-PY*2-12);
+  const ns='http://www.w3.org/2000/svg';
+  const el=(tag,attrs)=>{ const e=document.createElementNS(ns,tag); Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v)); return e; };
+
+  // Range band
+  svg.appendChild(el('rect',{x:PX,y:ty(HIGH),width:W-PX*2,height:ty(LOW)-ty(HIGH),fill:'rgba(126,200,160,0.08)',rx:'2'}));
+
+  // Colour segments by status
+  for (let i=1; i<sorted.length; i++) {
+    const v = vals[i];
+    const col = v<LOW?'#6EA8D8': v>HIGH?'#E07070': v>8.5?'#E8A84C':'#7EC8A0';
+    svg.appendChild(el('line',{x1:tx(times[i-1]),y1:ty(vals[i-1]),x2:tx(times[i]),y2:ty(v),stroke:col,'stroke-width':'1.8','stroke-linecap':'round'}));
+  }
+
+  // Area fill
+  const pts = sorted.map((_,i)=>`${tx(times[i])},${ty(vals[i])}`);
+  const areaD = `M${pts[0]} L${pts.join(' L')} L${tx(tMax)},${H-12} L${tx(tMin)},${H-12} Z`;
+  const defs=el('defs',{}), grad=el('linearGradient',{id:`g${svgId}`,x1:'0',y1:'0',x2:'0',y2:'1'});
+  grad.appendChild(el('stop',{offset:'0%','stop-color':'#7EC8A0','stop-opacity':'0.12'}));
+  grad.appendChild(el('stop',{offset:'100%','stop-color':'#7EC8A0','stop-opacity':'0'}));
+  defs.appendChild(grad); svg.appendChild(defs);
+  svg.appendChild(el('path',{d:areaD,fill:`url(#g${svgId})`}));
 
   // Time labels
-  const labelCount = 4;
-  for (let i = 0; i <= labelCount; i++) {
-    const t = tMin + (i / labelCount) * (tMax - tMin);
-    const x = tx(t);
-    const lbl = el('text', {
-      x, y: H - 2, 'text-anchor':'middle',
-      'font-family':'DM Sans,sans-serif', 'font-size':'8',
-      fill:'#B0ADA8'
-    });
-    lbl.textContent = new Date(t).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  for (let i=0; i<=4; i++) {
+    const t=tMin+(i/4)*(tMax-tMin);
+    const lbl=el('text',{x:tx(t),y:H-1,'text-anchor':'middle','font-family':'DM Mono,monospace','font-size':'7',fill:'#5C5B56'});
+    lbl.textContent=new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     svg.appendChild(lbl);
   }
 
+  // Range labels
+  [{v:LOW,l:'3.9'},{v:HIGH,l:'10'}].forEach(({v,l})=>{
+    const t=el('text',{x:2,y:ty(v)+3,'font-family':'DM Mono,monospace','font-size':'7',fill:'rgba(126,200,160,0.5)'});
+    t.textContent=l; svg.appendChild(t);
+  });
+
   // Latest dot
-  const last = sorted[sorted.length-1];
-  const lx = tx(last.date), ly = ty(vals[vals.length-1]);
-  svg.appendChild(el('circle', { cx:lx, cy:ly, r:'8', fill:'#2D6A4F', opacity:'0.15' }));
-  svg.appendChild(el('circle', { cx:lx, cy:ly, r:'4', fill:'#2D6A4F' }));
+  const lx=tx(tMax), ly=ty(vals[vals.length-1]);
+  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'6',fill:'#7EC8A0',opacity:'0.2'}));
+  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'3',fill:'#7EC8A0'}));
 }
 
-async function nsGet(path) {
-  const sep = path.includes('?') ? '&' : '?';
-  const url = `${NS}${path}${sep}token=${TOKEN}`;
-  const r = await fetch(url, { mode: 'cors', headers: { 'Accept': 'application/json' } });
-  if (!r.ok) throw new Error(`HTTP ${r.status} from Nightscout`);
-  const data = await r.json();
-  return data;
+function drawSparkline(container, vals) {
+  if (!vals || vals.length < 2) return;
+  const W=320, H=50, PX=4, PY=4;
+  const vMin=Math.min(...vals)-0.5, vMax=Math.max(...vals)+0.5;
+  const tx=i=>PX+(i/(vals.length-1))*(W-PX*2);
+  const ty=v=>PY+(1-(v-vMin)/(vMax-vMin))*(H-PY*2);
+  const ns='http://www.w3.org/2000/svg';
+  const el=(tag,attrs)=>{ const e=document.createElementNS(ns,tag); Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v)); return e; };
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio','none');
+  svg.style.width='100%'; svg.style.height='50px';
+
+  // Colour segments
+  for (let i=1; i<vals.length; i++) {
+    const v=vals[i];
+    const col=v<LOW?'#6EA8D8':v>HIGH?'#E07070':v>8.5?'#E8A84C':'#7EC8A0';
+    svg.appendChild(el('line',{x1:tx(i-1),y1:ty(vals[i-1]),x2:tx(i),y2:ty(v),stroke:col,'stroke-width':'1.5','stroke-linecap':'round'}));
+  }
+  container.appendChild(svg);
 }
 
-function safeArray(data) {
-  if (Array.isArray(data)) return data.filter(e => e && typeof e.sgv === 'number');
-  if (data && typeof data.sgv === 'number') return [data];
-  return [];
+// ═══════════════════════════════════════
+// RENDER HOME
+// ═══════════════════════════════════════
+function renderHome(current, todayEntries, weekEntries) {
+  const val = toMmol(current.sgv);
+  const st  = statusFor(val);
+  const event = detectEvent([current,...todayEntries]);
+
+  // Hero
+  document.getElementById('hero-val').textContent   = fmt1(val);
+  document.getElementById('hero-val').style.color   = st.col;
+  document.getElementById('hero-arrow').textContent = trendArrow(current.direction);
+  document.getElementById('hero-event').textContent = eventLabel(event, val);
+  document.getElementById('badge-txt').textContent  = st.label;
+  document.getElementById('hero-time').textContent  = `Updated ${timeAgo(current.date)}`;
+
+  const badge = document.getElementById('hero-badge');
+  badge.style.background = st.bg;
+  badge.style.borderColor = st.border;
+  badge.style.color = st.col;
+  badge.querySelector('.dot').style.background = st.col;
+
+  const glow = document.getElementById('hero-glow');
+  glow.style.background = st.col;
+
+  // Delta
+  if (todayEntries.length >= 2) {
+    const prev = todayEntries[1] ? toMmol(todayEntries[1].sgv) : val;
+    const d = val - prev;
+    const sign = d>=0?'+':'';
+    document.getElementById('hero-delta').textContent = `${sign}${fmt1(d)} last reading`;
+  }
+
+  // Chart
+  drawChart(todayEntries.slice(0,288));
+
+  // Inference
+  const inf = inferCause(event, weekEntries);
+  if (inf && event.type !== 'stable') {
+    const ic = document.getElementById('inference-card');
+    ic.style.display = 'block';
+    document.getElementById('inf-icon').textContent = inf.icon;
+    document.getElementById('inf-text').textContent = inf.text;
+    document.getElementById('conf-fill').style.width = Math.round(inf.confidence*100)+'%';
+  }
+
+  // Actions
+  const actions = getActions(event, val);
+  if (actions.length) {
+    const ac = document.getElementById('action-card');
+    ac.style.display = 'block';
+    const btns = document.getElementById('action-btns');
+    btns.innerHTML = '';
+    actions.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'action-btn' + (actionsDone[a.id] ? ' done' : '');
+      div.innerHTML = `<div class="action-btn-icon">${a.icon}</div>
+        <div class="action-btn-body">
+          <div class="action-btn-title">${a.title}</div>
+          <div class="action-btn-sub">${actionsDone[a.id] ? a.impact : a.sub}</div>
+        </div>
+        <div class="action-btn-check">${actionsDone[a.id] ? '✓' : '›'}</div>`;
+      if (a.id !== 'great') {
+        div.onclick = () => {
+          actionsDone[a.id] = true;
+          renderHome(current, todayEntries, weekEntries);
+        };
+      }
+      btns.appendChild(div);
+    });
+  }
+
+  // Goal + TIR
+  const mmols = todayEntries.map(e=>toMmol(e.sgv));
+  const inR   = mmols.filter(v=>v>=LOW&&v<=HIGH).length;
+  const tir   = mmols.length ? Math.round((inR/mmols.length)*100) : 0;
+  const target = 70;
+
+  // Baseline TIR from yesterday
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1); yesterday.setHours(0,0,0,0);
+  const yEnd = new Date(yesterday); yEnd.setHours(23,59,59,999);
+  const yEntries = weekEntries.filter(e=>e.date>=yesterday.getTime()&&e.date<=yEnd.getTime());
+  const yInR  = yEntries.filter(e=>toMmol(e.sgv)>=LOW&&toMmol(e.sgv)<=HIGH).length;
+  const yTIR  = yEntries.length ? Math.round((yInR/yEntries.length)*100) : tir;
+  const goalTIR = Math.min(100, yTIR + 8);
+
+  document.getElementById('goal-pct').textContent    = `${tir}%`;
+  document.getElementById('goal-pct').style.color    = tir >= target ? 'var(--green)' : tir >= 50 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('tir-fill').style.width    = `${tir}%`;
+  document.getElementById('tir-fill').style.background = tir >= target ? 'var(--green)' : tir >= 50 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('tir-target').textContent  = `Goal: ${goalTIR}%`;
+  document.getElementById('goal-text').textContent   = tir >= goalTIR
+    ? `Goal reached! Stay in range a little longer`
+    : `Stay in range ${goalTIR - tir}% more today`;
+
+  // Stats
+  if (mmols.length) {
+    const avg = mmols.reduce((a,b)=>a+b,0)/mmols.length;
+    const lo  = Math.min(...mmols);
+    const hi  = Math.max(...mmols);
+    document.getElementById('s-avg').textContent = fmt1(avg);
+    document.getElementById('s-low').textContent = fmt1(lo);
+    document.getElementById('s-high').textContent = fmt1(hi);
+    document.getElementById('s-low').style.color  = lo < LOW  ? 'var(--blue)'  : 'var(--text)';
+    document.getElementById('s-high').style.color = hi > HIGH ? 'var(--red)'   : 'var(--text)';
+  }
 }
 
+// ═══════════════════════════════════════
+// RENDER PATTERNS
+// ═══════════════════════════════════════
+function renderPatterns(entries) {
+  const patterns = analysePatterns(entries);
+  const days = Math.ceil(entries.length * 5 / 60 / 24);
+  document.getElementById('pat-days').textContent = `${days} day${days!==1?'s':''} of data`;
+
+  const list = document.getElementById('pattern-list');
+  if (!patterns.length) {
+    list.innerHTML = '<div class="loading"><div class="load-txt">Not enough data yet — check back soon</div></div>';
+    return;
+  }
+  list.innerHTML = '';
+  patterns.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'pattern-card card-enter';
+    card.style.animationDelay = `${i*0.07}s`;
+    const dots = Array.from({length:5},(_,j)=>`<div class="pat-dot ${j<p.dots?'filled':''}"></div>`).join('');
+    card.innerHTML = `
+      <div class="pat-hdr">
+        <div class="pat-icon-wrap">${p.icon}</div>
+        <div><div class="pat-title">${p.title}</div><div class="pat-sub">${p.sub}</div></div>
+      </div>
+      <div class="pat-body">${p.body}</div>
+      <div class="pat-conf">
+        <div class="pat-conf-dots">${dots}</div>
+        <div class="pat-conf-lbl">Confidence</div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════
+// RENDER INSIGHTS
+// ═══════════════════════════════════════
+function renderInsights(entries) {
+  const insights = buildInsights(entries);
+  const list = document.getElementById('insight-list');
+  if (!insights.length) {
+    list.innerHTML = '<div class="loading"><div class="load-txt">More data needed for insights</div></div>';
+    return;
+  }
+  list.innerHTML = '';
+  insights.forEach((ins, i) => {
+    const card = document.createElement('div');
+    card.className = 'insight-card card-enter';
+    card.style.animationDelay = `${i*0.07}s`;
+    card.innerHTML = `
+      <div class="ins-tag" style="color:${ins.tagColor}">${ins.tag}</div>
+      <div class="ins-body">${ins.body}</div>
+      <div class="ins-detail">${ins.detail}</div>
+      ${ins.sparkData ? '<div class="ins-chart" id="spark-'+i+'"></div>' : ''}`;
+    list.appendChild(card);
+    if (ins.sparkData) {
+      setTimeout(()=>drawSparkline(document.getElementById('spark-'+i), ins.sparkData), 50);
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('scroll-body').scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════
+// GREETING
+// ═══════════════════════════════════════
+const hr = new Date().getHours();
+document.getElementById('greeting').textContent =
+  hr<12 ? 'Good morning' : hr<17 ? 'Good afternoon' : 'Good evening';
+
+// ═══════════════════════════════════════
+// LOAD DATA
+// ═══════════════════════════════════════
 async function loadData() {
   try {
-    // Today's entries for chart + stats
     const midnight = new Date(); midnight.setHours(0,0,0,0);
-    const [currentRaw, todayRaw] = await Promise.all([
+    const weekAgo  = new Date(Date.now() - 7*86400000);
+
+    const [currentRaw, todayRaw, weekRaw] = await Promise.all([
       nsGet('/api/v1/entries/current.json'),
-      nsGet(`/api/v1/entries.json?find[dateString][$gte]=${midnight.toISOString()}&count=288`)
+      nsGet(`/api/v1/entries.json?find[dateString][$gte]=${midnight.toISOString()}&count=300`),
+      nsGet(`/api/v1/entries.json?find[dateString][$gte]=${weekAgo.toISOString()}&count=2016`)
     ]);
 
-    const today = safeArray(todayRaw);
+    const current     = safeArr(currentRaw)[0];
+    const todayEntries = safeArr(todayRaw).sort((a,b)=>b.date-a.date);
+    const weekEntries  = safeArr(weekRaw).sort((a,b)=>b.date-a.date);
+    allEntries = weekEntries;
 
-    // ── HERO ──
-    const currentArr = safeArray(currentRaw);
-    if (!currentArr.length) throw new Error('No current reading returned');
-    const entry = currentArr[0];
-    const val = sgvToMmol(entry.sgv);
-    const st  = statusFor(val);
+    if (!current) throw new Error('No current reading');
 
-    document.getElementById('hero-val').textContent = val.toFixed(1);
-    document.getElementById('hero-trend').textContent = trendArrow(entry.direction);
-    document.getElementById('badge-dot').style.background = st.dot;
-    document.getElementById('badge-text').textContent = st.label;
-    document.getElementById('hero-time').textContent = `Updated ${timeAgo(entry.date)}`;
-
-    // Colour hero by status
-    const heroCard = document.getElementById('hero-card');
-    if (st.cls === 'hi')   heroCard.style.background = '#993C1D';
-    else if (st.cls === 'lo') heroCard.style.background = '#0C447C';
-    else if (st.cls === 'warn') heroCard.style.background = '#85500B';
-    else heroCard.style.background = '#2D6A4F';
-
-    // Delta (last 2 readings)
-    const recentRaw = await nsGet('/api/v1/entries.json?count=2');
-    const recent = safeArray(recentRaw);
-    if (recent.length >= 2) {
-      const delta = sgvToMmol(recent[0].sgv) - sgvToMmol(recent[1].sgv);
-      const sign = delta >= 0 ? '+' : '';
-      document.getElementById('hero-delta').textContent = `${sign}${delta.toFixed(1)} mmol/L`;
-    }
-
-    // ── CHART ──
-    drawChart(today);
-
-    // ── STATS ──
-    const mmols = today.map(e => sgvToMmol(e.sgv));
-    const inRange = mmols.filter(v => v >= LOW && v <= HIGH).length;
-    const tir = mmols.length ? Math.round((inRange / mmols.length) * 100) : 0;
-    const avg = mmols.length ? (mmols.reduce((a,b)=>a+b,0)/mmols.length).toFixed(1) : '—';
-
-    document.getElementById('stat-tir').textContent = `${tir}%`;
-    document.getElementById('stat-avg').textContent = avg;
-    document.getElementById('stat-readings').textContent = mmols.length;
-
-    // ── LOG ──
-    const log10Raw = await nsGet('/api/v1/entries.json?count=10');
-    const log10 = safeArray(log10Raw);
-    const list = document.getElementById('log-list');
-    list.innerHTML = '';
-
-    log10.forEach((e, i) => {
-      const v   = sgvToMmol(e.sgv);
-      const st2 = statusFor(v);
-      const div = document.createElement('div');
-      div.className = 'log-entry';
-      div.style.animationDelay = `${i * 0.05}s`;
-      div.innerHTML = `
-        <div class="log-icon ${st2.cls}">${iconFor(st2.cls)}</div>
-        <div class="log-info">
-          <div class="log-ctx">${st2.label} · ${trendArrow(e.direction)}</div>
-          <div class="log-time">${fmtTime(e.date)} &nbsp;·&nbsp; ${timeAgo(e.date)}</div>
-        </div>
-        <div class="log-val ${st2.cls}">${v.toFixed(1)}</div>
-      `;
-      list.appendChild(div);
-    });
+    renderHome(current, todayEntries, weekEntries);
+    renderPatterns(weekEntries);
+    renderInsights(weekEntries);
 
   } catch(err) {
     console.error(err);
-    document.getElementById('log-list').innerHTML =
-      `<div class="state-msg">⚠️ Could not load data.<br><small>${err.message}</small></div>`;
-    document.getElementById('hero-val').textContent = '—';
-    document.getElementById('badge-text').textContent = 'Error';
+    document.getElementById('hero-event').textContent = '⚠️ ' + err.message;
+    document.getElementById('badge-txt').textContent  = 'Error';
   }
 }
 
 loadData();
-// Auto-refresh every 5 minutes
 setInterval(loadData, 5 * 60 * 1000);
 </script>
 </body>
