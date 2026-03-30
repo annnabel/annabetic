@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Annabetic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface2: #EEECEA;
+    --text: #1A1814;
+    --text2: #6B6760;
+    --text3: #B0ADA8;
+    --accent: #2D6A4F;
+    --accent-mid: #52997A;
+    --accent-light: #E4F2EB;
+    --danger: #B83232;
+    --danger-light: #FBEAEA;
+    --warn: #C06010;
+    --warn-light: #FEF0E0;
+    --low: #1A5A8A;
+    --low-light: #E3EEF8;
+    --border: rgba(26,24,20,0.09);
+    --border-med: rgba(26,24,20,0.14);
+    --radius: 20px;
+    --radius-sm: 12px;
+    --radius-xs: 8px;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 52px 22px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .greeting { font-size: 13px; color: var(--text3); font-weight: 400; letter-spacing: 0.01em; margin-bottom: 2px; }
+  .name { font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -0.04em; }
+
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; color: var(--accent);
+    border: 1.5px solid rgba(45,106,79,0.15);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  /* ── HERO ── */
+  .hero-card {
+    margin: 20px 22px 0;
+    background: var(--accent);
+    border-radius: var(--radius);
+    padding: 26px 26px 22px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .hero-orb1 {
+    position: absolute; top: -50px; right: -50px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+  .hero-orb2 {
+    position: absolute; bottom: -30px; right: 40px;
+    width: 90px; height: 90px; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .hero-label {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    opacity: 0.65; margin-bottom: 10px;
+  }
+
+  .hero-value-row {
+    display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
+  }
+
+  .hero-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 64px; font-weight: 400;
+    letter-spacing: -0.05em; line-height: 1;
+    transition: opacity 0.3s;
+  }
+
+  .hero-unit { font-size: 18px; opacity: 0.6; font-weight: 300; }
+
+  .hero-trend {
+    font-size: 28px; line-height: 1;
+    margin-left: 4px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 30px;
+    padding: 5px 12px;
+    font-size: 12px; font-weight: 500;
+    backdrop-filter: blur(4px);
+  }
+
+  .badge-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #69F0AE;
+    transition: background 0.3s;
+  }
+
+  .hero-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 18px;
+  }
+
+  .hero-time { font-size: 11px; opacity: 0.45; }
+
+  .hero-delta {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; opacity: 0.7;
+  }
+
+  /* ── CHART ── */
+  .chart-card {
+    margin: 14px 22px 0;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 20px 20px 14px;
+    border: 0.5px solid var(--border);
+  }
+
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-size: 14px; font-weight: 600;
+    letter-spacing: -0.02em; color: var(--text);
+  }
+
+  .range-info {
+    font-size: 11px; color: var(--text3); font-weight: 400;
+  }
+
+  .chart-wrap { position: relative; height: 110px; }
+  #chart-svg { width: 100%; height: 100%; overflow: visible; }
+
+  /* ── STATS ── */
+  .stats-row {
+    margin: 14px 22px 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    border: 0.5px solid var(--border);
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px; font-weight: 500;
+    letter-spacing: -0.03em; color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px; color: var(--text3);
+    margin-top: 4px; font-weight: 500;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+
+  /* ── LOG ── */
+  .log-section { margin: 16px 22px 0; flex: 1; }
+
+  .log-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .refresh-btn {
+    font-size: 11px; color: var(--accent); font-weight: 500;
+    cursor: pointer; background: none; border: none;
+    font-family: 'DM Sans', sans-serif;
+    padding: 4px 0;
+  }
+
+  .refresh-btn:active { opacity: 0.6; }
+
+  .log-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .log-entry {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 13px 15px;
+    border: 0.5px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .log-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+
+  .log-icon.in  { background: var(--accent-light); }
+  .log-icon.hi  { background: var(--danger-light); }
+  .log-icon.lo  { background: var(--low-light); }
+  .log-icon.warn { background: var(--warn-light); }
+
+  .log-info { flex: 1; min-width: 0; }
+
+  .log-ctx {
+    font-size: 13px; font-weight: 500; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .log-time { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .log-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 19px; font-weight: 500;
+    letter-spacing: -0.02em; flex-shrink: 0;
+  }
+
+  .log-val.in   { color: var(--accent); }
+  .log-val.hi   { color: var(--danger); }
+  .log-val.lo   { color: var(--low); }
+  .log-val.warn { color: var(--warn); }
+
+  /* ── BOTTOM PADDING ── */
+  .bottom-space { height: 32px; }
+
+  /* ── LOADING / ERROR ── */
+  .state-msg {
+    text-align: center; padding: 32px 20px;
+    color: var(--text3); font-size: 14px;
+  }
+
+  .spinner {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid var(--border-med);
+    border-top-color: var(--accent);
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 12px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── STAGGER ANIMATIONS ── */
+  .hero-card   { animation: fadeUp 0.4s 0.05s ease both; }
+  .chart-card  { animation: fadeUp 0.4s 0.12s ease both; }
+  .stats-row   { animation: fadeUp 0.4s 0.18s ease both; }
+  .log-section { animation: fadeUp 0.4s 0.24s ease both; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div>
+      <div class="greeting" id="greeting">Good morning</div>
+      <div class="name">Anna</div>
+    </div>
+    <div class="avatar">AN</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-card" id="hero-card">
+    <div class="hero-orb1"></div>
+    <div class="hero-orb2"></div>
+    <div class="hero-label">Current glucose</div>
+    <div class="hero-value-row">
+      <div class="hero-number" id="hero-val">—</div>
+      <div class="hero-unit">mmol/L</div>
+      <div class="hero-trend" id="hero-trend"></div>
+    </div>
+    <div class="hero-badge">
+      <div class="badge-dot" id="badge-dot"></div>
+      <span id="badge-text">Loading…</span>
+    </div>
+    <div class="hero-footer">
+      <div class="hero-time" id="hero-time"></div>
+      <div class="hero-delta" id="hero-delta"></div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-card">
+    <div class="card-header">
+      <div class="card-title">Today's trend</div>
+      <div class="range-info">Target 3.9 – 10 mmol/L</div>
+    </div>
+    <div class="chart-wrap">
+      <svg id="chart-svg" viewBox="0 0 360 110" preserveAspectRatio="none"></svg>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-tir">—</div>
+      <div class="stat-label">In range</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-avg">—</div>
+      <div class="stat-label">Avg today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-readings">—</div>
+      <div class="stat-label">Readings</div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="log-section">
+    <div class="log-header">
+      <div class="card-title">Recent readings</div>
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+    </div>
+    <div class="log-list" id="log-list">
+      <div class="state-msg"><div class="spinner"></div>Fetching your data…</div>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+<script>
+const NS = 'https://annabetic.10be.de';
+const LOW = 3.9, HIGH = 10;
+const W = 360, H = 110, PAD_X = 28, PAD_Y = 10;
+
+// Greeting
+const h = new Date().getHours();
+document.getElementById('greeting').textContent =
+  h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+
+function sgvToMmol(v) { return Math.round((v / 18) * 10) / 10; }
+
+function trendArrow(dir) {
+  const map = {
+    'DoubleUp':'↑↑', 'SingleUp':'↑', 'FortyFiveUp':'↗',
+    'Flat':'→', 'FortyFiveDown':'↘', 'SingleDown':'↓',
+    'DoubleDown':'↓↓', 'NONE':'', 'NOT COMPUTABLE':''
+  };
+  return map[dir] || '';
+}
+
+function statusFor(v) {
+  if (v < 3.0) return { cls:'lo', label:'Very low', dot:'#2196F3' };
+  if (v < LOW) return { cls:'lo', label:'Low', dot:'#42A5F5' };
+  if (v > 16)  return { cls:'hi', label:'Very high', dot:'#EF5350' };
+  if (v > HIGH)return { cls:'hi', label:'High', dot:'#FF7043' };
+  if (v > 8.5) return { cls:'warn', label:'Borderline', dot:'#FFA726' };
+  return { cls:'in', label:'In range', dot:'#69F0AE' };
+}
+
+function iconFor(cls) {
+  if (cls === 'hi')   return '🔴';
+  if (cls === 'lo')   return '🔵';
+  if (cls === 'warn') return '🟡';
+  return '🟢';
+}
+
+function timeAgo(ms) {
+  const diff = Math.round((Date.now() - ms) / 60000);
+  if (diff < 1)  return 'just now';
+  if (diff === 1) return '1 min ago';
+  if (diff < 60) return `${diff} min ago`;
+  const hh = Math.floor(diff / 60);
+  return hh === 1 ? '1 hr ago' : `${hh} hrs ago`;
+}
+
+function fmtTime(ms) {
+  return new Date(ms).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+}
+
+function drawChart(entries) {
+  const svg = document.getElementById('chart-svg');
+  svg.innerHTML = '';
+
+  if (!entries.length) return;
+
+  // Sort oldest → newest
+  const sorted = [...entries].sort((a,b) => a.date - b.date);
+  const times  = sorted.map(e => e.date);
+  const vals   = sorted.map(e => sgvToMmol(e.sgv));
+
+  const tMin = times[0], tMax = times[times.length-1];
+  const vMin = 2, vMax = 18;
+
+  const tx = t => PAD_X + ((t - tMin) / (tMax - tMin || 1)) * (W - PAD_X * 2);
+  const ty = v => PAD_Y + (1 - (v - vMin) / (vMax - vMin)) * (H - PAD_Y * 2 - 14);
+
+  const ns = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs) {
+    const e = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+    return e;
+  }
+
+  // Target range band
+  svg.appendChild(el('rect', {
+    x: PAD_X, y: ty(HIGH),
+    width: W - PAD_X*2,
+    height: ty(LOW) - ty(HIGH),
+    fill:'#2D6A4F', opacity:'0.08', rx:'2'
+  }));
+
+  // Range labels
+  [{ v:LOW, lbl:'3.9'}, {v:HIGH, lbl:'10'}].forEach(({v,lbl}) => {
+    const t = el('text', {
+      x: 2, y: ty(v)+3,
+      'font-family':'DM Mono,monospace', 'font-size':'8',
+      fill:'#2D6A4F', opacity:'0.55'
+    });
+    t.textContent = lbl;
+    svg.appendChild(t);
+  });
+
+  // Build path
+  const pts = sorted.map((e,i) => `${tx(e.date)},${ty(vals[i])}`);
+  const lineD = `M${pts.join(' L')}`;
+  const areaD = `M${pts[0]} L${pts.join(' L')} L${tx(tMax)},${H-14} L${tx(tMin)},${H-14} Z`;
+
+  // Defs gradient
+  const defs = el('defs', {});
+  const grad = el('linearGradient', { id:'g1', x1:'0', y1:'0', x2:'0', y2:'1' });
+  const s1 = el('stop', { offset:'0%', 'stop-color':'#2D6A4F', 'stop-opacity':'0.18' });
+  const s2 = el('stop', { offset:'100%', 'stop-color':'#2D6A4F', 'stop-opacity':'0' });
+  grad.appendChild(s1); grad.appendChild(s2); defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  svg.appendChild(el('path', { d:areaD, fill:'url(#g1)' }));
+  svg.appendChild(el('path', { d:lineD, fill:'none', stroke:'#2D6A4F', 'stroke-width':'1.8', 'stroke-linecap':'round', 'stroke-linejoin':'round' }));
+
+  // Time labels
+  const labelCount = 4;
+  for (let i = 0; i <= labelCount; i++) {
+    const t = tMin + (i / labelCount) * (tMax - tMin);
+    const x = tx(t);
+    const lbl = el('text', {
+      x, y: H - 2, 'text-anchor':'middle',
+      'font-family':'DM Sans,sans-serif', 'font-size':'8',
+      fill:'#B0ADA8'
+    });
+    lbl.textContent = new Date(t).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    svg.appendChild(lbl);
+  }
+
+  // Latest dot
+  const last = sorted[sorted.length-1];
+  const lx = tx(last.date), ly = ty(vals[vals.length-1]);
+  svg.appendChild(el('circle', { cx:lx, cy:ly, r:'8', fill:'#2D6A4F', opacity:'0.15' }));
+  svg.appendChild(el('circle', { cx:lx, cy:ly, r:'4', fill:'#2D6A4F' }));
+}
+
+async function loadData() {
+  try {
+    // Today's entries for chart + stats
+    const midnight = new Date(); midnight.setHours(0,0,0,0);
+    const [current, today] = await Promise.all([
+      fetch(`${NS}/api/v1/entries/current.json`).then(r => r.json()),
+      fetch(`${NS}/api/v1/entries.json?find[dateString][$gte]=${midnight.toISOString()}&count=288`).then(r => r.json())
+    ]);
+
+    // ── HERO ──
+    const entry = Array.isArray(current) ? current[0] : current;
+    const val = sgvToMmol(entry.sgv);
+    const st  = statusFor(val);
+
+    document.getElementById('hero-val').textContent = val.toFixed(1);
+    document.getElementById('hero-trend').textContent = trendArrow(entry.direction);
+    document.getElementById('badge-dot').style.background = st.dot;
+    document.getElementById('badge-text').textContent = st.label;
+    document.getElementById('hero-time').textContent = `Updated ${timeAgo(entry.date)}`;
+
+    // Colour hero by status
+    const heroCard = document.getElementById('hero-card');
+    if (st.cls === 'hi')   heroCard.style.background = '#993C1D';
+    else if (st.cls === 'lo') heroCard.style.background = '#0C447C';
+    else if (st.cls === 'warn') heroCard.style.background = '#85500B';
+    else heroCard.style.background = '#2D6A4F';
+
+    // Delta (last 2 readings)
+    const recent = await fetch(`${NS}/api/v1/entries.json?count=2`).then(r=>r.json());
+    if (recent.length >= 2) {
+      const delta = sgvToMmol(recent[0].sgv) - sgvToMmol(recent[1].sgv);
+      const sign = delta >= 0 ? '+' : '';
+      document.getElementById('hero-delta').textContent = `${sign}${delta.toFixed(1)} mmol/L`;
+    }
+
+    // ── CHART ──
+    drawChart(today);
+
+    // ── STATS ──
+    const mmols = today.map(e => sgvToMmol(e.sgv));
+    const inRange = mmols.filter(v => v >= LOW && v <= HIGH).length;
+    const tir = mmols.length ? Math.round((inRange / mmols.length) * 100) : 0;
+    const avg = mmols.length ? (mmols.reduce((a,b)=>a+b,0)/mmols.length).toFixed(1) : '—';
+
+    document.getElementById('stat-tir').textContent = `${tir}%`;
+    document.getElementById('stat-avg').textContent = avg;
+    document.getElementById('stat-readings').textContent = mmols.length;
+
+    // ── LOG ──
+    const log10 = await fetch(`${NS}/api/v1/entries.json?count=10`).then(r=>r.json());
+    const list = document.getElementById('log-list');
+    list.innerHTML = '';
+
+    log10.forEach((e, i) => {
+      const v   = sgvToMmol(e.sgv);
+      const st2 = statusFor(v);
+      const div = document.createElement('div');
+      div.className = 'log-entry';
+      div.style.animationDelay = `${i * 0.05}s`;
+      div.innerHTML = `
+        <div class="log-icon ${st2.cls}">${iconFor(st2.cls)}</div>
+        <div class="log-info">
+          <div class="log-ctx">${st2.label} · ${trendArrow(e.direction)}</div>
+          <div class="log-time">${fmtTime(e.date)} &nbsp;·&nbsp; ${timeAgo(e.date)}</div>
+        </div>
+        <div class="log-val ${st2.cls}">${v.toFixed(1)}</div>
+      `;
+      list.appendChild(div);
+    });
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById('log-list').innerHTML =
+      `<div class="state-msg">⚠️ Could not load data.<br><small>${err.message}</small></div>`;
+    document.getElementById('hero-val').textContent = '—';
+    document.getElementById('badge-text').textContent = 'Error';
+  }
+}
+
+loadData();
+// Auto-refresh every 5 minutes
+setInterval(loadData, 5 * 60 * 1000);
+</script>
+</body>
+</html>
