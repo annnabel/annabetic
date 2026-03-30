@@ -491,17 +491,35 @@ function drawChart(entries) {
   svg.appendChild(el('circle', { cx:lx, cy:ly, r:'4', fill:'#2D6A4F' }));
 }
 
+async function nsGet(path) {
+  const url = `${NS}${path}`;
+  const r = await fetch(url, { mode: 'cors', headers: { 'Accept': 'application/json' } });
+  if (!r.ok) throw new Error(`HTTP ${r.status} from Nightscout`);
+  const data = await r.json();
+  return data;
+}
+
+function safeArray(data) {
+  if (Array.isArray(data)) return data.filter(e => e && typeof e.sgv === 'number');
+  if (data && typeof data.sgv === 'number') return [data];
+  return [];
+}
+
 async function loadData() {
   try {
     // Today's entries for chart + stats
     const midnight = new Date(); midnight.setHours(0,0,0,0);
-    const [current, today] = await Promise.all([
-      fetch(`${NS}/api/v1/entries/current.json`).then(r => r.json()),
-      fetch(`${NS}/api/v1/entries.json?find[dateString][$gte]=${midnight.toISOString()}&count=288`).then(r => r.json())
+    const [currentRaw, todayRaw] = await Promise.all([
+      nsGet('/api/v1/entries/current.json'),
+      nsGet(`/api/v1/entries.json?find[dateString][$gte]=${midnight.toISOString()}&count=288`)
     ]);
 
+    const today = safeArray(todayRaw);
+
     // ── HERO ──
-    const entry = Array.isArray(current) ? current[0] : current;
+    const currentArr = safeArray(currentRaw);
+    if (!currentArr.length) throw new Error('No current reading returned');
+    const entry = currentArr[0];
     const val = sgvToMmol(entry.sgv);
     const st  = statusFor(val);
 
@@ -519,7 +537,8 @@ async function loadData() {
     else heroCard.style.background = '#2D6A4F';
 
     // Delta (last 2 readings)
-    const recent = await fetch(`${NS}/api/v1/entries.json?count=2`).then(r=>r.json());
+    const recentRaw = await nsGet('/api/v1/entries.json?count=2');
+    const recent = safeArray(recentRaw);
     if (recent.length >= 2) {
       const delta = sgvToMmol(recent[0].sgv) - sgvToMmol(recent[1].sgv);
       const sign = delta >= 0 ? '+' : '';
@@ -540,7 +559,8 @@ async function loadData() {
     document.getElementById('stat-readings').textContent = mmols.length;
 
     // ── LOG ──
-    const log10 = await fetch(`${NS}/api/v1/entries.json?count=10`).then(r=>r.json());
+    const log10Raw = await nsGet('/api/v1/entries.json?count=10');
+    const log10 = safeArray(log10Raw);
     const list = document.getElementById('log-list');
     list.innerHTML = '';
 
