@@ -363,6 +363,7 @@
 
 <script>
 const NS = 'https://annabetic.10be.de';
+const TOKEN = 'htmlwrap-2d9323159618ba54';
 const LOW = 3.9, HIGH = 10;
 const W = 360, H = 110, PAD_X = 28, PAD_Y = 10;
 
@@ -492,7 +493,8 @@ function drawChart(entries) {
 }
 
 async function nsGet(path) {
-  const url = `${NS}${path}`;
+  const sep = path.includes('?') ? '&' : '?';
+  const url = `${NS}${path}${sep}token=${TOKEN}`;
   const r = await fetch(url, { mode: 'cors', headers: { 'Accept': 'application/json' } });
   if (!r.ok) throw new Error(`HTTP ${r.status} from Nightscout`);
   const data = await r.json();
