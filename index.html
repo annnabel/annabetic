@@ -2,1034 +2,393 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Annabetic</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>annaBETIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0E0F0C;
-  --bg2:#151612;
-  --bg3:#1C1D19;
-  --surface:#222420;
-  --surface2:#2A2C27;
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --text:#F0EDE6;
-  --text2:#9A9890;
-  --text3:#5C5B56;
-  --green:#7EC8A0;
-  --green-bg:rgba(126,200,160,0.1);
-  --green-border:rgba(126,200,160,0.2);
-  --amber:#E8A84C;
-  --amber-bg:rgba(232,168,76,0.1);
-  --amber-border:rgba(232,168,76,0.2);
-  --red:#E07070;
-  --red-bg:rgba(224,112,112,0.1);
-  --red-border:rgba(224,112,112,0.2);
-  --blue:#6EA8D8;
-  --blue-bg:rgba(110,168,216,0.1);
-  --blue-border:rgba(110,168,216,0.2);
-  --radius:18px;
-  --radius-sm:12px;
-  --radius-xs:8px;
+  --bg:#1A1A18;--surface:#242422;--surface2:#2E2E2C;--surface3:#383836;
+  --text:#F5F2EB;--text2:#C8C4BA;--text3:#8A8780;
+  --ok:#5BC98A;--ok-bg:#1A2E22;--ok-border:#2A5038;--ok-text:#A8EEC8;
+  --warn:#F0B840;--warn-bg:#2E2210;--warn-border:#5A4018;--warn-text:#FAD880;
+  --hi:#E86060;--hi-bg:#2E1414;--hi-border:#5A2424;--hi-text:#F5A0A0;
+  --lo:#60A8E8;--lo-bg:#10203A;--lo-border:#1C3A60;--lo-text:#A0CCF5;
+  --r:20px;--rsm:14px;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-
-/* ── LAYOUT ── */
-.app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
-.scroll-body{flex:1;overflow-y:auto;padding:0 0 100px;scroll-behavior:smooth}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:18px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.scroll-body{flex:1;overflow-y:auto;padding:0 0 96px}
 .scroll-body::-webkit-scrollbar{display:none}
-
-/* ── NAV ── */
-.nav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:430px;
-  background:rgba(14,15,12,0.92);
-  backdrop-filter:blur(20px);
-  border-top:0.5px solid var(--border);
-  display:flex;padding:10px 8px calc(10px + env(safe-area-inset-bottom));
-  z-index:100;
-}
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:6px 4px;border:none;background:none;cursor:pointer;
-  border-radius:var(--radius-xs);transition:background 0.15s;
-}
-.nav-btn:active{background:var(--surface)}
-.nav-icon{font-size:20px;line-height:1}
-.nav-lbl{font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);transition:color 0.15s}
-.nav-btn.active .nav-lbl{color:var(--green)}
-
-/* ── PAGES ── */
-.page{display:none;animation:fadeIn 0.25s ease both}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── HEADER ── */
-.header{padding:54px 20px 0;display:flex;align-items:flex-start;justify-content:space-between}
-.header-left .sub{font-size:12px;color:var(--text3);font-weight:400;letter-spacing:0.04em;margin-bottom:3px}
-.header-left .title{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--text)}
-.avatar{width:40px;height:40px;border-radius:50%;background:var(--green-bg);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--green);flex-shrink:0;margin-top:2px}
-
-/* ── HERO ── */
-.hero{
-  margin:18px 20px 0;
-  background:var(--surface);
-  border-radius:var(--radius);
-  padding:24px;
-  border:0.5px solid var(--border);
-  position:relative;overflow:hidden;
-}
-.hero-glow{
-  position:absolute;top:-60px;right:-60px;
-  width:180px;height:180px;border-radius:50%;
-  background:var(--green);opacity:0.04;
-  transition:background 0.5s,opacity 0.5s;
-  pointer-events:none;
-}
-.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.hero-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:4px 10px;border-radius:20px;
-  font-size:11px;font-weight:600;letter-spacing:0.02em;
-  background:var(--green-bg);color:var(--green);border:0.5px solid var(--green-border);
-  transition:all 0.4s;
-}
-.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.hero-main{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
-.hero-val{
-  font-family:'DM Mono',monospace;
-  font-size:72px;font-weight:300;
-  letter-spacing:-0.05em;line-height:1;
-  color:var(--text);transition:color 0.4s;
-}
-.hero-unit{font-size:16px;color:var(--text3);font-weight:400}
-.hero-arrow{font-size:32px;line-height:1;margin-left:2px}
-.hero-event{
-  font-size:13px;font-weight:600;color:var(--text2);
-  margin-bottom:18px;letter-spacing:-0.01em;
-}
-.hero-footer{display:flex;align-items:center;justify-content:space-between}
-.hero-time{font-size:11px;color:var(--text3)}
-.hero-delta{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3)}
-
-/* ── CHART ── */
-.chart-card{margin:12px 20px 0;background:var(--surface);border-radius:var(--radius);padding:18px 18px 12px;border:0.5px solid var(--border)}
-.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.card-ttl{font-size:13px;font-weight:700;letter-spacing:-0.01em}
-.chart-range{font-size:10px;color:var(--text3);font-weight:400}
-.chart-wrap{height:100px;position:relative}
-#chart-svg{width:100%;height:100%;overflow:visible}
-
-/* ── INFERENCE CARD ── */
-.inference-card{
-  margin:12px 20px 0;
-  border-radius:var(--radius);
-  padding:18px;
-  border:0.5px solid var(--amber-border);
-  background:var(--amber-bg);
-}
-.inf-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.inf-icon{font-size:18px}
-.inf-title{font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--amber)}
-.inf-text{font-size:14px;font-weight:400;color:var(--text);line-height:1.5;margin-bottom:10px}
-.conf-bar-wrap{display:flex;align-items:center;gap:8px}
-.conf-label{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:0.04em;white-space:nowrap}
-.conf-bar{flex:1;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
-.conf-fill{height:100%;background:var(--amber);border-radius:2px;transition:width 0.6s ease}
-
-/* ── ACTION CARD ── */
-.action-card{
-  margin:12px 20px 0;
-  background:var(--surface);
-  border-radius:var(--radius);
-  padding:18px;
-  border:0.5px solid var(--border);
-}
-.action-ttl{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
-.action-btns{display:flex;flex-direction:column;gap:8px}
-.action-btn{
-  display:flex;align-items:center;gap:12px;
-  background:var(--bg3);border:0.5px solid var(--border2);
-  border-radius:var(--radius-sm);padding:14px 16px;
-  cursor:pointer;transition:all 0.15s;
-  font-family:'Syne',sans-serif;
-}
-.action-btn:active{transform:scale(0.98);background:var(--surface2)}
-.action-btn-icon{font-size:22px;flex-shrink:0}
-.action-btn-body{flex:1;text-align:left}
-.action-btn-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-0.01em}
-.action-btn-sub{font-size:11px;color:var(--text3);margin-top:2px;font-weight:400}
-.action-btn-check{font-size:18px;color:var(--text3)}
-.action-btn.done{border-color:var(--green-border);background:var(--green-bg)}
-.action-btn.done .action-btn-check{color:var(--green)}
-
-/* ── GOAL CARD ── */
-.goal-card{margin:12px 20px 0;background:var(--surface);border-radius:var(--radius);padding:18px;border:0.5px solid var(--border)}
-.goal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
-.goal-text{font-size:15px;font-weight:600;letter-spacing:-0.02em;line-height:1.35;max-width:220px}
-.goal-pct{font-family:'DM Mono',monospace;font-size:28px;font-weight:400;color:var(--green);letter-spacing:-0.04em}
-.tir-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:8px}
-.tir-fill{height:100%;border-radius:3px;background:var(--green);transition:width 1s cubic-bezier(.4,0,.2,1)}
-.tir-labels{display:flex;justify-content:space-between}
-.tir-lbl{font-size:10px;color:var(--text3);font-weight:500}
-
-/* ── SECTIONS ── */
-.section-hdr{display:flex;align-items:center;justify-content:space-between;padding:24px 20px 10px}
-.section-ttl{font-size:13px;font-weight:700;letter-spacing:-0.01em}
-.section-sub{font-size:11px;color:var(--text3);font-weight:400}
-
-/* ── STATS ROW ── */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 20px}
-.stat-card{background:var(--surface);border-radius:var(--radius-sm);padding:14px 10px;border:0.5px solid var(--border);text-align:center}
-.stat-num{font-family:'DM Mono',monospace;font-size:20px;font-weight:400;letter-spacing:-0.03em;line-height:1}
-.stat-lbl{font-size:9px;color:var(--text3);margin-top:4px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase}
-
-/* ── PATTERN PAGE ── */
-.pattern-card{
-  margin:0 20px 12px;
-  background:var(--surface);border-radius:var(--radius);
-  padding:18px;border:0.5px solid var(--border);
-}
-.pattern-card:first-of-type{margin-top:0}
-.pat-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.pat-icon-wrap{width:40px;height:40px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.pat-title{font-size:14px;font-weight:700;letter-spacing:-0.02em}
-.pat-sub{font-size:11px;color:var(--text3);margin-top:2px;font-weight:400}
-.pat-body{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:12px}
-.pat-conf{display:flex;align-items:center;gap:8px}
-.pat-conf-dots{display:flex;gap:3px}
-.pat-dot{width:8px;height:8px;border-radius:50%;background:var(--surface2)}
-.pat-dot.filled{background:var(--green)}
-.pat-conf-lbl{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:0.04em}
-
-/* ── INSIGHTS PAGE ── */
-.insight-card{
-  margin:0 20px 12px;
-  border-radius:var(--radius);padding:18px;
-  border:0.5px solid var(--border);
-  background:var(--surface);
-}
-.ins-tag{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
-.ins-body{font-size:15px;font-weight:600;letter-spacing:-0.02em;line-height:1.4;margin-bottom:10px}
-.ins-detail{font-size:12px;color:var(--text2);line-height:1.5}
-.ins-chart{margin-top:14px;height:50px}
-.ins-chart svg{width:100%;height:100%}
-
-/* ── LOADING ── */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px}
-.spin{width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);border-top-color:var(--green);animation:spin 0.7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.load-txt{font-size:13px;color:var(--text3)}
-
-/* ── ANIMATIONS ── */
-.card-enter{animation:cardIn 0.35s ease both}
-@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.stagger-1{animation-delay:0.05s}
-.stagger-2{animation-delay:0.1s}
-.stagger-3{animation-delay:0.15s}
-.stagger-4{animation-delay:0.2s}
-.stagger-5{animation-delay:0.25s}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(26,26,24,0.96);backdrop-filter:blur(16px);border-top:1.5px solid var(--surface3);display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:100;gap:4px}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px 4px;border:none;background:none;cursor:pointer;border-radius:var(--rsm);min-height:60px;font-family:'Nunito',sans-serif}
+.nb:active,.nb:focus{background:var(--surface2);outline:none}
+.ni{font-size:24px;line-height:1}
+.nl{font-size:13px;font-weight:800;letter-spacing:0.02em;color:var(--text3)}
+.nb.active .nl{color:var(--ok)}
+.page{display:none}
+.page.active{display:block;animation:fu 0.2s ease both}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.pghdr{padding:52px 20px 16px;display:flex;align-items:center;justify-content:space-between}
+.pggreet{font-size:16px;color:var(--text3);font-weight:700;margin-bottom:2px}
+.pgtitle{font-size:30px;font-weight:900;letter-spacing:-0.02em;color:var(--text);line-height:1.1}
+.rbtn{width:48px;height:48px;border-radius:50%;background:var(--surface2);border:1.5px solid var(--surface3);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;flex-shrink:0}
+.rbtn:active{background:var(--surface3)}
+/* HERO */
+.hero{margin:0 16px 14px;border-radius:var(--r);padding:24px 24px 20px;border:2.5px solid var(--ok-border);background:var(--ok-bg);transition:background 0.4s,border-color 0.4s}
+.hero.warn{background:var(--warn-bg);border-color:var(--warn-border)}
+.hero.hi{background:var(--hi-bg);border-color:var(--hi-border)}
+.hero.lo{background:var(--lo-bg);border-color:var(--lo-border)}
+.htop{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.hshape{width:32px;height:32px;border-radius:8px;background:var(--ok);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#000;flex-shrink:0;transition:background 0.4s}
+.hero.warn .hshape{background:var(--warn);border-radius:50%}
+.hero.hi .hshape{background:var(--hi);border-radius:4px;transform:rotate(45deg)}
+.hero.lo .hshape{background:var(--lo);border-radius:50% 50% 50% 0}
+.hword{font-size:20px;font-weight:900;color:var(--ok-text)}
+.hero.warn .hword{color:var(--warn-text)}
+.hero.hi .hword{color:var(--hi-text)}
+.hero.lo .hword{color:var(--lo-text)}
+.grow{display:flex;align-items:flex-end;gap:10px;margin-bottom:8px}
+.gnum{font-size:88px;font-weight:900;line-height:1;letter-spacing:-0.04em;color:var(--text)}
+.gunit{font-size:20px;font-weight:700;color:var(--text3);padding-bottom:14px}
+.garr{font-size:38px;line-height:1;padding-bottom:12px;color:var(--text2)}
+.gdesc{font-size:20px;font-weight:700;color:var(--text);margin-bottom:16px;line-height:1.35}
+.gfoot{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)}
+.gtime{font-size:16px;color:var(--text3);font-weight:700}
+.gdelta{font-size:16px;color:var(--text3);font-weight:700}
+/* STREAK */
+.streak{margin:0 16px 14px;background:var(--ok-bg);border:2px solid var(--ok-border);border-radius:var(--r);padding:18px 20px;display:flex;align-items:center;gap:14px}
+.sicon{font-size:32px;flex-shrink:0}
+.stxt{font-size:17px;font-weight:700;color:var(--ok-text);line-height:1.4}
+/* ACTION */
+.acard{margin:0 16px 14px;background:var(--surface);border-radius:var(--r);padding:20px;border:1.5px solid var(--surface3)}
+.albl{font-size:13px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.alist{display:flex;flex-direction:column;gap:10px}
+.abtn{display:flex;align-items:center;gap:14px;background:var(--surface2);border:1.5px solid var(--surface3);border-radius:var(--rsm);padding:16px 18px;cursor:pointer;min-height:72px;text-align:left;width:100%;font-family:'Nunito',sans-serif;transition:all 0.15s}
+.abtn:active,.abtn:focus{background:var(--surface3);outline:3px solid var(--ok);outline-offset:2px}
+.abtn.done{border-color:var(--ok-border);background:var(--ok-bg)}
+.aico{font-size:28px;flex-shrink:0;line-height:1}
+.atxt{flex:1}
+.atit{font-size:18px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:3px}
+.asub{font-size:15px;color:var(--text2);font-weight:600;line-height:1.3}
+.achk{font-size:24px;color:var(--text3);flex-shrink:0;font-weight:900}
+.abtn.done .achk{color:var(--ok)}
+.abtn.done .atit{color:var(--ok-text)}
+/* CHART */
+.ccrd{margin:0 16px 14px;background:var(--surface);border-radius:var(--r);padding:20px 18px 14px;border:1.5px solid var(--surface3)}
+.chdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ctit{font-size:18px;font-weight:800;color:var(--text)}
+.csub{font-size:14px;color:var(--text3);font-weight:700}
+.cwrap{height:110px}
+#csvg{width:100%;height:100%;overflow:visible}
+/* INFERENCE */
+.icrd{margin:0 16px 14px;border-radius:var(--r);padding:20px;border:1.5px solid var(--warn-border);background:var(--warn-bg)}
+.ihdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.iico{font-size:24px}
+.ilbl{font-size:13px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn)}
+.itxt{font-size:17px;font-weight:600;color:var(--text);line-height:1.55;margin-bottom:14px}
+.crow{display:flex;align-items:center;gap:10px}
+.clbl{font-size:14px;font-weight:700;color:var(--text3);white-space:nowrap}
+.ctrk{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.cfil{height:100%;background:var(--warn);border-radius:3px;transition:width 0.7s ease}
+/* GOAL */
+.gcrd{margin:0 16px 14px;background:var(--surface);border-radius:var(--r);padding:20px;border:1.5px solid var(--surface3)}
+.gtop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px}
+.gtxt{font-size:20px;font-weight:800;color:var(--text);line-height:1.3;flex:1}
+.gpct{font-size:38px;font-weight:900;color:var(--ok);letter-spacing:-0.03em;line-height:1;flex-shrink:0}
+.ttrk{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-bottom:10px}
+.tbar{height:100%;background:var(--ok);border-radius:5px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.tfeet{display:flex;justify-content:space-between}
+.tlbl{font-size:14px;font-weight:700;color:var(--text3)}
+/* STATS */
+.slbl{font-size:13px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);padding:4px 20px 10px}
+.sgrd{margin:0 16px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sbox{background:var(--surface);border-radius:var(--rsm);padding:16px 10px;border:1.5px solid var(--surface3);text-align:center}
+.snum{font-size:24px;font-weight:900;letter-spacing:-0.03em;line-height:1;color:var(--text);margin-bottom:4px}
+.slb2{font-size:13px;font-weight:700;color:var(--text3)}
+/* PATTERN + INSIGHT */
+.pcrd,.inscrd{margin:0 16px 12px;background:var(--surface);border-radius:var(--r);padding:20px;border:1.5px solid var(--surface3)}
+.ptop{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pico{width:52px;height:52px;border-radius:14px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;border:1.5px solid var(--surface3)}
+.ptit{font-size:18px;font-weight:800;color:var(--text);line-height:1.2}
+.psub{font-size:14px;font-weight:600;color:var(--text3);margin-top:2px}
+.pbdy{font-size:17px;font-weight:600;color:var(--text2);line-height:1.55;margin-bottom:14px}
+.cdots{display:flex;gap:5px;align-items:center}
+.cdot{width:10px;height:10px;border-radius:50%;background:var(--surface3)}
+.cdot.on{background:var(--ok)}
+.cdotlbl{font-size:13px;font-weight:700;color:var(--text3);margin-left:6px}
+.itag{display:inline-block;font-size:12px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:10px;background:var(--ok-bg);color:var(--ok-text);border:1px solid var(--ok-border)}
+.ihed{font-size:19px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:8px}
+.ibdy{font-size:16px;font-weight:600;color:var(--text2);line-height:1.55;margin-bottom:12px}
+.ispark{height:52px;margin-top:4px}
+/* EMPTY */
+.empty{padding:48px 24px;text-align:center}
+.eico{font-size:40px;margin-bottom:14px}
+.etxt{font-size:18px;font-weight:700;color:var(--text2);line-height:1.5}
+.spin{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--surface3);border-top-color:var(--ok);animation:sp 0.7s linear infinite;margin:0 auto 14px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.s1{animation:fu 0.3s 0.04s ease both}.s2{animation:fu 0.3s 0.09s ease both}
+.s3{animation:fu 0.3s 0.14s ease both}.s4{animation:fu 0.3s 0.19s ease both}
+.s5{animation:fu 0.3s 0.24s ease both}.cin{animation:fu 0.3s ease both}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="scroll-body" id="scroll-body">
+<div class="scroll-body" id="sbody">
 
-    <!-- ══ HOME PAGE ══ -->
-    <div class="page active" id="page-home">
-      <div class="header">
-        <div class="header-left">
-          <div class="sub" id="greeting">Good morning</div>
-          <div class="title">Anna</div>
-        </div>
-        <div class="avatar">AN</div>
-      </div>
-
-      <!-- Hero -->
-      <div class="hero card-enter stagger-1" id="hero">
-        <div class="hero-glow" id="hero-glow"></div>
-        <div class="hero-top">
-          <div class="hero-label">Glucose now</div>
-          <div class="hero-badge" id="hero-badge"><span class="dot"></span><span id="badge-txt">—</span></div>
-        </div>
-        <div class="hero-main">
-          <div class="hero-val" id="hero-val">—</div>
-          <div class="hero-unit">mmol/L</div>
-          <div class="hero-arrow" id="hero-arrow"></div>
-        </div>
-        <div class="hero-event" id="hero-event">Loading…</div>
-        <div class="hero-footer">
-          <div class="hero-time" id="hero-time"></div>
-          <div class="hero-delta" id="hero-delta"></div>
-        </div>
-      </div>
-
-      <!-- Chart -->
-      <div class="chart-card card-enter stagger-2">
-        <div class="card-hdr">
-          <div class="card-ttl">Today's trend</div>
-          <div class="chart-range">3.9 – 10 mmol/L</div>
-        </div>
-        <div class="chart-wrap">
-          <svg id="chart-svg" viewBox="0 0 360 100" preserveAspectRatio="none"></svg>
-        </div>
-      </div>
-
-      <!-- Inference card -->
-      <div class="inference-card card-enter stagger-3" id="inference-card" style="display:none">
-        <div class="inf-hdr">
-          <div class="inf-icon" id="inf-icon">🔍</div>
-          <div class="inf-title">What's happening</div>
-        </div>
-        <div class="inf-text" id="inf-text">Analysing your pattern…</div>
-        <div class="conf-bar-wrap">
-          <div class="conf-label">Confidence</div>
-          <div class="conf-bar"><div class="conf-fill" id="conf-fill" style="width:0%"></div></div>
-        </div>
-      </div>
-
-      <!-- Action card -->
-      <div class="action-card card-enter stagger-4" id="action-card" style="display:none">
-        <div class="action-ttl">Quick action</div>
-        <div class="action-btns" id="action-btns"></div>
-      </div>
-
-      <!-- Goal card -->
-      <div class="goal-card card-enter stagger-5">
-        <div class="goal-hdr">
-          <div class="goal-text" id="goal-text">Loading goal…</div>
-          <div class="goal-pct" id="goal-pct">—</div>
-        </div>
-        <div class="tir-track"><div class="tir-fill" id="tir-fill" style="width:0%"></div></div>
-        <div class="tir-labels">
-          <div class="tir-lbl">Time in range today</div>
-          <div class="tir-lbl" id="tir-target"></div>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="section-hdr"><div class="section-ttl">Today at a glance</div></div>
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-num" id="s-avg">—</div><div class="stat-lbl">Avg</div></div>
-        <div class="stat-card"><div class="stat-num" id="s-low">—</div><div class="stat-lbl">Low</div></div>
-        <div class="stat-card"><div class="stat-num" id="s-high">—</div><div class="stat-lbl">High</div></div>
-      </div>
-    </div>
-
-    <!-- ══ PATTERNS PAGE ══ -->
-    <div class="page" id="page-patterns">
-      <div class="header">
-        <div class="header-left">
-          <div class="sub">Your body</div>
-          <div class="title">Patterns</div>
-        </div>
-      </div>
-      <div class="section-hdr">
-        <div class="section-ttl">What we've learned</div>
-        <div class="section-sub" id="pat-days">—</div>
-      </div>
-      <div id="pattern-list">
-        <div class="loading"><div class="spin"></div><div class="load-txt">Analysing your data…</div></div>
-      </div>
-    </div>
-
-    <!-- ══ INSIGHTS PAGE ══ -->
-    <div class="page" id="page-insights">
-      <div class="header">
-        <div class="header-left">
-          <div class="sub">Deep dive</div>
-          <div class="title">Insights</div>
-        </div>
-      </div>
-      <div class="section-hdr">
-        <div class="section-ttl">Recent observations</div>
-      </div>
-      <div id="insight-list">
-        <div class="loading"><div class="spin"></div><div class="load-txt">Building insights…</div></div>
-      </div>
-    </div>
-
-  </div><!-- end scroll-body -->
-
-  <!-- Bottom nav -->
-  <nav class="nav">
-    <button class="nav-btn active" data-page="home" onclick="showPage('home',this)">
-      <div class="nav-icon">◉</div>
-      <div class="nav-lbl">Home</div>
-    </button>
-    <button class="nav-btn" data-page="patterns" onclick="showPage('patterns',this)">
-      <div class="nav-icon">◈</div>
-      <div class="nav-lbl">Patterns</div>
-    </button>
-    <button class="nav-btn" data-page="insights" onclick="showPage('insights',this)">
-      <div class="nav-icon">◇</div>
-      <div class="nav-lbl">Insights</div>
-    </button>
-  </nav>
+<div class="page active" id="page-home">
+  <div class="pghdr s1">
+    <div><div class="pggreet" id="greeting">Good morning</div><div class="pgtitle">Nghi</div></div>
+    <div class="rbtn" onclick="loadData()" aria-label="Refresh">&#8635;</div>
+  </div>
+  <div class="hero s2" id="hero">
+    <div class="htop"><div class="hshape" id="hshape">&#10003;</div><div class="hword" id="hword">In range</div></div>
+    <div class="grow"><div class="gnum" id="gnum">&#8212;</div><div class="gunit">mmol/L</div><div class="garr" id="garr"></div></div>
+    <div class="gdesc" id="gdesc">Loading your reading&hellip;</div>
+    <div class="gfoot"><div class="gtime" id="gtime">&#8212;</div><div class="gdelta" id="gdelta"></div></div>
+  </div>
+  <div class="streak s3" id="streak" style="display:none">
+    <div class="sicon">&#127775;</div><div class="stxt" id="stxt">You are in your healthy range. Well done.</div>
+  </div>
+  <div class="acard s3" id="acard" style="display:none">
+    <div class="albl">What to do now</div><div class="alist" id="alist"></div>
+  </div>
+  <div class="ccrd s4">
+    <div class="chdr"><div class="ctit">Today</div><div class="csub">Healthy range: 3.9 &#8211; 10</div></div>
+    <div class="cwrap"><svg id="csvg" viewBox="0 0 360 110" preserveAspectRatio="none"></svg></div>
+  </div>
+  <div class="icrd s4" id="icrd" style="display:none">
+    <div class="ihdr"><div class="iico" id="iico">&#128269;</div><div class="ilbl">What might be happening</div></div>
+    <div class="itxt" id="itxt"></div>
+    <div class="crow"><div class="clbl">How sure we are</div><div class="ctrk"><div class="cfil" id="cfil" style="width:0%"></div></div></div>
+  </div>
+  <div class="gcrd s5">
+    <div class="gtop"><div class="gtxt" id="gtxt">Calculating your goal&hellip;</div><div class="gpct" id="gpct">&#8212;</div></div>
+    <div class="ttrk"><div class="tbar" id="tbar" style="width:0%"></div></div>
+    <div class="tfeet"><div class="tlbl">Time in healthy range today</div><div class="tlbl" id="tgoal"></div></div>
+  </div>
+  <div class="slbl s5">Today at a glance</div>
+  <div class="sgrd s5">
+    <div class="sbox"><div class="snum" id="savg">&#8212;</div><div class="slb2">Average</div></div>
+    <div class="sbox"><div class="snum" id="slow">&#8212;</div><div class="slb2">Lowest</div></div>
+    <div class="sbox"><div class="snum" id="shi">&#8212;</div><div class="slb2">Highest</div></div>
+  </div>
 </div>
 
+<div class="page" id="page-patterns">
+  <div class="pghdr"><div><div class="pggreet">Your body</div><div class="pgtitle">Patterns</div></div></div>
+  <div class="slbl" id="pdlbl">Analysing&hellip;</div>
+  <div id="plist"><div class="empty"><div class="spin"></div><div class="etxt">Looking at your data&hellip;</div></div></div>
+</div>
+
+<div class="page" id="page-insights">
+  <div class="pghdr"><div><div class="pggreet">What we found</div><div class="pgtitle">Insights</div></div></div>
+  <div id="ilist"><div class="empty"><div class="spin"></div><div class="etxt">Building your insights&hellip;</div></div></div>
+</div>
+
+</div>
+<nav class="nav" role="navigation">
+  <button class="nb active" onclick="showPage('home',this)" aria-label="Home"><div class="ni">&#127968;</div><div class="nl">Home</div></button>
+  <button class="nb" onclick="showPage('patterns',this)" aria-label="Patterns"><div class="ni">&#128202;</div><div class="nl">Patterns</div></button>
+  <button class="nb" onclick="showPage('insights',this)" aria-label="Insights"><div class="ni">&#128161;</div><div class="nl">Insights</div></button>
+</nav>
+</div>
 <script>
-// ═══════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════
-const NS    = 'https://annabetic.10be.de';
-const TOKEN = 'htmlwrap-2d9323159618ba54';
-const LOW   = 3.9, HIGH = 10.0;
-const SPIKE_THRESH = 1.7, DROP_THRESH = 1.1;
-const SPIKE_WINDOW = 45 * 60000, DROP_WINDOW = 35 * 60000;
-
-// ═══════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════
-let allEntries = [];
-let actionsDone = {};
-
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
-const toMmol = v => Math.round((v / 18) * 10) / 10;
-const fmt1   = v => v.toFixed(1);
-
-function timeAgo(ms) {
-  const d = Math.round((Date.now() - ms) / 60000);
-  if (d < 1) return 'just now';
-  if (d < 60) return `${d} min ago`;
-  return `${Math.floor(d/60)}h ${d%60}m ago`;
+const NS='https://annabetic.10be.de',TOKEN='htmlwrap-2d9323159618ba54';
+const LOW=3.9,HIGH=10.0,ST=1.7,DT=1.1,SW=45*60000,DW=35*60000;
+let done={};
+const mm=v=>Math.round((v/18)*10)/10,f1=v=>v.toFixed(1);
+function ago(ms){const d=Math.round((Date.now()-ms)/60000);if(d<1)return'Just now';if(d<60)return d+' minutes ago';const h=Math.floor(d/60);return h===1?'1 hour ago':h+' hours ago';}
+function sa(d){if(Array.isArray(d))return d.filter(e=>e&&typeof e.sgv==='number');if(d&&typeof d.sgv==='number')return[d];return[];}
+async function ng(p){const sep=p.includes('?')?'&':'?';const r=await fetch(NS+p+sep+'token='+TOKEN,{mode:'cors',headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
+function arr(d){return{DoubleUp:'&#8648;',SingleUp:'&#8593;',FortyFiveUp:'&#8599;',Flat:'&#8594;',FortyFiveDown:'&#8600;',SingleDown:'&#8595;',DoubleDown:'&#8650;'}[d]||'&#8594;';}
+function sf(v){
+  if(v<3.0)return{c:'lo',w:'Very low',d:'Act now — this is too low',s:'!',col:'var(--lo)'};
+  if(v<LOW)return{c:'lo',w:'Low',d:'Getting low — keep an eye on it',s:'!',col:'var(--lo)'};
+  if(v>16)return{c:'hi',w:'Very high',d:'This needs your attention',s:'&#9650;',col:'var(--hi)'};
+  if(v>HIGH)return{c:'hi',w:'High',d:'Above your healthy range',s:'&#9650;',col:'var(--hi)'};
+  if(v>8.5)return{c:'warn',w:'Borderline',d:'Getting towards the top of range',s:'~',col:'var(--warn)'};
+  return{c:'in',w:'In range',d:'You are in your healthy range',s:'&#10003;',col:'var(--ok)'};
 }
-function fmtTime(ms) {
-  return new Date(ms).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+function de(entries){
+  if(entries.length<3)return{t:'stable',m:'mild',conf:0.3};
+  const r=[...entries].sort((a,b)=>b.date-a.date).slice(0,12),n=r[0];
+  const w4=r.filter(e=>n.date-e.date<=SW),sp=w4.length>=2?mm(n.sgv)-mm(w4[w4.length-1].sgv):0;
+  const w3=r.filter(e=>n.date-e.date<=DW),dr=w3.length>=2?mm(w3[w3.length-1].sgv)-mm(n.sgv):0;
+  if(sp>=ST){const m=sp>=3.5?'high':sp>=2.2?'moderate':'mild';return{t:'spike',m,delta:sp,conf:Math.min(0.95,0.6+sp*0.1)};}
+  if(dr>=DT){const m=dr>=2.5?'high':dr>=1.7?'moderate':'mild';return{t:'drop',m,delta:dr,conf:Math.min(0.95,0.6+dr*0.1)};}
+  const vs=r.map(e=>mm(e.sgv)),mn=vs.reduce((a,b)=>a+b,0)/vs.length,va=vs.reduce((a,b)=>a+(b-mn)**2,0)/vs.length;
+  return{t:'stable',m:'mild',conf:Math.min(0.9,0.6+(1/(va+0.5))*0.3)};
 }
-function fmtHour(ms) {
-  return new Date(ms).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',hour12:true});
+function es(ev,v){
+  if(ev.t==='spike'){if(ev.m==='high')return'Your glucose is rising quickly.';if(ev.m==='moderate')return'Your glucose is rising steadily.';return'Your glucose is rising a little.';}
+  if(ev.t==='drop'){if(ev.m==='high')return'Your glucose is falling fast.';if(ev.m==='moderate')return'Your glucose is coming down.';return'Your glucose is easing down.';}
+  if(v<LOW)return'Your glucose is low. Keep watching.';if(v>HIGH)return'Your glucose is above your healthy range.';return'Your glucose is holding steady.';
 }
-function safeArr(d) {
-  if (Array.isArray(d)) return d.filter(e => e && typeof e.sgv === 'number');
-  if (d && typeof d.sgv === 'number') return [d];
-  return [];
-}
-async function nsGet(path) {
-  const sep = path.includes('?') ? '&' : '?';
-  const r = await fetch(`${NS}${path}${sep}token=${TOKEN}`,{mode:'cors',headers:{'Accept':'application/json'}});
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return r.json();
-}
-
-function trendArrow(dir) {
-  return {DoubleUp:'↑↑',SingleUp:'↑',FortyFiveUp:'↗',Flat:'→',
-    FortyFiveDown:'↘',SingleDown:'↓',DoubleDown:'↓↓'}[dir] || '→';
-}
-function statusFor(v) {
-  if (v < 3.0)  return {cls:'lo',   col:'var(--blue)',  bg:'var(--blue-bg)',  border:'var(--blue-border)',  label:'Very low'};
-  if (v < LOW)  return {cls:'lo',   col:'var(--blue)',  bg:'var(--blue-bg)',  border:'var(--blue-border)',  label:'Low'};
-  if (v > 16)   return {cls:'hi',   col:'var(--red)',   bg:'var(--red-bg)',   border:'var(--red-border)',   label:'Very high'};
-  if (v > HIGH) return {cls:'hi',   col:'var(--red)',   bg:'var(--red-bg)',   border:'var(--red-border)',   label:'High'};
-  if (v > 8.5)  return {cls:'warn', col:'var(--amber)', bg:'var(--amber-bg)', border:'var(--amber-border)', label:'Borderline'};
-  return           {cls:'in',   col:'var(--green)', bg:'var(--green-bg)', border:'var(--green-border)', label:'In range'};
-}
-
-// ═══════════════════════════════════════
-// EVENT DETECTION
-// ═══════════════════════════════════════
-function detectEvent(entries) {
-  if (entries.length < 3) return {type:'stable',magnitude:'mild',confidence:0.3};
-  const recent = [...entries].sort((a,b)=>b.date-a.date).slice(0,12);
-  const now    = recent[0];
-  const oldest = recent[recent.length-1];
-  const span   = now.date - oldest.date;
-  const delta  = toMmol(now.sgv) - toMmol(oldest.sgv);
-  const rate   = delta / (span / 60000); // mmol per min
-
-  // Check spike in 45min window
-  const window45 = recent.filter(e => now.date - e.date <= SPIKE_WINDOW);
-  const spike45  = window45.length >= 2
-    ? toMmol(now.sgv) - toMmol(window45[window45.length-1].sgv)
-    : 0;
-
-  // Check drop in 35min window
-  const window35 = recent.filter(e => now.date - e.date <= DROP_WINDOW);
-  const drop35   = window35.length >= 2
-    ? toMmol(window35[window35.length-1].sgv) - toMmol(now.sgv)
-    : 0;
-
-  if (spike45 >= SPIKE_THRESH || rate >= 0.03) {
-    const mag = spike45 >= 3.5 ? 'high' : spike45 >= 2.2 ? 'moderate' : 'mild';
-    return {type:'spike', magnitude:mag, delta:spike45, rate, confidence:Math.min(0.95, 0.6 + spike45*0.1)};
+function ic2(ev,entries){
+  if(ev.t==='stable')return null;
+  const h=new Date().getHours(),r=[...entries].sort((a,b)=>b.date-a.date);
+  if(ev.t==='spike'&&h>=4&&h<=8&&!r.slice(1,6).some(e=>mm(e.sgv)<LOW))
+    return{i:'&#127749;',c:0.72,tx:'This early morning rise often happens naturally as your body wakes up. It is called the dawn effect and is not caused by anything you did.'};
+  const im=(h>=6&&h<10)||(h>=11&&h<15)||(h>=18&&h<22);
+  if(ev.t==='spike'&&im){
+    const past=entries.filter(e=>{const a=Date.now()-e.date;return a>86400000&&a<7*86400000;});
+    const sim=past.filter(e=>{const hh=new Date(e.date).getHours();return Math.abs(hh-h)<=1&&mm(e.sgv)>HIGH*0.85;});
+    const meal=h<10?'breakfast':h<15?'lunch':'dinner';
+    return{i:'&#127869;',c:Math.min(0.9,0.5+sim.length*0.12),tx:'This looks like a typical '+meal+' response. Your glucose often rises after eating, which is normal. The goal is to keep the rise as gentle as possible.'};
   }
-  if (drop35 >= DROP_THRESH) {
-    const mag = drop35 >= 2.5 ? 'high' : drop35 >= 1.7 ? 'moderate' : 'mild';
-    return {type:'drop', magnitude:mag, delta:drop35, rate, confidence:Math.min(0.95, 0.6 + drop35*0.1)};
-  }
-
-  // Variance check for stability
-  const vals = recent.map(e=>toMmol(e.sgv));
-  const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
-  const variance = vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length;
-  const conf = Math.min(0.95, 0.5 + (1/(variance+0.1))*0.1);
-  return {type:'stable', magnitude:'mild', variance, confidence:conf};
-}
-
-function eventLabel(event, currentVal) {
-  if (event.type === 'spike') {
-    if (event.magnitude === 'high')     return 'Rising sharply';
-    if (event.magnitude === 'moderate') return 'Rising steadily';
-    return 'Rising slightly';
-  }
-  if (event.type === 'drop') {
-    if (event.magnitude === 'high')     return 'Dropping fast';
-    if (event.magnitude === 'moderate') return 'Dropping steadily';
-    return 'Easing down';
-  }
-  if (currentVal < LOW)  return 'Holding low — watch closely';
-  if (currentVal > HIGH) return 'Elevated — staying high';
-  return 'Holding steady ✓';
-}
-
-// ═══════════════════════════════════════
-// MEAL / CAUSE INFERENCE
-// ═══════════════════════════════════════
-function inferCause(event, entries) {
-  if (event.type === 'stable') return null;
-
-  const now    = new Date();
-  const hour   = now.getHours();
-  const recent = [...entries].sort((a,b)=>b.date-a.date);
-
-  // Dawn phenomenon: rise 4–8am, no prior drop
-  if (event.type === 'spike' && hour >= 4 && hour <= 8) {
-    const priorDrop = recent.slice(1,6).some(e => toMmol(e.sgv) < LOW);
-    if (!priorDrop) {
-      return {cause:'Dawn phenomenon', icon:'🌅', confidence:0.72,
-        text:"Your glucose is rising in the early morning — this is likely the dawn phenomenon, where your body naturally releases hormones before waking."};
-    }
-  }
-
-  // Meal windows
-  const mealWindow = (hour>=6&&hour<10)||(hour>=11&&hour<15)||(hour>=18&&hour<22);
-
-  if (event.type === 'spike' && mealWindow) {
-    // Check if similar spike happened same time in prior days
-    const spikeHour = now.getHours();
-    const pastDays = entries.filter(e => {
-      const age = Date.now() - e.date;
-      return age > 86400000 && age < 7*86400000;
-    });
-    const sameTimeSpikes = pastDays.filter(e => {
-      const h = new Date(e.date).getHours();
-      return Math.abs(h - spikeHour) <= 1 && toMmol(e.sgv) > HIGH * 0.85;
-    });
-    const mealConf = Math.min(0.9, 0.5 + sameTimeSpikes.length * 0.12);
-    const mealName = hour<10 ? 'breakfast' : hour<15 ? 'lunch' : 'dinner';
-    return {cause:`Likely ${mealName}`, icon:'🍽️', confidence:mealConf,
-      text:`This rise matches your typical ${mealName} pattern${sameTimeSpikes.length>1?' \u2014 you\u2019ve had similar responses at this time before':''}.`};
-  }
-
-  if (event.type === 'spike' && !mealWindow) {
-    return {cause:'Possible stress spike', icon:'⚡', confidence:0.55,
-      text:"This rise isn\u2019t during a typical meal window \u2014 it could be related to stress, hormones, or low activity. Nothing to worry about, just worth noting."};
-  }
-
-  if (event.type === 'drop') {
-    return {cause:'Natural drop', icon:'📉', confidence:0.65,
-      text:"Your glucose is coming down. This could follow a meal response, exercise, or your body's natural cycle."};
-  }
-
+  if(ev.t==='spike')return{i:'&#9889;',c:0.5,tx:'This rise is not during a typical meal time. It could be stress, a busy period, or just natural variation. Nothing to worry about right now.'};
+  if(ev.t==='drop')return{i:'&#128202;',c:0.65,tx:'Your glucose is coming down. This can happen after a meal response settles, after movement, or naturally during the day.'};
   return null;
 }
-
-// ═══════════════════════════════════════
-// ACTION ENGINE
-// ═══════════════════════════════════════
-function getActions(event, currentVal) {
-  const actions = [];
-
-  if (event.type === 'spike') {
-    if (currentVal > 10.0) {
-      actions.push({id:'walk', icon:'🚶', title:'Take a 10-min walk', sub:'Movement is the fastest natural reducer', impact:'Could reduce by 1–2 mmol/L'});
-      actions.push({id:'water', icon:'💧', title:'Drink a glass of water', sub:'Hydration helps your kidneys process glucose', impact:'Mild but immediate benefit'});
-    } else if (currentVal > 8.5) {
-      actions.push({id:'walk', icon:'🚶', title:'Short walk or stretch', sub:'Even 5 minutes helps flatten the curve', impact:'Could reduce by 0.5–1 mmol/L'});
-      actions.push({id:'water', icon:'💧', title:'Stay hydrated', sub:'Sip water steadily over the next hour', impact:'Supports natural regulation'});
-    }
-  } else if (event.type === 'drop') {
-    if (currentVal < 4.5) {
-      actions.push({id:'carbs', icon:'🍊', title:'Consider fast-acting carbs', sub:'15g — juice, glucose tabs, or fruit', impact:'Should raise by 2–3 mmol/L in 15 min'});
-    } else {
-      actions.push({id:'monitor', icon:'👁️', title:'Keep an eye on it', sub:'You\'re trending down — check again soon', impact:'No action needed yet'});
-    }
-  } else {
-    // Stable + in range
-    if (currentVal >= LOW && currentVal <= HIGH) {
-      actions.push({id:'great', icon:'✓', title:'You\'re in a great range', sub:'Keep doing what you\'re doing', impact:'Goal: stay here as long as possible'});
-    }
+function ga(ev,v){
+  const a=[];
+  if(ev.t==='spike'){
+    if(v>10.0){a.push({id:'walk',i:'&#128694;',t:'Go for a 10-minute walk',s:'Movement is the quickest natural way to lower glucose',imp:'Could reduce your level by 1 to 2 mmol/L'});a.push({id:'water',i:'&#128167;',t:'Drink a glass of water',s:'Staying hydrated helps your body process glucose',imp:'A gentle but immediate benefit'});}
+    else if(v>8.5){a.push({id:'walk',i:'&#128694;',t:'A short walk or stretch',s:'Even 5 minutes helps flatten the rise',imp:'Could reduce by 0.5 to 1 mmol/L'});a.push({id:'water',i:'&#128167;',t:'Have a glass of water',s:'Keep sipping steadily over the next hour',imp:'Supports natural regulation'});}
+  }else if(ev.t==='drop'){
+    if(v<4.5)a.push({id:'carbs',i:'&#127818;',t:'Have some fast-acting carbs',s:'About 15g: a small juice, glucose tablets, or fruit',imp:'Should raise your level in about 15 minutes'});
+    else a.push({id:'watch',i:'&#128065;',t:'Keep an eye on it',s:'You are easing down. Check again in 15 minutes',imp:'No action needed yet'});
   }
-
-  return actions.slice(0, 2);
+  return a.slice(0,2);
 }
-
-// ═══════════════════════════════════════
-// PATTERN ANALYSIS
-// ═══════════════════════════════════════
-function analysePatterns(entries) {
-  const patterns = [];
-  if (entries.length < 24) return patterns;
-
-  // Group by hour
-  const byHour = {};
-  entries.forEach(e => {
-    const h = new Date(e.date).getHours();
-    if (!byHour[h]) byHour[h] = [];
-    byHour[h].push(toMmol(e.sgv));
-  });
-
-  // Find peak hour
-  const hourAvgs = Object.entries(byHour).map(([h,vals])=>({
-    hour:+h, avg:vals.reduce((a,b)=>a+b,0)/vals.length, count:vals.length
-  })).filter(x=>x.count>=2);
-
-  const peakHour = hourAvgs.sort((a,b)=>b.avg-a.avg)[0];
-  if (peakHour && peakHour.avg > HIGH * 0.9) {
-    const h = peakHour.hour;
-    const label = h<12 ? `${h}am` : h===12 ? '12pm' : `${h-12}pm`;
-    patterns.push({
-      icon:'📈', title:`Peak around ${label}`,
-      sub:`Avg ${fmt1(peakHour.avg)} mmol/L`,
-      body:`Your glucose tends to be highest around ${label}. ${h>=6&&h<10?'This often follows breakfast — the first meal of the day has the biggest impact for many people.':h>=11&&h<15?'This is a common lunch response window.':'Consider what\'s happening at this time of day.'}`,
-      confidence: Math.min(1, peakHour.count / 8),
-      dots: Math.round(Math.min(5, peakHour.count / 3))
-    });
-  }
-
-  // Dawn phenomenon detection
-  const dawnVals = (byHour[5]||[]).concat(byHour[6]||[]).concat(byHour[7]||[]);
-  if (dawnVals.length >= 3) {
-    const dawnAvg = dawnVals.reduce((a,b)=>a+b,0)/dawnVals.length;
-    if (dawnAvg > 7.5) {
-      patterns.push({
-        icon:'🌅', title:'Dawn phenomenon detected',
-        sub:`Avg ${fmt1(dawnAvg)} mmol/L at 5–7am`,
-        body:"Your glucose rises in the early morning before you wake. This is caused by hormones like cortisol and growth hormone \u2014 it\u2019s very common and not your fault.",
-        confidence:0.75,
-        dots:4
-      });
-    }
-  }
-
-  // TIR pattern
-  const inRange = entries.filter(e=>toMmol(e.sgv)>=LOW&&toMmol(e.sgv)<=HIGH).length;
-  const tir = Math.round((inRange/entries.length)*100);
-  patterns.push({
-    icon:'🎯', title:`${tir}% time in range`,
-    sub:`Over ${Math.ceil(entries.length*5/60/24)} days of data`,
-    body: tir >= 70 ? "You\u2019re hitting the recommended target of 70%+ in range \u2014 excellent work." : tir >= 50 ? "You\u2019re spending "+tir+"% of your time in range. The recommended target is 70% \u2014 you\u2019re making progress." : "You\u2019re at "+tir+"% time in range. Small consistent changes \u2014 especially around food timing and movement \u2014 can meaningfully improve this.",
-    confidence:0.95,
-    dots:5
-  });
-
-  // Low frequency
-  const lowEvents = entries.filter(e=>toMmol(e.sgv)<LOW).length;
-  const lowPct = Math.round((lowEvents/entries.length)*100);
-  if (lowPct > 3) {
-    patterns.push({
-      icon:'🔵', title:`${lowPct}% time below range`,
-      sub:`${lowEvents} readings under 3.9 mmol/L`,
-      body:"You've had some time below range. Lows often happen after delayed meal response, exercise, or overnight. The app will flag these as they happen.",
-      confidence:0.9,
-      dots:4
-    });
-  }
-
-  return patterns;
+function ap(entries){
+  const ps=[];if(entries.length<24)return ps;
+  const bh={};entries.forEach(e=>{const h=new Date(e.date).getHours();if(!bh[h])bh[h]=[];bh[h].push(mm(e.sgv));});
+  const ha=Object.entries(bh).map(([h,v])=>({h:+h,a:v.reduce((a,b)=>a+b,0)/v.length,n:v.length})).filter(x=>x.n>=2);
+  const pk=ha.sort((a,b)=>b.a-a.a)[0];
+  if(pk&&pk.a>HIGH*0.88){const h=pk.h,lbl=h<12?(h+'am'):h===12?'12pm':((h-12)+'pm');ps.push({i:'&#128200;',ti:'Your glucose peaks around '+lbl,su:'Average '+f1(pk.a)+' mmol/L at this time',bo:'Your levels tend to be highest around '+lbl+'. '+(h>=6&&h<10?'Morning rises often follow breakfast. Eating a lower-carb breakfast or walking afterwards can help.':h>=11&&h<15?'This is common after lunch. A short walk after eating can make a big difference.':'Evening rises can follow dinner. Consider what you eat and how much you move after.'),dt:Math.round(Math.min(5,pk.n/3))});}
+  const dawn=(bh[5]||[]).concat(bh[6]||[]).concat(bh[7]||[]);
+  if(dawn.length>=3){const av=dawn.reduce((a,b)=>a+b,0)/dawn.length;if(av>7.5)ps.push({i:'&#127749;',ti:'Early morning rises detected',su:'Average '+f1(av)+' mmol/L between 5 and 7am',bo:'Your glucose tends to rise in the early morning before you wake. This is called the dawn effect. It is caused by natural hormones and is not something you caused.',dt:4});}
+  const inR=entries.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length,tir=Math.round((inR/entries.length)*100),days=Math.ceil(entries.length*5/60/24);
+  ps.push({i:'&#127919;',ti:tir+'% time in healthy range',su:'Over '+days+' day'+(days!==1?'s':'')+' of data',bo:tir>=70?'You are hitting the recommended target of 70% or more. This is excellent and reflects real effort.':tir>=50?'You are at '+tir+'% time in range. The target is 70%. You are making steady progress.':'You are at '+tir+'% time in range. Small daily changes around meals and movement can improve this over time.',dt:5});
+  const lws=entries.filter(e=>mm(e.sgv)<LOW).length,lp=Math.round((lws/entries.length)*100);
+  if(lp>3)ps.push({i:'&#128309;',ti:lp+'% of readings are low',su:lws+' readings below 3.9 mmol/L',bo:'You have had some readings below your healthy range. Lows can happen after exercise, a delayed meal, or medication timing. The app will always flag these immediately.',dt:4});
+  return ps;
 }
-
-// ═══════════════════════════════════════
-// BUILD INSIGHTS
-// ═══════════════════════════════════════
-function buildInsights(entries) {
-  const insights = [];
-  if (entries.length < 12) return insights;
-
-  const byDay = {};
-  entries.forEach(e => {
-    const day = new Date(e.date).toDateString();
-    if (!byDay[day]) byDay[day] = [];
-    byDay[day].push(e);
-  });
-
-  const days = Object.values(byDay);
-
-  // Best day
-  if (days.length >= 2) {
-    const dayTIRs = days.map(d => {
-      const inR = d.filter(e=>toMmol(e.sgv)>=LOW&&toMmol(e.sgv)<=HIGH).length;
-      return {date:d[0].date, tir:inR/d.length, entries:d};
-    });
-    const best = dayTIRs.sort((a,b)=>b.tir-a.tir)[0];
-    const bestPct = Math.round(best.tir*100);
-    const dayName = new Date(best.date).toLocaleDateString([],{weekday:'long'});
-    insights.push({
-      tag:'Best day', tagColor:'var(--green)',
-      body:`${dayName} was your best day — ${bestPct}% in range`,
-      detail:`Your glucose stayed between 3.9–10 mmol/L for ${bestPct}% of the day. Understanding what made that day different can help you replicate it.`,
-      sparkData: best.entries.sort((a,b)=>a.date-b.date).map(e=>toMmol(e.sgv))
-    });
+function bi(entries){
+  const ins=[];if(entries.length<12)return ins;
+  const bd={};entries.forEach(e=>{const d=new Date(e.date).toDateString();if(!bd[d])bd[d]=[];bd[d].push(e);});
+  const days=Object.values(bd);
+  if(days.length>=2){
+    const rk=days.map(d=>{const ir=d.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length;return{date:d[0].date,tir:ir/d.length,en:d};}).sort((a,b)=>b.tir-a.tir);
+    const best=rk[0],pct=Math.round(best.tir*100),name=new Date(best.date).toLocaleDateString([],{weekday:'long'});
+    ins.push({tag:'Best day',tc:'ok',h:name+' was your best day',b:'You were in your healthy range for '+pct+'% of that day. Think about what felt different on that day.',sp:best.en.sort((a,b)=>a.date-b.date).map(e=>mm(e.sgv))});
   }
-
-  // Overnight stability
-  const overnight = entries.filter(e => {
-    const h = new Date(e.date).getHours();
-    return h >= 22 || h < 6;
-  });
-  if (overnight.length >= 6) {
-    const oVals = overnight.map(e=>toMmol(e.sgv));
-    const oMean = oVals.reduce((a,b)=>a+b,0)/oVals.length;
-    const oVar  = oVals.reduce((a,b)=>a+(b-oMean)**2,0)/oVals.length;
-    const stable = oVar < 0.8;
-    insights.push({
-      tag:'Overnight', tagColor: stable ? 'var(--green)' : 'var(--amber)',
-      body: stable ? 'Your overnight glucose is fairly stable' : 'Some overnight variability detected',
-      detail: stable
-        ? `Overnight average: ${fmt1(oMean)} mmol/L with low variability. Your basal levels look consistent during sleep.`
-        : `Overnight average: ${fmt1(oMean)} mmol/L with moderate swings. This could be from delayed meal response, dawn phenomenon, or overnight insulin patterns.`,
-      sparkData: oVals.slice(0, 20)
-    });
+  const ov=entries.filter(e=>{const h=new Date(e.date).getHours();return h>=22||h<6;});
+  if(ov.length>=6){
+    const vs=ov.map(e=>mm(e.sgv)),mn=vs.reduce((a,b)=>a+b,0)/vs.length,va=vs.reduce((a,b)=>a+(b-mn)**2,0)/vs.length,st=va<0.8;
+    ins.push({tag:st?'Overnight':'Watch: overnight',tc:st?'ok':'warn',h:st?'Your overnight glucose is steady':'Some overnight variation detected',b:st?'Your overnight average is '+f1(mn)+' mmol/L with low variation. Stable nights support better daytime control.':'Your overnight average is '+f1(mn)+' mmol/L with some variation. This could be the dawn effect, a late meal, or medication timing.',sp:vs.slice(0,20)});
   }
-
-  // Most common event time
-  const spikes = [];
-  const sorted = [...entries].sort((a,b)=>a.date-b.date);
-  for (let i=2; i<sorted.length; i++) {
-    const span = sorted[i].date - sorted[i-4<0?0:i-4].date;
-    const delta = toMmol(sorted[i].sgv) - toMmol(sorted[Math.max(0,i-4)].sgv);
-    if (delta >= SPIKE_THRESH && span <= SPIKE_WINDOW*1.5) {
-      spikes.push(new Date(sorted[i].date).getHours());
-    }
-  }
-  if (spikes.length >= 2) {
-    const freq = {};
-    spikes.forEach(h => freq[h]=(freq[h]||0)+1);
-    const topHour = Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
-    const h = +topHour[0];
-    const label = h<12?`${h}am`:h===12?'12pm':`${h-12}pm`;
-    insights.push({
-      tag:'Pattern', tagColor:'var(--amber)',
-      body:`You often spike around ${label}`,
-      detail:`${topHour[1]} rise${topHour[1]>1?'s':''} detected around this time. ${h>=6&&h<=10?'Morning spikes often reflect breakfast response or dawn phenomenon.':h>=11&&h<=15?'This could be your lunchtime response.':'Evening spikes may follow dinner or stress.'}`,
-      sparkData: null
-    });
-  }
-
-  return insights;
+  const spt=[];const so=[...entries].sort((a,b)=>a.date-b.date);
+  for(let i=4;i<so.length;i++){const dl=mm(so[i].sgv)-mm(so[i-4].sgv),sp2=so[i].date-so[i-4].date;if(dl>=ST&&sp2<=SW*1.5)spt.push(new Date(so[i].date).getHours());}
+  if(spt.length>=2){const fr={};spt.forEach(h=>{fr[h]=(fr[h]||0)+1;});const top=Object.entries(fr).sort((a,b)=>b[1]-a[1])[0],h=+top[0],lbl=h<12?(h+'am'):h===12?'12pm':((h-12)+'pm');
+    ins.push({tag:'Pattern spotted',tc:'warn',h:'You often have a rise around '+lbl,b:top[1]+' rises detected around this time. '+(h>=6&&h<=10?'This is likely a breakfast response. A lower-carb breakfast or a short walk after eating can help.':h>=11&&h<=15?'This looks like a lunchtime response. Even 5 minutes of walking after lunch can help.':'Evening rises may follow dinner or stress. Light activity after your evening meal can help.'),sp:null});}
+  return ins;
 }
-
-// ═══════════════════════════════════════
-// DRAW CHART
-// ═══════════════════════════════════════
-function drawChart(entries, svgId='chart-svg', h=100) {
-  const svg = document.getElementById(svgId);
-  if (!svg) return;
-  svg.innerHTML = '';
-  if (!entries.length) return;
-
-  const W=360, H=h, PX=24, PY=8;
-  const sorted = [...entries].sort((a,b)=>a.date-b.date);
-  const times  = sorted.map(e=>e.date);
-  const vals   = sorted.map(e=>toMmol(e.sgv));
-  const tMin=times[0], tMax=times[times.length-1];
-  const vMin=2, vMax=16;
-  const tx = t => PX+((t-tMin)/(tMax-tMin||1))*(W-PX*2);
-  const ty = v => PY+(1-(v-vMin)/(vMax-vMin))*(H-PY*2-12);
-  const ns='http://www.w3.org/2000/svg';
-  const el=(tag,attrs)=>{ const e=document.createElementNS(ns,tag); Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v)); return e; };
-
-  // Range band
-  svg.appendChild(el('rect',{x:PX,y:ty(HIGH),width:W-PX*2,height:ty(LOW)-ty(HIGH),fill:'rgba(126,200,160,0.08)',rx:'2'}));
-
-  // Colour segments by status
-  for (let i=1; i<sorted.length; i++) {
-    const v = vals[i];
-    const col = v<LOW?'#6EA8D8': v>HIGH?'#E07070': v>8.5?'#E8A84C':'#7EC8A0';
-    svg.appendChild(el('line',{x1:tx(times[i-1]),y1:ty(vals[i-1]),x2:tx(times[i]),y2:ty(v),stroke:col,'stroke-width':'1.8','stroke-linecap':'round'}));
-  }
-
-  // Area fill
-  const pts = sorted.map((_,i)=>`${tx(times[i])},${ty(vals[i])}`);
-  const areaD = `M${pts[0]} L${pts.join(' L')} L${tx(tMax)},${H-12} L${tx(tMin)},${H-12} Z`;
-  const defs=el('defs',{}), grad=el('linearGradient',{id:`g${svgId}`,x1:'0',y1:'0',x2:'0',y2:'1'});
-  grad.appendChild(el('stop',{offset:'0%','stop-color':'#7EC8A0','stop-opacity':'0.12'}));
-  grad.appendChild(el('stop',{offset:'100%','stop-color':'#7EC8A0','stop-opacity':'0'}));
-  defs.appendChild(grad); svg.appendChild(defs);
-  svg.appendChild(el('path',{d:areaD,fill:`url(#g${svgId})`}));
-
-  // Time labels
-  for (let i=0; i<=4; i++) {
-    const t=tMin+(i/4)*(tMax-tMin);
-    const lbl=el('text',{x:tx(t),y:H-1,'text-anchor':'middle','font-family':'DM Mono,monospace','font-size':'7',fill:'#5C5B56'});
-    lbl.textContent=new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    svg.appendChild(lbl);
-  }
-
-  // Range labels
-  [{v:LOW,l:'3.9'},{v:HIGH,l:'10'}].forEach(({v,l})=>{
-    const t=el('text',{x:2,y:ty(v)+3,'font-family':'DM Mono,monospace','font-size':'7',fill:'rgba(126,200,160,0.5)'});
-    t.textContent=l; svg.appendChild(t);
-  });
-
-  // Latest dot
-  const lx=tx(tMax), ly=ty(vals[vals.length-1]);
-  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'6',fill:'#7EC8A0',opacity:'0.2'}));
-  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'3',fill:'#7EC8A0'}));
+function drawC(entries){
+  const svg=document.getElementById('csvg');svg.innerHTML='';
+  if(!entries||!entries.length)return;
+  const W=360,H=110,PX=26,PY=8,so=[...entries].sort((a,b)=>a.date-b.date);
+  const ts=so.map(e=>e.date),vs=so.map(e=>mm(e.sgv)),tMn=ts[0],tMx=ts[ts.length-1]||tMn+1;
+  const tx=t=>PX+((t-tMn)/(tMx-tMn))*(W-PX*2),ty=v=>PY+(1-(v-2)/(16-2))*(H-PY*2-14);
+  const ns='http://www.w3.org/2000/svg',el=(t,a,tx2)=>{const e=document.createElementNS(ns,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(tx2!==undefined)e.textContent=tx2;return e;};
+  svg.appendChild(el('rect',{x:PX,y:ty(HIGH),width:W-PX*2,height:ty(LOW)-ty(HIGH),fill:'rgba(91,201,138,0.1)',rx:'3'}));
+  const df=el('defs',{}),gr=el('linearGradient',{id:'cg',x1:'0',y1:'0',x2:'0',y2:'1'});
+  gr.appendChild(el('stop',{offset:'0%','stop-color':'#5BC98A','stop-opacity':'0.15'}));gr.appendChild(el('stop',{offset:'100%','stop-color':'#5BC98A','stop-opacity':'0'}));
+  df.appendChild(gr);svg.appendChild(df);
+  const pts=so.map((_,i)=>tx(ts[i])+','+ty(vs[i]));
+  svg.appendChild(el('path',{d:'M'+pts[0]+' L'+pts.join(' L')+' L'+tx(tMx)+','+(H-14)+' L'+tx(tMn)+','+(H-14)+' Z',fill:'url(#cg)'}));
+  for(let i=1;i<so.length;i++){const v=vs[i],c=v<LOW?'#60A8E8':v>HIGH?'#E86060':v>8.5?'#F0B840':'#5BC98A';svg.appendChild(el('line',{x1:tx(ts[i-1]),y1:ty(vs[i-1]),x2:tx(ts[i]),y2:ty(v),stroke:c,'stroke-width':'2.2','stroke-linecap':'round'}));}
+  svg.appendChild(el('text',{x:2,y:ty(HIGH)+3,'font-family':'Nunito,sans-serif','font-size':'9',fill:'rgba(91,201,138,0.6)'},'10'));
+  svg.appendChild(el('text',{x:2,y:ty(LOW)+3,'font-family':'Nunito,sans-serif','font-size':'9',fill:'rgba(91,201,138,0.6)'},'3.9'));
+  for(let i=0;i<=4;i++){const t=tMn+(i/4)*(tMx-tMn);svg.appendChild(el('text',{x:tx(t),y:H-2,'text-anchor':'middle','font-family':'Nunito,sans-serif','font-size':'9',fill:'#8A8780'},new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})));}
+  const lx=tx(tMx),ly=ty(vs[vs.length-1]);
+  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'7',fill:'#5BC98A',opacity:'0.25'}));svg.appendChild(el('circle',{cx:lx,cy:ly,r:'4',fill:'#5BC98A'}));
 }
-
-function drawSparkline(container, vals) {
-  if (!vals || vals.length < 2) return;
-  const W=320, H=50, PX=4, PY=4;
-  const vMin=Math.min(...vals)-0.5, vMax=Math.max(...vals)+0.5;
-  const tx=i=>PX+(i/(vals.length-1))*(W-PX*2);
-  const ty=v=>PY+(1-(v-vMin)/(vMax-vMin))*(H-PY*2);
-  const ns='http://www.w3.org/2000/svg';
-  const el=(tag,attrs)=>{ const e=document.createElementNS(ns,tag); Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v)); return e; };
-  const svg=document.createElementNS(ns,'svg');
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  svg.setAttribute('preserveAspectRatio','none');
-  svg.style.width='100%'; svg.style.height='50px';
-
-  // Colour segments
-  for (let i=1; i<vals.length; i++) {
-    const v=vals[i];
-    const col=v<LOW?'#6EA8D8':v>HIGH?'#E07070':v>8.5?'#E8A84C':'#7EC8A0';
-    svg.appendChild(el('line',{x1:tx(i-1),y1:ty(vals[i-1]),x2:tx(i),y2:ty(v),stroke:col,'stroke-width':'1.5','stroke-linecap':'round'}));
-  }
-  container.appendChild(svg);
+function drawSp(cid,vals){
+  const c=document.getElementById(cid);if(!c||!vals||vals.length<2)return;
+  const W=320,H=52,PX=4,PY=4,mn=Math.min(...vals)-0.5,mx=Math.max(...vals)+0.5;
+  const tx=i=>PX+(i/(vals.length-1))*(W-PX*2),ty=v=>PY+(1-(v-mn)/(mx-mn))*(H-PY*2);
+  const ns='http://www.w3.org/2000/svg',el=(t,a)=>{const e=document.createElementNS(ns,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));return e;};
+  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','none');svg.style.cssText='width:100%;height:52px;';
+  for(let i=1;i<vals.length;i++){const v=vals[i],col=v<LOW?'#60A8E8':v>HIGH?'#E86060':v>8.5?'#F0B840':'#5BC98A';svg.appendChild(el('line',{x1:tx(i-1),y1:ty(vals[i-1]),x2:tx(i),y2:ty(v),stroke:col,'stroke-width':'1.8','stroke-linecap':'round'}));}
+  c.appendChild(svg);
 }
-
-// ═══════════════════════════════════════
-// RENDER HOME
-// ═══════════════════════════════════════
-function renderHome(current, todayEntries, weekEntries) {
-  const val = toMmol(current.sgv);
-  const st  = statusFor(val);
-  const event = detectEvent([current,...todayEntries]);
-
-  // Hero
-  document.getElementById('hero-val').textContent   = fmt1(val);
-  document.getElementById('hero-val').style.color   = st.col;
-  document.getElementById('hero-arrow').textContent = trendArrow(current.direction);
-  document.getElementById('hero-event').textContent = eventLabel(event, val);
-  document.getElementById('badge-txt').textContent  = st.label;
-  document.getElementById('hero-time').textContent  = `Updated ${timeAgo(current.date)}`;
-
-  const badge = document.getElementById('hero-badge');
-  badge.style.background = st.bg;
-  badge.style.borderColor = st.border;
-  badge.style.color = st.col;
-  badge.querySelector('.dot').style.background = st.col;
-
-  const glow = document.getElementById('hero-glow');
-  glow.style.background = st.col;
-
-  // Delta
-  if (todayEntries.length >= 2) {
-    const prev = todayEntries[1] ? toMmol(todayEntries[1].sgv) : val;
-    const d = val - prev;
-    const sign = d>=0?'+':'';
-    document.getElementById('hero-delta').textContent = `${sign}${fmt1(d)} last reading`;
-  }
-
-  // Chart
-  drawChart(todayEntries.slice(0,288));
-
-  // Inference
-  const inf = inferCause(event, weekEntries);
-  if (inf && event.type !== 'stable') {
-    const ic = document.getElementById('inference-card');
-    ic.style.display = 'block';
-    document.getElementById('inf-icon').textContent = inf.icon;
-    document.getElementById('inf-text').textContent = inf.text;
-    document.getElementById('conf-fill').style.width = Math.round(inf.confidence*100)+'%';
-  }
-
-  // Actions
-  const actions = getActions(event, val);
-  if (actions.length) {
-    const ac = document.getElementById('action-card');
-    ac.style.display = 'block';
-    const btns = document.getElementById('action-btns');
-    btns.innerHTML = '';
-    actions.forEach(a => {
-      const div = document.createElement('div');
-      div.className = 'action-btn' + (actionsDone[a.id] ? ' done' : '');
-      div.innerHTML = `<div class="action-btn-icon">${a.icon}</div>
-        <div class="action-btn-body">
-          <div class="action-btn-title">${a.title}</div>
-          <div class="action-btn-sub">${actionsDone[a.id] ? a.impact : a.sub}</div>
-        </div>
-        <div class="action-btn-check">${actionsDone[a.id] ? '✓' : '›'}</div>`;
-      if (a.id !== 'great') {
-        div.onclick = () => {
-          actionsDone[a.id] = true;
-          renderHome(current, todayEntries, weekEntries);
-        };
-      }
-      btns.appendChild(div);
-    });
-  }
-
-  // Goal + TIR
-  const mmols = todayEntries.map(e=>toMmol(e.sgv));
-  const inR   = mmols.filter(v=>v>=LOW&&v<=HIGH).length;
-  const tir   = mmols.length ? Math.round((inR/mmols.length)*100) : 0;
-  const target = 70;
-
-  // Baseline TIR from yesterday
-  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1); yesterday.setHours(0,0,0,0);
-  const yEnd = new Date(yesterday); yEnd.setHours(23,59,59,999);
-  const yEntries = weekEntries.filter(e=>e.date>=yesterday.getTime()&&e.date<=yEnd.getTime());
-  const yInR  = yEntries.filter(e=>toMmol(e.sgv)>=LOW&&toMmol(e.sgv)<=HIGH).length;
-  const yTIR  = yEntries.length ? Math.round((yInR/yEntries.length)*100) : tir;
-  const goalTIR = Math.min(100, yTIR + 8);
-
-  document.getElementById('goal-pct').textContent    = `${tir}%`;
-  document.getElementById('goal-pct').style.color    = tir >= target ? 'var(--green)' : tir >= 50 ? 'var(--amber)' : 'var(--red)';
-  document.getElementById('tir-fill').style.width    = `${tir}%`;
-  document.getElementById('tir-fill').style.background = tir >= target ? 'var(--green)' : tir >= 50 ? 'var(--amber)' : 'var(--red)';
-  document.getElementById('tir-target').textContent  = `Goal: ${goalTIR}%`;
-  document.getElementById('goal-text').textContent   = tir >= goalTIR
-    ? `Goal reached! Stay in range a little longer`
-    : `Stay in range ${goalTIR - tir}% more today`;
-
-  // Stats
-  if (mmols.length) {
-    const avg = mmols.reduce((a,b)=>a+b,0)/mmols.length;
-    const lo  = Math.min(...mmols);
-    const hi  = Math.max(...mmols);
-    document.getElementById('s-avg').textContent = fmt1(avg);
-    document.getElementById('s-low').textContent = fmt1(lo);
-    document.getElementById('s-high').textContent = fmt1(hi);
-    document.getElementById('s-low').style.color  = lo < LOW  ? 'var(--blue)'  : 'var(--text)';
-    document.getElementById('s-high').style.color = hi > HIGH ? 'var(--red)'   : 'var(--text)';
-  }
+function rHome(cur,tod,wk){
+  const v=mm(cur.sgv),st=sf(v),ev=de([cur,...tod]);
+  const hero=document.getElementById('hero');hero.className='hero s2 '+st.c;
+  document.getElementById('hshape').innerHTML=st.s;document.getElementById('hshape').style.background=st.col;
+  document.getElementById('hword').textContent=st.w;document.getElementById('gnum').textContent=f1(v);
+  document.getElementById('garr').innerHTML=arr(cur.direction);document.getElementById('gdesc').textContent=es(ev,v);
+  document.getElementById('gtime').textContent=ago(cur.date);
+  if(tod.length>=2){const dv=v-mm(tod[1].sgv);document.getElementById('gdelta').textContent=(dv>=0?'+':'')+f1(dv)+' last reading';}
+  const sk=document.getElementById('streak');
+  if(st.c==='in'){sk.style.display='flex';const ic3=tod.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length,hr2=Math.round(ic3*5/60);document.getElementById('stxt').textContent=hr2>1?'You have been in your healthy range for about '+hr2+' hours today. Keep it up!':'You are in your healthy range right now. Well done.';}
+  else sk.style.display='none';
+  const acts=ga(ev,v),ac=document.getElementById('acard');
+  if(acts.length){ac.style.display='block';const al=document.getElementById('alist');al.innerHTML='';
+    acts.forEach(a=>{const b=document.createElement('button');b.className='abtn'+(done[a.id]?' done':'');b.setAttribute('aria-label',a.t);
+      b.innerHTML='<div class="aico">'+a.i+'</div><div class="atxt"><div class="atit">'+a.t+'</div><div class="asub">'+(done[a.id]?a.imp:a.s)+'</div></div><div class="achk">'+(done[a.id]?'&#10003;':'&#8250;')+'</div>';
+      if(a.id!=='watch')b.onclick=()=>{done[a.id]=true;rHome(cur,tod,wk);};
+      al.appendChild(b);});}
+  else ac.style.display='none';
+  drawC(tod.slice(0,288));
+  const inf=ic2(ev,wk),icard=document.getElementById('icrd');
+  if(inf&&ev.t!=='stable'){icard.style.display='block';document.getElementById('iico').innerHTML=inf.i;document.getElementById('itxt').textContent=inf.tx;document.getElementById('cfil').style.width=Math.round(inf.c*100)+'%';}
+  else icard.style.display='none';
+  const ms=tod.map(e=>mm(e.sgv)),inr=ms.filter(v2=>v2>=LOW&&v2<=HIGH).length,tir=ms.length?Math.round((inr/ms.length)*100):0;
+  const ys=new Date();ys.setDate(ys.getDate()-1);ys.setHours(0,0,0,0);const ye=new Date(ys);ye.setHours(23,59,59,999);
+  const yE=wk.filter(e=>e.date>=ys.getTime()&&e.date<=ye.getTime()),yIR=yE.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length;
+  const yT=yE.length?Math.round((yIR/yE.length)*100):tir,goal=Math.min(100,yT+8);
+  const gp=document.getElementById('gpct');gp.textContent=tir+'%';gp.style.color=tir>=70?'var(--ok)':tir>=50?'var(--warn)':'var(--hi)';
+  const tb=document.getElementById('tbar');tb.style.width=tir+'%';tb.style.background=tir>=70?'var(--ok)':tir>=50?'var(--warn)':'var(--hi)';
+  document.getElementById('tgoal').textContent='Goal: '+goal+'%';
+  document.getElementById('gtxt').textContent=tir>=goal?'Goal reached today. Excellent work!':'Stay in range '+(goal-tir)+'% more today';
+  if(ms.length){const av=ms.reduce((a,b)=>a+b,0)/ms.length,lo=Math.min(...ms),hi=Math.max(...ms);
+    document.getElementById('savg').textContent=f1(av);document.getElementById('slow').textContent=f1(lo);document.getElementById('shi').textContent=f1(hi);
+    document.getElementById('slow').style.color=lo<LOW?'var(--lo)':'var(--text)';document.getElementById('shi').style.color=hi>HIGH?'var(--hi)':'var(--text)';}
 }
-
-// ═══════════════════════════════════════
-// RENDER PATTERNS
-// ═══════════════════════════════════════
-function renderPatterns(entries) {
-  const patterns = analysePatterns(entries);
-  const days = Math.ceil(entries.length * 5 / 60 / 24);
-  document.getElementById('pat-days').textContent = `${days} day${days!==1?'s':''} of data`;
-
-  const list = document.getElementById('pattern-list');
-  if (!patterns.length) {
-    list.innerHTML = '<div class="loading"><div class="load-txt">Not enough data yet — check back soon</div></div>';
-    return;
-  }
-  list.innerHTML = '';
-  patterns.forEach((p, i) => {
-    const card = document.createElement('div');
-    card.className = 'pattern-card card-enter';
-    card.style.animationDelay = `${i*0.07}s`;
-    const dots = Array.from({length:5},(_,j)=>`<div class="pat-dot ${j<p.dots?'filled':''}"></div>`).join('');
-    card.innerHTML = `
-      <div class="pat-hdr">
-        <div class="pat-icon-wrap">${p.icon}</div>
-        <div><div class="pat-title">${p.title}</div><div class="pat-sub">${p.sub}</div></div>
-      </div>
-      <div class="pat-body">${p.body}</div>
-      <div class="pat-conf">
-        <div class="pat-conf-dots">${dots}</div>
-        <div class="pat-conf-lbl">Confidence</div>
-      </div>`;
-    list.appendChild(card);
-  });
+function rPat(entries){
+  const list=document.getElementById('plist'),days=Math.ceil(entries.length*5/60/24);
+  document.getElementById('pdlbl').textContent=days+' day'+(days!==1?'s':'')+' of data';
+  const ps=ap(entries);
+  if(!ps.length){list.innerHTML='<div class="empty"><div class="eico">&#128300;</div><div class="etxt">Not enough data yet. Check back in a day or two.</div></div>';return;}
+  list.innerHTML='';
+  ps.forEach((p,i)=>{const c=document.createElement('div');c.className='pcrd cin';c.style.animationDelay=(i*0.07)+'s';
+    const dots=Array.from({length:5},(_,j)=>'<div class="cdot'+(j<p.dt?' on':'')+'"></div>').join('');
+    c.innerHTML='<div class="ptop"><div class="pico">'+p.i+'</div><div><div class="ptit">'+p.ti+'</div><div class="psub">'+p.su+'</div></div></div><div class="pbdy">'+p.bo+'</div><div class="cdots">'+dots+'<span class="cdotlbl">How confident we are</span></div>';
+    list.appendChild(c);});
 }
-
-// ═══════════════════════════════════════
-// RENDER INSIGHTS
-// ═══════════════════════════════════════
-function renderInsights(entries) {
-  const insights = buildInsights(entries);
-  const list = document.getElementById('insight-list');
-  if (!insights.length) {
-    list.innerHTML = '<div class="loading"><div class="load-txt">More data needed for insights</div></div>';
-    return;
-  }
-  list.innerHTML = '';
-  insights.forEach((ins, i) => {
-    const card = document.createElement('div');
-    card.className = 'insight-card card-enter';
-    card.style.animationDelay = `${i*0.07}s`;
-    card.innerHTML = `
-      <div class="ins-tag" style="color:${ins.tagColor}">${ins.tag}</div>
-      <div class="ins-body">${ins.body}</div>
-      <div class="ins-detail">${ins.detail}</div>
-      ${ins.sparkData ? '<div class="ins-chart" id="spark-'+i+'"></div>' : ''}`;
-    list.appendChild(card);
-    if (ins.sparkData) {
-      setTimeout(()=>drawSparkline(document.getElementById('spark-'+i), ins.sparkData), 50);
-    }
-  });
+function rIns(entries){
+  const list=document.getElementById('ilist'),ins=bi(entries);
+  if(!ins.length){list.innerHTML='<div class="empty"><div class="eico">&#128161;</div><div class="etxt">More data needed for insights. Keep going!</div></div>';return;}
+  list.innerHTML='';
+  ins.forEach((n,i)=>{const c=document.createElement('div');c.className='inscrd cin';c.style.animationDelay=(i*0.07)+'s';
+    const ts=n.tc==='warn'?'background:var(--warn-bg);color:var(--warn-text);border-color:var(--warn-border)':'background:var(--ok-bg);color:var(--ok-text);border-color:var(--ok-border)';
+    c.innerHTML='<div class="itag" style="'+ts+'">'+n.tag+'</div><div class="ihed">'+n.h+'</div><div class="ibdy">'+n.b+'</div>'+(n.sp?'<div class="ispark" id="sp'+i+'"></div>':'');
+    list.appendChild(c);if(n.sp)setTimeout(()=>drawSp('sp'+i,n.sp),60);});
 }
-
-// ═══════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════
-function showPage(id, btn) {
+function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  btn.classList.add('active');
-  document.getElementById('scroll-body').scrollTo(0,0);
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');
+  document.getElementById('sbody').scrollTo(0,0);
 }
-
-// ═══════════════════════════════════════
-// GREETING
-// ═══════════════════════════════════════
-const hr = new Date().getHours();
-document.getElementById('greeting').textContent =
-  hr<12 ? 'Good morning' : hr<17 ? 'Good afternoon' : 'Good evening';
-
-// ═══════════════════════════════════════
-// LOAD DATA
-// ═══════════════════════════════════════
-async function loadData() {
-  try {
-    const midnight = new Date(); midnight.setHours(0,0,0,0);
-    const weekAgo  = new Date(Date.now() - 7*86400000);
-
-    const [currentRaw, todayRaw, weekRaw] = await Promise.all([
-      nsGet('/api/v1/entries/current.json'),
-      nsGet(`/api/v1/entries.json?find[dateString][$gte]=${midnight.toISOString()}&count=300`),
-      nsGet(`/api/v1/entries.json?find[dateString][$gte]=${weekAgo.toISOString()}&count=2016`)
-    ]);
-
-    const current     = safeArr(currentRaw)[0];
-    const todayEntries = safeArr(todayRaw).sort((a,b)=>b.date-a.date);
-    const weekEntries  = safeArr(weekRaw).sort((a,b)=>b.date-a.date);
-    allEntries = weekEntries;
-
-    if (!current) throw new Error('No current reading');
-
-    renderHome(current, todayEntries, weekEntries);
-    renderPatterns(weekEntries);
-    renderInsights(weekEntries);
-
-  } catch(err) {
-    console.error(err);
-    document.getElementById('hero-event').textContent = '⚠️ ' + err.message;
-    document.getElementById('badge-txt').textContent  = 'Error';
-  }
+const hr=new Date().getHours();
+document.getElementById('greeting').textContent=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+async function loadData(){
+  try{
+    const mid=new Date();mid.setHours(0,0,0,0);const wa=new Date(Date.now()-7*86400000);
+    const[cr,tr,wr]=await Promise.all([ng('/api/v1/entries/current.json'),ng('/api/v1/entries.json?find[dateString][$gte]='+mid.toISOString()+'&count=300'),ng('/api/v1/entries.json?find[dateString][$gte]='+wa.toISOString()+'&count=2016')]);
+    const cur=sa(cr)[0],tod=sa(tr).sort((a,b)=>b.date-a.date),wk=sa(wr).sort((a,b)=>b.date-a.date);
+    if(!cur)throw new Error('No reading found');
+    rHome(cur,tod,wk);rPat(wk);rIns(wk);
+  }catch(e){console.error(e);document.getElementById('gdesc').textContent='Could not load: '+e.message;document.getElementById('gnum').textContent='?';}
 }
-
-loadData();
-setInterval(loadData, 5 * 60 * 1000);
+loadData();setInterval(loadData,5*60*1000);
 </script>
 </body>
 </html>
