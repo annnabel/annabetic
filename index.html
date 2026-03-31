@@ -20,9 +20,13 @@
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:18px;line-height:1.5}
 .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+@media(min-width:768px){.app{max-width:960px}}
+@media(min-width:1024px){.app{max-width:1040px}}
 .scroll-body{flex:1;overflow-y:auto;padding:0 0 96px}
 .scroll-body::-webkit-scrollbar{display:none}
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(26,26,24,0.96);backdrop-filter:blur(16px);border-top:1.5px solid var(--surface3);display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:100;gap:4px}
+@media(min-width:768px){.nav{max-width:960px}}
+@media(min-width:1024px){.nav{max-width:1040px}}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px 4px;border:none;background:none;cursor:pointer;border-radius:var(--rsm);min-height:60px;font-family:'Nunito',sans-serif}
 .nb:active,.nb:focus{background:var(--surface2);outline:none}
 .ni{font-size:24px;line-height:1}
@@ -81,7 +85,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito
 .chdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .ctit{font-size:18px;font-weight:800;color:var(--text)}
 .csub{font-size:14px;color:var(--text3);font-weight:700}
-.cwrap{height:110px}
+.cwrap{height:180px}
 #csvg{width:100%;height:100%;overflow:visible}
 /* INFERENCE */
 .icrd{margin:0 16px 14px;border-radius:var(--r);padding:20px;border:1.5px solid var(--warn-border);background:var(--warn-bg)}
@@ -132,6 +136,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito
 .s1{animation:fu 0.3s 0.04s ease both}.s2{animation:fu 0.3s 0.09s ease both}
 .s3{animation:fu 0.3s 0.14s ease both}.s4{animation:fu 0.3s 0.19s ease both}
 .s5{animation:fu 0.3s 0.24s ease both}.cin{animation:fu 0.3s ease both}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:0.6}70%{transform:scale(2.2);opacity:0}100%{transform:scale(2.2);opacity:0}}
+.chart-pulse{animation:pulse-ring 1.8s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 2px 2px}
+.cl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cl-item{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--text3)}
+@media(min-width:768px){
+  .home-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:start}
+  .home-l,.home-r{min-width:0}
+  #plist,#ilist{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  #plist .pcrd{margin:0 8px 12px}
+  #ilist .inscrd{margin:0 8px 12px}
+}
 </style>
 </head>
 <body>
@@ -143,6 +159,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito
     <div><div class="pggreet" id="greeting">Good morning</div><div class="pgtitle">Nghi</div></div>
     <div class="rbtn" onclick="loadData()" aria-label="Refresh">&#8635;</div>
   </div>
+  <div class="home-cols">
+  <div class="home-l">
   <div class="hero s2" id="hero">
     <div class="htop"><div class="hshape" id="hshape">&#10003;</div><div class="hword" id="hword">In range</div></div>
     <div class="grow"><div class="gnum" id="gnum">&#8212;</div><div class="gunit">mmol/L</div><div class="garr" id="garr"></div></div>
@@ -155,9 +173,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito
   <div class="acard s3" id="acard" style="display:none">
     <div class="albl">What to do now</div><div class="alist" id="alist"></div>
   </div>
+  </div><!-- /home-l -->
+  <div class="home-r">
   <div class="ccrd s4">
     <div class="chdr"><div class="ctit">Today</div><div class="csub">Healthy range: 3.9 &#8211; 10</div></div>
-    <div class="cwrap"><svg id="csvg" viewBox="0 0 360 110" preserveAspectRatio="none"></svg></div>
+    <div class="cwrap"><svg id="csvg" viewBox="0 0 360 180" preserveAspectRatio="none"></svg></div>
+    <div class="chart-legend">
+      <div class="cl-item"><div class="cl-dot" style="background:#5BC98A"></div>In range</div>
+      <div class="cl-item"><div class="cl-dot" style="background:#F0B840"></div>Borderline</div>
+      <div class="cl-item"><div class="cl-dot" style="background:#E86060"></div>High</div>
+      <div class="cl-item"><div class="cl-dot" style="background:#60A8E8"></div>Low</div>
+    </div>
   </div>
   <div class="icrd s4" id="icrd" style="display:none">
     <div class="ihdr"><div class="iico" id="iico">&#128269;</div><div class="ilbl">What might be happening</div></div>
@@ -175,6 +201,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito
     <div class="sbox"><div class="snum" id="slow">&#8212;</div><div class="slb2">Lowest</div></div>
     <div class="sbox"><div class="snum" id="shi">&#8212;</div><div class="slb2">Highest</div></div>
   </div>
+  </div><!-- /home-r -->
+  </div><!-- /home-cols -->
 </div>
 
 <div class="page" id="page-patterns">
@@ -291,22 +319,34 @@ function bi(entries){
 function drawC(entries){
   const svg=document.getElementById('csvg');svg.innerHTML='';
   if(!entries||!entries.length)return;
-  const W=360,H=110,PX=26,PY=8,so=[...entries].sort((a,b)=>a.date-b.date);
+  const W=360,H=180,PX=40,PY=8,so=[...entries].sort((a,b)=>a.date-b.date);
   const ts=so.map(e=>e.date),vs=so.map(e=>mm(e.sgv)),tMn=ts[0],tMx=ts[ts.length-1]||tMn+1;
-  const tx=t=>PX+((t-tMn)/(tMx-tMn))*(W-PX*2),ty=v=>PY+(1-(v-2)/(16-2))*(H-PY*2-14);
+  const tx=t=>PX+((t-tMn)/(tMx-tMn))*(W-PX*2),ty=v=>PY+(1-(v-2)/(16-2))*(H-PY*2-18);
   const ns='http://www.w3.org/2000/svg',el=(t,a,tx2)=>{const e=document.createElementNS(ns,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(tx2!==undefined)e.textContent=tx2;return e;};
-  svg.appendChild(el('rect',{x:PX,y:ty(HIGH),width:W-PX*2,height:ty(LOW)-ty(HIGH),fill:'rgba(91,201,138,0.1)',rx:'3'}));
+  svg.appendChild(el('rect',{x:PX,y:ty(HIGH),width:W-PX*2,height:ty(LOW)-ty(HIGH),fill:'rgba(91,201,138,0.08)',rx:'3'}));
   const df=el('defs',{}),gr=el('linearGradient',{id:'cg',x1:'0',y1:'0',x2:'0',y2:'1'});
   gr.appendChild(el('stop',{offset:'0%','stop-color':'#5BC98A','stop-opacity':'0.15'}));gr.appendChild(el('stop',{offset:'100%','stop-color':'#5BC98A','stop-opacity':'0'}));
   df.appendChild(gr);svg.appendChild(df);
   const pts=so.map((_,i)=>tx(ts[i])+','+ty(vs[i]));
-  svg.appendChild(el('path',{d:'M'+pts[0]+' L'+pts.join(' L')+' L'+tx(tMx)+','+(H-14)+' L'+tx(tMn)+','+(H-14)+' Z',fill:'url(#cg)'}));
+  svg.appendChild(el('path',{d:'M'+pts[0]+' L'+pts.join(' L')+' L'+tx(tMx)+','+(H-18)+' L'+tx(tMn)+','+(H-18)+' Z',fill:'url(#cg)'}));
   for(let i=1;i<so.length;i++){const v=vs[i],c=v<LOW?'#60A8E8':v>HIGH?'#E86060':v>8.5?'#F0B840':'#5BC98A';svg.appendChild(el('line',{x1:tx(ts[i-1]),y1:ty(vs[i-1]),x2:tx(ts[i]),y2:ty(v),stroke:c,'stroke-width':'2.2','stroke-linecap':'round'}));}
-  svg.appendChild(el('text',{x:2,y:ty(HIGH)+3,'font-family':'Nunito,sans-serif','font-size':'9',fill:'rgba(91,201,138,0.6)'},'10'));
-  svg.appendChild(el('text',{x:2,y:ty(LOW)+3,'font-family':'Nunito,sans-serif','font-size':'9',fill:'rgba(91,201,138,0.6)'},'3.9'));
-  for(let i=0;i<=4;i++){const t=tMn+(i/4)*(tMx-tMn);svg.appendChild(el('text',{x:tx(t),y:H-2,'text-anchor':'middle','font-family':'Nunito,sans-serif','font-size':'9',fill:'#8A8780'},new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})));}
-  const lx=tx(tMx),ly=ty(vs[vs.length-1]);
-  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'7',fill:'#5BC98A',opacity:'0.25'}));svg.appendChild(el('circle',{cx:lx,cy:ly,r:'4',fill:'#5BC98A'}));
+  // Horizontal dashed gridlines + Y-axis labels at 4,6,8,10,12,14
+  [4,6,8,10,12,14].forEach(gv=>{
+    const gy=ty(gv);
+    svg.appendChild(el('line',{x1:PX,y1:gy,x2:W-PX,y2:gy,stroke:'rgba(138,135,128,0.25)','stroke-width':'1','stroke-dasharray':'3,4'}));
+    svg.appendChild(el('text',{x:PX-4,y:gy+4,'text-anchor':'end','font-family':'Nunito,sans-serif','font-size':'10',fill:'rgba(138,135,128,0.7)'},String(gv)));
+  });
+  // Solid range boundary lines
+  svg.appendChild(el('line',{x1:PX,y1:ty(HIGH),x2:W-PX,y2:ty(HIGH),stroke:'rgba(91,201,138,0.55)','stroke-width':'1.5'}));
+  svg.appendChild(el('line',{x1:PX,y1:ty(LOW),x2:W-PX,y2:ty(LOW),stroke:'rgba(96,168,232,0.55)','stroke-width':'1.5'}));
+  // Time labels
+  for(let i=0;i<=4;i++){const t=tMn+(i/4)*(tMx-tMn);svg.appendChild(el('text',{x:tx(t),y:H-4,'text-anchor':'middle','font-family':'Nunito,sans-serif','font-size':'10',fill:'#8A8780'},new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})));}
+  // Current-value dot with pulsing outer ring
+  const lx=tx(tMx),ly=ty(vs[vs.length-1]),lastCol=vs[vs.length-1]<LOW?'#60A8E8':vs[vs.length-1]>HIGH?'#E86060':vs[vs.length-1]>8.5?'#F0B840':'#5BC98A';
+  const ring=el('circle',{cx:lx,cy:ly,r:'7',fill:'none',stroke:lastCol,'stroke-width':'2',opacity:'0.6'});
+  ring.setAttribute('class','chart-pulse');
+  svg.appendChild(ring);
+  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'4',fill:lastCol}));
 }
 function drawSp(cid,vals){
   const c=document.getElementById(cid);if(!c||!vals||vals.length<2)return;
