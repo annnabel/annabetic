@@ -6,147 +6,202 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>annaBETIC</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#1A1A18;--surface:#242422;--surface2:#2E2E2C;--surface3:#383836;
-  --text:#F5F2EB;--text2:#C8C4BA;--text3:#8A8780;
-  --ok:#5BC98A;--ok-bg:#1A2E22;--ok-border:#2A5038;--ok-text:#A8EEC8;
-  --warn:#F0B840;--warn-bg:#2E2210;--warn-border:#5A4018;--warn-text:#FAD880;
-  --hi:#E86060;--hi-bg:#2E1414;--hi-border:#5A2424;--hi-text:#F5A0A0;
-  --lo:#60A8E8;--lo-bg:#10203A;--lo-border:#1C3A60;--lo-text:#A0CCF5;
-  --r:20px;--rsm:14px;
+  --bg:#131412;--surface:#1E1F1C;--surface2:#272825;--surface3:#313330;
+  --text:#F0EDE6;--text2:#B8B4AA;--text3:#767370;
+  --ok:#4EC47A;--ok-bg:#152018;--ok-border:#224030;--ok-text:#90DFB0;
+  --warn:#F0B840;--warn-bg:#261D0A;--warn-border:#4A380E;--warn-text:#FACC60;
+  --hi:#E85858;--hi-bg:#261010;--hi-border:#502020;--hi-text:#F5A0A0;
+  --lo:#5AAAE8;--lo-bg:#0C1A2E;--lo-border:#163050;--lo-text:#90C8F5;
+  --r:18px;--rsm:12px;
+  --nav-h:72px;
+  --max-w:520px;
+  --chart-h:180px;
+  --fs-xs:11px;--fs-sm:13px;--fs-base:15px;--fs-md:17px;--fs-lg:20px;--fs-xl:26px;--fs-hero:84px;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:18px;line-height:1.5}
-.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
-@media(min-width:768px){.app{max-width:960px}}
-@media(min-width:1024px){.app{max-width:1040px}}
-.scroll-body{flex:1;overflow-y:auto;padding:0 0 96px}
+@media(min-width:600px){:root{--chart-h:220px;--fs-hero:100px;--max-w:680px}}
+@media(min-width:900px){:root{--chart-h:260px;--max-w:760px;--fs-hero:116px}}
+
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:var(--fs-base);line-height:1.5}
+.app{max-width:var(--max-w);margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+.scroll-body{flex:1;overflow-y:auto;padding:0 0 calc(var(--nav-h) + 20px)}
 .scroll-body::-webkit-scrollbar{display:none}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(26,26,24,0.96);backdrop-filter:blur(16px);border-top:1.5px solid var(--surface3);display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:100;gap:4px}
-@media(min-width:768px){.nav{max-width:960px}}
-@media(min-width:1024px){.nav{max-width:1040px}}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px 4px;border:none;background:none;cursor:pointer;border-radius:var(--rsm);min-height:60px;font-family:'Nunito',sans-serif}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:var(--max-w);background:rgba(19,20,18,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--surface3);display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:100;gap:4px}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;border:none;background:none;cursor:pointer;border-radius:10px;min-height:56px;font-family:'Nunito',sans-serif;transition:background 0.15s}
 .nb:active,.nb:focus{background:var(--surface2);outline:none}
-.ni{font-size:24px;line-height:1}
-.nl{font-size:13px;font-weight:800;letter-spacing:0.02em;color:var(--text3)}
+.ni{font-size:22px;line-height:1}
+.nl{font-size:var(--fs-xs);font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:var(--text3)}
 .nb.active .nl{color:var(--ok)}
+.nb.active .ni{filter:drop-shadow(0 0 6px rgba(78,196,122,0.4))}
+
+/* PAGES */
 .page{display:none}
-.page.active{display:block;animation:fu 0.2s ease both}
-@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.pghdr{padding:52px 20px 16px;display:flex;align-items:center;justify-content:space-between}
-.pggreet{font-size:16px;color:var(--text3);font-weight:700;margin-bottom:2px}
-.pgtitle{font-size:30px;font-weight:900;letter-spacing:-0.02em;color:var(--text);line-height:1.1}
-.rbtn{width:48px;height:48px;border-radius:50%;background:var(--surface2);border:1.5px solid var(--surface3);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;flex-shrink:0}
+.page.active{display:block;animation:fu 0.22s ease both}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pghdr{padding:52px 20px 12px;display:flex;align-items:flex-start;justify-content:space-between}
+.pggreet{font-size:var(--fs-sm);color:var(--text3);font-weight:700;margin-bottom:3px;letter-spacing:0.04em;text-transform:uppercase}
+.pgtitle{font-size:var(--fs-xl);font-weight:900;letter-spacing:-0.02em;color:var(--text);line-height:1.1}
+.hdr-actions{display:flex;gap:8px;align-items:center}
+.rbtn{width:44px;height:44px;border-radius:50%;background:var(--surface2);border:1px solid var(--surface3);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;flex-shrink:0;transition:background 0.15s,transform 0.3s}
 .rbtn:active{background:var(--surface3)}
+.rbtn.spin-once{animation:sp1 0.5s ease}
+@keyframes sp1{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
 /* HERO */
-.hero{margin:0 16px 14px;border-radius:var(--r);padding:24px 24px 20px;border:2.5px solid var(--ok-border);background:var(--ok-bg);transition:background 0.4s,border-color 0.4s}
+.hero{margin:0 16px 12px;border-radius:var(--r);padding:22px 22px 18px;border:2px solid var(--ok-border);background:var(--ok-bg);transition:background 0.4s,border-color 0.4s;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;border-radius:50%;background:var(--ok);opacity:0.04;pointer-events:none;transition:background 0.4s}
 .hero.warn{background:var(--warn-bg);border-color:var(--warn-border)}
+.hero.warn::before{background:var(--warn)}
 .hero.hi{background:var(--hi-bg);border-color:var(--hi-border)}
+.hero.hi::before{background:var(--hi)}
 .hero.lo{background:var(--lo-bg);border-color:var(--lo-border)}
-.htop{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.hshape{width:32px;height:32px;border-radius:8px;background:var(--ok);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#000;flex-shrink:0;transition:background 0.4s}
-.hero.warn .hshape{background:var(--warn);border-radius:50%}
-.hero.hi .hshape{background:var(--hi);border-radius:4px;transform:rotate(45deg)}
-.hero.lo .hshape{background:var(--lo);border-radius:50% 50% 50% 0}
-.hword{font-size:20px;font-weight:900;color:var(--ok-text)}
+.hero.lo::before{background:var(--lo)}
+.htop{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hbadge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08)}
+.hbadge-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex-shrink:0;transition:background 0.4s}
+.hword{font-size:var(--fs-sm);font-weight:900;letter-spacing:0.06em;text-transform:uppercase;color:var(--ok-text)}
 .hero.warn .hword{color:var(--warn-text)}
 .hero.hi .hword{color:var(--hi-text)}
 .hero.lo .hword{color:var(--lo-text)}
-.grow{display:flex;align-items:flex-end;gap:10px;margin-bottom:8px}
-.gnum{font-size:88px;font-weight:900;line-height:1;letter-spacing:-0.04em;color:var(--text)}
-.gunit{font-size:20px;font-weight:700;color:var(--text3);padding-bottom:14px}
-.garr{font-size:38px;line-height:1;padding-bottom:12px;color:var(--text2)}
-.gdesc{font-size:20px;font-weight:700;color:var(--text);margin-bottom:16px;line-height:1.35}
-.gfoot{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)}
-.gtime{font-size:16px;color:var(--text3);font-weight:700}
-.gdelta{font-size:16px;color:var(--text3);font-weight:700}
+.grow{display:flex;align-items:flex-end;gap:10px;margin-bottom:6px}
+.gnum{font-size:var(--fs-hero);font-weight:900;line-height:1;letter-spacing:-0.04em;color:var(--text);font-variant-numeric:tabular-nums}
+.gunit{font-size:var(--fs-md);font-weight:700;color:var(--text3);padding-bottom:12px}
+.garr{font-size:32px;line-height:1;padding-bottom:10px;color:var(--text2)}
+.gdesc{font-size:var(--fs-md);font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.4}
+.gfoot{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.gtime{font-size:var(--fs-sm);color:var(--text3);font-weight:600;font-family:'DM Mono',monospace}
+.gdelta{font-size:var(--fs-sm);color:var(--text3);font-weight:600;font-family:'DM Mono',monospace}
+
+/* GOAL */
+.gcrd{margin:0 16px 12px;background:var(--surface);border-radius:var(--r);padding:18px 20px;border:1px solid var(--surface3)}
+.gtop{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.gtxt{font-size:var(--fs-base);font-weight:800;color:var(--text);line-height:1.3;flex:1}
+.gpct-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.gpct{font-size:var(--fs-xl);font-weight:900;color:var(--ok);letter-spacing:-0.03em;line-height:1;font-variant-numeric:tabular-nums}
+.gpct-lbl{font-size:var(--fs-xs);font-weight:700;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase}
+.ttrk{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;margin-bottom:8px;position:relative}
+.tbar{height:100%;background:var(--ok);border-radius:4px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.tfeet{display:flex;justify-content:space-between}
+.tlbl{font-size:var(--fs-xs);font-weight:700;color:var(--text3)}
+
 /* STREAK */
-.streak{margin:0 16px 14px;background:var(--ok-bg);border:2px solid var(--ok-border);border-radius:var(--r);padding:18px 20px;display:flex;align-items:center;gap:14px}
-.sicon{font-size:32px;flex-shrink:0}
-.stxt{font-size:17px;font-weight:700;color:var(--ok-text);line-height:1.4}
+.streak{margin:0 16px 12px;background:var(--ok-bg);border:1px solid var(--ok-border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px}
+.sicon{font-size:28px;flex-shrink:0}
+.stxt{font-size:var(--fs-base);font-weight:700;color:var(--ok-text);line-height:1.4}
+
 /* ACTION */
-.acard{margin:0 16px 14px;background:var(--surface);border-radius:var(--r);padding:20px;border:1.5px solid var(--surface3)}
-.albl{font-size:13px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
-.alist{display:flex;flex-direction:column;gap:10px}
-.abtn{display:flex;align-items:center;gap:14px;background:var(--surface2);border:1.5px solid var(--surface3);border-radius:var(--rsm);padding:16px 18px;cursor:pointer;min-height:72px;text-align:left;width:100%;font-family:'Nunito',sans-serif;transition:all 0.15s}
-.abtn:active,.abtn:focus{background:var(--surface3);outline:3px solid var(--ok);outline-offset:2px}
+.acard{margin:0 16px 12px;background:var(--surface);border-radius:var(--r);padding:18px;border:1px solid var(--surface3)}
+.albl{font-size:var(--fs-xs);font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.alist{display:flex;flex-direction:column;gap:8px}
+.abtn{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--surface3);border-radius:var(--rsm);padding:14px 16px;cursor:pointer;min-height:64px;text-align:left;width:100%;font-family:'Nunito',sans-serif;transition:all 0.15s}
+.abtn:active,.abtn:focus{background:var(--surface3);outline:none;transform:scale(0.99)}
 .abtn.done{border-color:var(--ok-border);background:var(--ok-bg)}
-.aico{font-size:28px;flex-shrink:0;line-height:1}
+.aico{font-size:26px;flex-shrink:0;line-height:1}
 .atxt{flex:1}
-.atit{font-size:18px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:3px}
-.asub{font-size:15px;color:var(--text2);font-weight:600;line-height:1.3}
-.achk{font-size:24px;color:var(--text3);flex-shrink:0;font-weight:900}
+.atit{font-size:var(--fs-base);font-weight:800;color:var(--text);line-height:1.2;margin-bottom:2px}
+.asub{font-size:var(--fs-sm);color:var(--text2);font-weight:600;line-height:1.3}
+.achk{font-size:22px;color:var(--text3);flex-shrink:0}
 .abtn.done .achk{color:var(--ok)}
 .abtn.done .atit{color:var(--ok-text)}
+
 /* CHART */
-.ccrd{margin:0 16px 14px;background:var(--surface);border-radius:var(--r);padding:20px 18px 14px;border:1.5px solid var(--surface3)}
-.chdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.ctit{font-size:18px;font-weight:800;color:var(--text)}
-.csub{font-size:14px;color:var(--text3);font-weight:700}
-.cwrap{height:180px}
-#csvg{width:100%;height:100%;overflow:visible}
+.ccrd{margin:0 16px 12px;background:var(--surface);border-radius:var(--r);padding:18px 16px 14px;border:1px solid var(--surface3)}
+.chdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.ctit{font-size:var(--fs-base);font-weight:800;color:var(--text)}
+.clegend{display:flex;align-items:center;gap:10px}
+.cleg-item{display:flex;align-items:center;gap:5px}
+.cleg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cleg-txt{font-size:var(--fs-xs);font-weight:700;color:var(--text3)}
+/* chart sizing — overflow:visible so labels outside the plot area show */
+.cwrap{width:100%;position:relative}
+.cwrap svg{display:block;width:100%;overflow:visible}
+
 /* INFERENCE */
-.icrd{margin:0 16px 14px;border-radius:var(--r);padding:20px;border:1.5px solid var(--warn-border);background:var(--warn-bg)}
-.ihdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.iico{font-size:24px}
-.ilbl{font-size:13px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn)}
-.itxt{font-size:17px;font-weight:600;color:var(--text);line-height:1.55;margin-bottom:14px}
+.icrd{margin:0 16px 12px;border-radius:var(--r);padding:18px 20px;border:1px solid var(--warn-border);background:var(--warn-bg)}
+.ihdr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.iico{font-size:22px}
+.ilbl{font-size:var(--fs-xs);font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--warn)}
+.itxt{font-size:var(--fs-base);font-weight:600;color:var(--text);line-height:1.55;margin-bottom:12px}
 .crow{display:flex;align-items:center;gap:10px}
-.clbl{font-size:14px;font-weight:700;color:var(--text3);white-space:nowrap}
-.ctrk{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.clbl{font-size:var(--fs-xs);font-weight:700;color:var(--text3);white-space:nowrap}
+.ctrk{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
 .cfil{height:100%;background:var(--warn);border-radius:3px;transition:width 0.7s ease}
-/* GOAL */
-.gcrd{margin:0 16px 14px;background:var(--surface);border-radius:var(--r);padding:20px;border:1.5px solid var(--surface3)}
-.gtop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px}
-.gtxt{font-size:20px;font-weight:800;color:var(--text);line-height:1.3;flex:1}
-.gpct{font-size:38px;font-weight:900;color:var(--ok);letter-spacing:-0.03em;line-height:1;flex-shrink:0}
-.ttrk{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-bottom:10px}
-.tbar{height:100%;background:var(--ok);border-radius:5px;transition:width 1s cubic-bezier(.4,0,.2,1)}
-.tfeet{display:flex;justify-content:space-between}
-.tlbl{font-size:14px;font-weight:700;color:var(--text3)}
+
 /* STATS */
-.slbl{font-size:13px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);padding:4px 20px 10px}
-.sgrd{margin:0 16px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.sbox{background:var(--surface);border-radius:var(--rsm);padding:16px 10px;border:1.5px solid var(--surface3);text-align:center}
-.snum{font-size:24px;font-weight:900;letter-spacing:-0.03em;line-height:1;color:var(--text);margin-bottom:4px}
-.slb2{font-size:13px;font-weight:700;color:var(--text3)}
-/* PATTERN + INSIGHT */
-.pcrd,.inscrd{margin:0 16px 12px;background:var(--surface);border-radius:var(--r);padding:20px;border:1.5px solid var(--surface3)}
-.ptop{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.pico{width:52px;height:52px;border-radius:14px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;border:1.5px solid var(--surface3)}
-.ptit{font-size:18px;font-weight:800;color:var(--text);line-height:1.2}
-.psub{font-size:14px;font-weight:600;color:var(--text3);margin-top:2px}
-.pbdy{font-size:17px;font-weight:600;color:var(--text2);line-height:1.55;margin-bottom:14px}
+.slbl{font-size:var(--fs-xs);font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);padding:4px 20px 8px}
+.sgrd{margin:0 16px 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sbox{background:var(--surface);border-radius:var(--rsm);padding:14px 10px;border:1px solid var(--surface3);text-align:center}
+.snum{font-size:var(--fs-lg);font-weight:900;letter-spacing:-0.03em;line-height:1;color:var(--text);margin-bottom:4px;font-variant-numeric:tabular-nums}
+.slb2{font-size:var(--fs-xs);font-weight:700;color:var(--text3)}
+
+/* PATTERN / INSIGHT */
+.pcrd,.inscrd{margin:0 16px 10px;background:var(--surface);border-radius:var(--r);padding:18px 20px;border:1px solid var(--surface3)}
+.ptop{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.pico{width:48px;height:48px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;border:1px solid var(--surface3)}
+.ptit{font-size:var(--fs-base);font-weight:800;color:var(--text);line-height:1.2}
+.psub{font-size:var(--fs-sm);font-weight:600;color:var(--text3);margin-top:2px}
+.pbdy{font-size:var(--fs-sm);font-weight:600;color:var(--text2);line-height:1.6;margin-bottom:12px}
 .cdots{display:flex;gap:5px;align-items:center}
-.cdot{width:10px;height:10px;border-radius:50%;background:var(--surface3)}
+.cdot{width:8px;height:8px;border-radius:50%;background:var(--surface3)}
 .cdot.on{background:var(--ok)}
-.cdotlbl{font-size:13px;font-weight:700;color:var(--text3);margin-left:6px}
-.itag{display:inline-block;font-size:12px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:10px;background:var(--ok-bg);color:var(--ok-text);border:1px solid var(--ok-border)}
-.ihed{font-size:19px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:8px}
-.ibdy{font-size:16px;font-weight:600;color:var(--text2);line-height:1.55;margin-bottom:12px}
-.ispark{height:52px;margin-top:4px}
-/* EMPTY */
+.cdotlbl{font-size:var(--fs-xs);font-weight:700;color:var(--text3);margin-left:6px}
+.itag{display:inline-block;font-size:var(--fs-xs);font-weight:900;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:8px;background:var(--ok-bg);color:var(--ok-text);border:1px solid var(--ok-border)}
+.ihed{font-size:var(--fs-md);font-weight:800;color:var(--text);line-height:1.3;margin-bottom:6px}
+.ibdy{font-size:var(--fs-sm);font-weight:600;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.ispark{height:48px;margin-top:4px}
+
+/* SETTINGS SHEET */
+.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.settings-overlay.open{opacity:1;pointer-events:all}
+.settings-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:var(--max-w);background:var(--surface);border-radius:24px 24px 0 0;border:1px solid var(--surface3);border-bottom:none;z-index:201;transition:transform 0.35s cubic-bezier(.4,0,.2,1);max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.settings-sheet.open{transform:translateX(-50%) translateY(0)}
+.sheet-handle{width:40px;height:4px;background:var(--surface3);border-radius:2px;margin:14px auto 0;flex-shrink:0}
+.sheet-hdr{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--surface3)}
+.sheet-title{font-size:var(--fs-lg);font-weight:900;letter-spacing:-0.02em}
+.sheet-close{width:36px;height:36px;border-radius:50%;background:var(--surface2);border:1px solid var(--surface3);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--text2)}
+.sheet-body{overflow-y:auto;padding:16px 20px calc(32px + env(safe-area-inset-bottom));flex:1}
+.sheet-body::-webkit-scrollbar{display:none}
+.sgrp{margin-bottom:22px}
+.sgrp-lbl{font-size:var(--fs-xs);font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface2);border-radius:var(--rsm);border:1px solid var(--surface3);margin-bottom:7px;gap:12px}
+.srow-txt{flex:1}
+.srow-name{font-size:var(--fs-base);font-weight:700;color:var(--text)}
+.srow-desc{font-size:var(--fs-sm);color:var(--text3);font-weight:600;margin-top:2px;line-height:1.4}
+.snum-input{width:78px;background:var(--surface3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 10px;font-family:'DM Mono',monospace;font-size:var(--fs-sm);font-weight:500;color:var(--text);text-align:right;-webkit-appearance:none;appearance:none}
+.snum-input:focus{outline:none;border-color:var(--ok)}
+.stoggle{position:relative;width:48px;height:28px;flex-shrink:0;cursor:pointer}
+.stoggle input{opacity:0;width:0;height:0;position:absolute}
+.stoggle-track{position:absolute;inset:0;background:var(--surface3);border-radius:14px;transition:background 0.2s;border:1px solid rgba(255,255,255,0.08)}
+.stoggle input:checked+.stoggle-track{background:var(--ok)}
+.stoggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform 0.2s;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.3)}
+.stoggle input:checked~.stoggle-thumb{transform:translateX(20px)}
+.reset-btn{width:100%;padding:14px;background:var(--surface2);border:1px solid var(--surface3);border-radius:var(--rsm);font-family:'Nunito',sans-serif;font-size:var(--fs-base);font-weight:800;color:var(--text3);cursor:pointer;transition:all 0.15s;text-align:center}
+.reset-btn:active{background:var(--surface3);color:var(--text)}
+
+/* EMPTY / LOADER */
 .empty{padding:48px 24px;text-align:center}
-.eico{font-size:40px;margin-bottom:14px}
-.etxt{font-size:18px;font-weight:700;color:var(--text2);line-height:1.5}
-.spin{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--surface3);border-top-color:var(--ok);animation:sp 0.7s linear infinite;margin:0 auto 14px}
+.eico{font-size:36px;margin-bottom:12px}
+.etxt{font-size:var(--fs-base);font-weight:700;color:var(--text2);line-height:1.5}
+.spin{width:26px;height:26px;border-radius:50%;border:2px solid var(--surface3);border-top-color:var(--ok);animation:sp 0.7s linear infinite;margin:0 auto 12px}
 @keyframes sp{to{transform:rotate(360deg)}}
-.s1{animation:fu 0.3s 0.04s ease both}.s2{animation:fu 0.3s 0.09s ease both}
-.s3{animation:fu 0.3s 0.14s ease both}.s4{animation:fu 0.3s 0.19s ease both}
-.s5{animation:fu 0.3s 0.24s ease both}.cin{animation:fu 0.3s ease both}
-@keyframes pulse-ring{0%{transform:scale(1);opacity:0.6}70%{transform:scale(2.2);opacity:0}100%{transform:scale(2.2);opacity:0}}
-.chart-pulse{animation:pulse-ring 1.8s ease-out infinite;transform-box:fill-box;transform-origin:center}
-.chart-legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 2px 2px}
-.cl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.cl-item{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--text3)}
-@media(min-width:768px){
-  .home-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:start}
-  .home-l,.home-r{min-width:0}
-  #plist,#ilist{display:grid;grid-template-columns:1fr 1fr;gap:0}
-  #plist .pcrd{margin:0 8px 12px}
-  #ilist .inscrd{margin:0 8px 12px}
+
+/* STAGGER */
+.s1{animation:fu 0.3s 0.04s ease both}.s2{animation:fu 0.3s 0.08s ease both}
+.s3{animation:fu 0.3s 0.13s ease both}.s4{animation:fu 0.3s 0.18s ease both}
+.s5{animation:fu 0.3s 0.23s ease both}.s6{animation:fu 0.3s 0.28s ease both}
+.cin{animation:fu 0.3s ease both}
+
+/* DESKTOP */
+@media(min-width:720px){
+  .pghdr{padding:48px 24px 16px}
+  .hero,.ccrd,.gcrd,.acard,.streak,.icrd,.pcrd,.inscrd{margin-left:20px;margin-right:20px}
+  .sgrd{margin-left:20px;margin-right:20px}
+  .slbl{padding-left:24px;padding-right:24px}
 }
 </style>
 </head>
@@ -154,242 +209,480 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Nunito
 <div class="app">
 <div class="scroll-body" id="sbody">
 
+<!-- HOME -->
 <div class="page active" id="page-home">
   <div class="pghdr s1">
     <div><div class="pggreet" id="greeting">Good morning</div><div class="pgtitle">Nghi</div></div>
-    <div class="rbtn" onclick="loadData()" aria-label="Refresh">&#8635;</div>
+    <div class="hdr-actions">
+      <div class="rbtn" id="refresh-btn" onclick="triggerRefresh()" aria-label="Refresh">&#8635;</div>
+      <div class="rbtn" onclick="openSettings()" aria-label="Settings">&#9881;</div>
+    </div>
   </div>
-  <div class="home-cols">
-  <div class="home-l">
+
+  <!-- 1. Current reading -->
   <div class="hero s2" id="hero">
-    <div class="htop"><div class="hshape" id="hshape">&#10003;</div><div class="hword" id="hword">In range</div></div>
+    <div class="htop">
+      <div class="hbadge"><div class="hbadge-dot" id="hbadge-dot"></div><div class="hword" id="hword">In range</div></div>
+    </div>
     <div class="grow"><div class="gnum" id="gnum">&#8212;</div><div class="gunit">mmol/L</div><div class="garr" id="garr"></div></div>
     <div class="gdesc" id="gdesc">Loading your reading&hellip;</div>
     <div class="gfoot"><div class="gtime" id="gtime">&#8212;</div><div class="gdelta" id="gdelta"></div></div>
   </div>
-  <div class="streak s3" id="streak" style="display:none">
-    <div class="sicon">&#127775;</div><div class="stxt" id="stxt">You are in your healthy range. Well done.</div>
-  </div>
-  <div class="acard s3" id="acard" style="display:none">
-    <div class="albl">What to do now</div><div class="alist" id="alist"></div>
-  </div>
-  </div><!-- /home-l -->
-  <div class="home-r">
-  <div class="ccrd s4">
-    <div class="chdr"><div class="ctit">Today</div><div class="csub">Healthy range: 3.9 &#8211; 10</div></div>
-    <div class="cwrap"><svg id="csvg" viewBox="0 0 360 180" preserveAspectRatio="none"></svg></div>
-    <div class="chart-legend">
-      <div class="cl-item"><div class="cl-dot" style="background:#5BC98A"></div>In range</div>
-      <div class="cl-item"><div class="cl-dot" style="background:#F0B840"></div>Borderline</div>
-      <div class="cl-item"><div class="cl-dot" style="background:#E86060"></div>High</div>
-      <div class="cl-item"><div class="cl-dot" style="background:#60A8E8"></div>Low</div>
+
+  <!-- 2. Goal progress (self-efficacy: show progress immediately) -->
+  <div class="gcrd s3">
+    <div class="gtop">
+      <div class="gtxt" id="gtxt">Calculating your goal&hellip;</div>
+      <div class="gpct-wrap"><div class="gpct" id="gpct">&#8212;</div><div class="gpct-lbl">in range</div></div>
     </div>
-  </div>
-  <div class="icrd s4" id="icrd" style="display:none">
-    <div class="ihdr"><div class="iico" id="iico">&#128269;</div><div class="ilbl">What might be happening</div></div>
-    <div class="itxt" id="itxt"></div>
-    <div class="crow"><div class="clbl">How sure we are</div><div class="ctrk"><div class="cfil" id="cfil" style="width:0%"></div></div></div>
-  </div>
-  <div class="gcrd s5">
-    <div class="gtop"><div class="gtxt" id="gtxt">Calculating your goal&hellip;</div><div class="gpct" id="gpct">&#8212;</div></div>
     <div class="ttrk"><div class="tbar" id="tbar" style="width:0%"></div></div>
     <div class="tfeet"><div class="tlbl">Time in healthy range today</div><div class="tlbl" id="tgoal"></div></div>
   </div>
+
+  <!-- 3. Positive reinforcement streak -->
+  <div class="streak s3" id="streak" style="display:none">
+    <div class="sicon">&#127775;</div><div class="stxt" id="stxt">You are in your healthy range.</div>
+  </div>
+
+  <!-- 4. Contextual actions (implementation intention) -->
+  <div class="acard s4" id="acard" style="display:none">
+    <div class="albl">Your next move</div><div class="alist" id="alist"></div>
+  </div>
+
+  <!-- 5. Chart (context for reading, improved readability) -->
+  <div class="ccrd s4">
+    <div class="chdr">
+      <div class="ctit">Today</div>
+      <div class="clegend">
+        <div class="cleg-item"><div class="cleg-dot" style="background:var(--lo)"></div><div class="cleg-txt">Low</div></div>
+        <div class="cleg-item"><div class="cleg-dot" style="background:var(--ok)"></div><div class="cleg-txt">In range</div></div>
+        <div class="cleg-item"><div class="cleg-dot" style="background:var(--warn)"></div><div class="cleg-txt">High</div></div>
+      </div>
+    </div>
+    <div class="cwrap" id="cwrap"></div>
+  </div>
+
+  <!-- 6. Inference / explanation -->
+  <div class="icrd s5" id="icrd" style="display:none">
+    <div class="ihdr"><div class="iico" id="iico">&#128269;</div><div class="ilbl">What might be happening</div></div>
+    <div class="itxt" id="itxt"></div>
+    <div class="crow"><div class="clbl">Confidence</div><div class="ctrk"><div class="cfil" id="cfil" style="width:0%"></div></div></div>
+  </div>
+
+  <!-- 7. Stats -->
   <div class="slbl s5">Today at a glance</div>
   <div class="sgrd s5">
     <div class="sbox"><div class="snum" id="savg">&#8212;</div><div class="slb2">Average</div></div>
     <div class="sbox"><div class="snum" id="slow">&#8212;</div><div class="slb2">Lowest</div></div>
     <div class="sbox"><div class="snum" id="shi">&#8212;</div><div class="slb2">Highest</div></div>
   </div>
-  </div><!-- /home-r -->
-  </div><!-- /home-cols -->
 </div>
 
+<!-- PATTERNS -->
 <div class="page" id="page-patterns">
   <div class="pghdr"><div><div class="pggreet">Your body</div><div class="pgtitle">Patterns</div></div></div>
   <div class="slbl" id="pdlbl">Analysing&hellip;</div>
   <div id="plist"><div class="empty"><div class="spin"></div><div class="etxt">Looking at your data&hellip;</div></div></div>
 </div>
 
+<!-- INSIGHTS -->
 <div class="page" id="page-insights">
   <div class="pghdr"><div><div class="pggreet">What we found</div><div class="pgtitle">Insights</div></div></div>
   <div id="ilist"><div class="empty"><div class="spin"></div><div class="etxt">Building your insights&hellip;</div></div></div>
 </div>
 
-</div>
+</div><!-- /scroll-body -->
+
 <nav class="nav" role="navigation">
   <button class="nb active" onclick="showPage('home',this)" aria-label="Home"><div class="ni">&#127968;</div><div class="nl">Home</div></button>
   <button class="nb" onclick="showPage('patterns',this)" aria-label="Patterns"><div class="ni">&#128202;</div><div class="nl">Patterns</div></button>
   <button class="nb" onclick="showPage('insights',this)" aria-label="Insights"><div class="ni">&#128161;</div><div class="nl">Insights</div></button>
 </nav>
+
+<!-- SETTINGS SHEET -->
+<div class="settings-overlay" id="settings-overlay" onclick="closeSettings()"></div>
+<div class="settings-sheet" id="settings-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-hdr">
+    <div class="sheet-title">Settings</div>
+    <div class="sheet-close" onclick="closeSettings()">&#10005;</div>
+  </div>
+  <div class="sheet-body">
+    <div class="sgrp">
+      <div class="sgrp-lbl">Glucose thresholds</div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Low threshold</div><div class="srow-desc">Below this is flagged as low (mmol/L)</div></div>
+        <input class="snum-input" id="s-low" type="number" step="0.1" min="2" max="5" value="3.9">
+      </div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">High threshold</div><div class="srow-desc">Above this is flagged as high (mmol/L)</div></div>
+        <input class="snum-input" id="s-high" type="number" step="0.1" min="7" max="15" value="10.0">
+      </div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Borderline threshold</div><div class="srow-desc">Above this triggers a borderline warning (mmol/L)</div></div>
+        <input class="snum-input" id="s-border" type="number" step="0.1" min="6" max="12" value="8.5">
+      </div>
+    </div>
+    <div class="sgrp">
+      <div class="sgrp-lbl">Trend detection</div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Spike threshold</div><div class="srow-desc">Rise in mmol/L to call a spike</div></div>
+        <input class="snum-input" id="s-st" type="number" step="0.1" min="0.5" max="5" value="1.7">
+      </div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Drop threshold</div><div class="srow-desc">Fall in mmol/L to call a drop</div></div>
+        <input class="snum-input" id="s-dt" type="number" step="0.1" min="0.5" max="5" value="1.1">
+      </div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Spike window</div><div class="srow-desc">Minutes to look back for a spike</div></div>
+        <input class="snum-input" id="s-sw" type="number" step="5" min="15" max="90" value="45">
+      </div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Drop window</div><div class="srow-desc">Minutes to look back for a drop</div></div>
+        <input class="snum-input" id="s-dw" type="number" step="5" min="15" max="90" value="35">
+      </div>
+    </div>
+    <div class="sgrp">
+      <div class="sgrp-lbl">Chart display</div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Grid lines</div><div class="srow-desc">Horizontal guides on the glucose chart</div></div>
+        <label class="stoggle"><input type="checkbox" id="s-gridlines" checked><div class="stoggle-track"></div><div class="stoggle-thumb"></div></label>
+      </div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Range band</div><div class="srow-desc">Green fill showing healthy range on chart</div></div>
+        <label class="stoggle"><input type="checkbox" id="s-rangeband" checked><div class="stoggle-track"></div><div class="stoggle-thumb"></div></label>
+      </div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Inference card</div><div class="srow-desc">Contextual explanation of what might be happening</div></div>
+        <label class="stoggle"><input type="checkbox" id="s-inference" checked><div class="stoggle-track"></div><div class="stoggle-thumb"></div></label>
+      </div>
+    </div>
+    <div class="sgrp">
+      <div class="sgrp-lbl">Goal</div>
+      <div class="srow">
+        <div class="srow-txt"><div class="srow-name">Daily goal boost</div><div class="srow-desc">% added to yesterday's TIR to set today's goal</div></div>
+        <input class="snum-input" id="s-goalboost" type="number" step="1" min="0" max="20" value="8">
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetSettings()">Reset to defaults</button>
+  </div>
 </div>
+
+</div><!-- /app -->
+
 <script>
+/* ── CONFIG ── */
+const DEF={LOW:3.9,HIGH:10.0,BORDER:8.5,ST:1.7,DT:1.1,SW:45,DW:35,GRIDLINES:true,RANGEBAND:true,INFERENCE:true,GOALBOOST:8};
+let CFG={...DEF};
 const NS='https://annabetic.10be.de',TOKEN='htmlwrap-2d9323159618ba54';
-const LOW=3.9,HIGH=10.0,ST=1.7,DT=1.1,SW=45*60000,DW=35*60000;
-let done={};
+let done={},lastData=null;
 const mm=v=>Math.round((v/18)*10)/10,f1=v=>v.toFixed(1);
-function ago(ms){const d=Math.round((Date.now()-ms)/60000);if(d<1)return'Just now';if(d<60)return d+' minutes ago';const h=Math.floor(d/60);return h===1?'1 hour ago':h+' hours ago';}
+
+/* ── SETTINGS ── */
+function readSettings(){
+  CFG.LOW=parseFloat(document.getElementById('s-low').value)||DEF.LOW;
+  CFG.HIGH=parseFloat(document.getElementById('s-high').value)||DEF.HIGH;
+  CFG.BORDER=parseFloat(document.getElementById('s-border').value)||DEF.BORDER;
+  CFG.ST=parseFloat(document.getElementById('s-st').value)||DEF.ST;
+  CFG.DT=parseFloat(document.getElementById('s-dt').value)||DEF.DT;
+  CFG.SW=(parseFloat(document.getElementById('s-sw').value)||DEF.SW)*60000;
+  CFG.DW=(parseFloat(document.getElementById('s-dw').value)||DEF.DW)*60000;
+  CFG.GRIDLINES=document.getElementById('s-gridlines').checked;
+  CFG.RANGEBAND=document.getElementById('s-rangeband').checked;
+  CFG.INFERENCE=document.getElementById('s-inference').checked;
+  CFG.GOALBOOST=parseInt(document.getElementById('s-goalboost').value)||DEF.GOALBOOST;
+}
+function resetSettings(){
+  document.getElementById('s-low').value=DEF.LOW;
+  document.getElementById('s-high').value=DEF.HIGH;
+  document.getElementById('s-border').value=DEF.BORDER;
+  document.getElementById('s-st').value=DEF.ST;
+  document.getElementById('s-dt').value=DEF.DT;
+  document.getElementById('s-sw').value=DEF.SW;
+  document.getElementById('s-dw').value=DEF.DW;
+  document.getElementById('s-gridlines').checked=DEF.GRIDLINES;
+  document.getElementById('s-rangeband').checked=DEF.RANGEBAND;
+  document.getElementById('s-inference').checked=DEF.INFERENCE;
+  document.getElementById('s-goalboost').value=DEF.GOALBOOST;
+  readSettings();if(lastData)rHome(...lastData);
+}
+function openSettings(){document.getElementById('settings-overlay').classList.add('open');document.getElementById('settings-sheet').classList.add('open');}
+function closeSettings(){
+  document.getElementById('settings-overlay').classList.remove('open');
+  document.getElementById('settings-sheet').classList.remove('open');
+  readSettings();if(lastData)rHome(...lastData);
+}
+document.getElementById('settings-sheet').addEventListener('input',()=>{readSettings();if(lastData)rHome(...lastData);});
+
+/* ── HELPERS ── */
+function ago(ms){const d=Math.round((Date.now()-ms)/60000);if(d<1)return'Just now';if(d<60)return d+' min ago';const h=Math.floor(d/60);return h===1?'1 hr ago':h+' hrs ago';}
 function sa(d){if(Array.isArray(d))return d.filter(e=>e&&typeof e.sgv==='number');if(d&&typeof d.sgv==='number')return[d];return[];}
 async function ng(p){const sep=p.includes('?')?'&':'?';const r=await fetch(NS+p+sep+'token='+TOKEN,{mode:'cors',headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
 function arr(d){return{DoubleUp:'&#8648;',SingleUp:'&#8593;',FortyFiveUp:'&#8599;',Flat:'&#8594;',FortyFiveDown:'&#8600;',SingleDown:'&#8595;',DoubleDown:'&#8650;'}[d]||'&#8594;';}
+
+/* ── STATUS ── */
 function sf(v){
-  if(v<3.0)return{c:'lo',w:'Very low',d:'Act now — this is too low',s:'!',col:'var(--lo)'};
-  if(v<LOW)return{c:'lo',w:'Low',d:'Getting low — keep an eye on it',s:'!',col:'var(--lo)'};
-  if(v>16)return{c:'hi',w:'Very high',d:'This needs your attention',s:'&#9650;',col:'var(--hi)'};
-  if(v>HIGH)return{c:'hi',w:'High',d:'Above your healthy range',s:'&#9650;',col:'var(--hi)'};
-  if(v>8.5)return{c:'warn',w:'Borderline',d:'Getting towards the top of range',s:'~',col:'var(--warn)'};
-  return{c:'in',w:'In range',d:'You are in your healthy range',s:'&#10003;',col:'var(--ok)'};
+  if(v<3.0)return{c:'lo',w:'Very low',d:'Act now — this is too low'};
+  if(v<CFG.LOW)return{c:'lo',w:'Low',d:'Getting low — keep an eye on it'};
+  if(v>16)return{c:'hi',w:'Very high',d:'This needs your attention'};
+  if(v>CFG.HIGH)return{c:'hi',w:'High',d:'Above your healthy range'};
+  if(v>CFG.BORDER)return{c:'warn',w:'Borderline',d:'Getting towards the top of range'};
+  return{c:'in',w:'In range',d:'You are in your healthy range'};
 }
+
+/* ── EVENT DETECTION ── */
 function de(entries){
   if(entries.length<3)return{t:'stable',m:'mild',conf:0.3};
   const r=[...entries].sort((a,b)=>b.date-a.date).slice(0,12),n=r[0];
-  const w4=r.filter(e=>n.date-e.date<=SW),sp=w4.length>=2?mm(n.sgv)-mm(w4[w4.length-1].sgv):0;
-  const w3=r.filter(e=>n.date-e.date<=DW),dr=w3.length>=2?mm(w3[w3.length-1].sgv)-mm(n.sgv):0;
-  if(sp>=ST){const m=sp>=3.5?'high':sp>=2.2?'moderate':'mild';return{t:'spike',m,delta:sp,conf:Math.min(0.95,0.6+sp*0.1)};}
-  if(dr>=DT){const m=dr>=2.5?'high':dr>=1.7?'moderate':'mild';return{t:'drop',m,delta:dr,conf:Math.min(0.95,0.6+dr*0.1)};}
+  const w4=r.filter(e=>n.date-e.date<=CFG.SW),sp=w4.length>=2?mm(n.sgv)-mm(w4[w4.length-1].sgv):0;
+  const w3=r.filter(e=>n.date-e.date<=CFG.DW),dr=w3.length>=2?mm(w3[w3.length-1].sgv)-mm(n.sgv):0;
+  if(sp>=CFG.ST){const m=sp>=3.5?'high':sp>=2.2?'moderate':'mild';return{t:'spike',m,delta:sp,conf:Math.min(0.95,0.6+sp*0.1)};}
+  if(dr>=CFG.DT){const m=dr>=2.5?'high':dr>=1.7?'moderate':'mild';return{t:'drop',m,delta:dr,conf:Math.min(0.95,0.6+dr*0.1)};}
   const vs=r.map(e=>mm(e.sgv)),mn=vs.reduce((a,b)=>a+b,0)/vs.length,va=vs.reduce((a,b)=>a+(b-mn)**2,0)/vs.length;
   return{t:'stable',m:'mild',conf:Math.min(0.9,0.6+(1/(va+0.5))*0.3)};
 }
 function es(ev,v){
   if(ev.t==='spike'){if(ev.m==='high')return'Your glucose is rising quickly.';if(ev.m==='moderate')return'Your glucose is rising steadily.';return'Your glucose is rising a little.';}
   if(ev.t==='drop'){if(ev.m==='high')return'Your glucose is falling fast.';if(ev.m==='moderate')return'Your glucose is coming down.';return'Your glucose is easing down.';}
-  if(v<LOW)return'Your glucose is low. Keep watching.';if(v>HIGH)return'Your glucose is above your healthy range.';return'Your glucose is holding steady.';
+  if(v<CFG.LOW)return'Your glucose is low. Keep watching.';if(v>CFG.HIGH)return'Your glucose is above your healthy range.';return'Your glucose is holding steady.';
 }
+
+/* ── INFERENCE ── */
 function ic2(ev,entries){
   if(ev.t==='stable')return null;
   const h=new Date().getHours(),r=[...entries].sort((a,b)=>b.date-a.date);
-  if(ev.t==='spike'&&h>=4&&h<=8&&!r.slice(1,6).some(e=>mm(e.sgv)<LOW))
+  if(ev.t==='spike'&&h>=4&&h<=8&&!r.slice(1,6).some(e=>mm(e.sgv)<CFG.LOW))
     return{i:'&#127749;',c:0.72,tx:'This early morning rise often happens naturally as your body wakes up. It is called the dawn effect and is not caused by anything you did.'};
   const im=(h>=6&&h<10)||(h>=11&&h<15)||(h>=18&&h<22);
   if(ev.t==='spike'&&im){
     const past=entries.filter(e=>{const a=Date.now()-e.date;return a>86400000&&a<7*86400000;});
-    const sim=past.filter(e=>{const hh=new Date(e.date).getHours();return Math.abs(hh-h)<=1&&mm(e.sgv)>HIGH*0.85;});
+    const sim=past.filter(e=>{const hh=new Date(e.date).getHours();return Math.abs(hh-h)<=1&&mm(e.sgv)>CFG.HIGH*0.85;});
     const meal=h<10?'breakfast':h<15?'lunch':'dinner';
     return{i:'&#127869;',c:Math.min(0.9,0.5+sim.length*0.12),tx:'This looks like a typical '+meal+' response. Your glucose often rises after eating, which is normal. The goal is to keep the rise as gentle as possible.'};
   }
-  if(ev.t==='spike')return{i:'&#9889;',c:0.5,tx:'This rise is not during a typical meal time. It could be stress, a busy period, or just natural variation. Nothing to worry about right now.'};
+  if(ev.t==='spike')return{i:'&#9889;',c:0.5,tx:'This rise is not during a typical meal time. It could be stress, a busy period, or just natural variation.'};
   if(ev.t==='drop')return{i:'&#128202;',c:0.65,tx:'Your glucose is coming down. This can happen after a meal response settles, after movement, or naturally during the day.'};
   return null;
 }
+
+/* ── ACTIONS ── */
 function ga(ev,v){
   const a=[];
   if(ev.t==='spike'){
-    if(v>10.0){a.push({id:'walk',i:'&#128694;',t:'Go for a 10-minute walk',s:'Movement is the quickest natural way to lower glucose',imp:'Could reduce your level by 1 to 2 mmol/L'});a.push({id:'water',i:'&#128167;',t:'Drink a glass of water',s:'Staying hydrated helps your body process glucose',imp:'A gentle but immediate benefit'});}
-    else if(v>8.5){a.push({id:'walk',i:'&#128694;',t:'A short walk or stretch',s:'Even 5 minutes helps flatten the rise',imp:'Could reduce by 0.5 to 1 mmol/L'});a.push({id:'water',i:'&#128167;',t:'Have a glass of water',s:'Keep sipping steadily over the next hour',imp:'Supports natural regulation'});}
+    if(v>CFG.HIGH){
+      a.push({id:'walk',i:'&#128694;',t:'Go for a 10-minute walk',s:'Movement is the quickest natural way to lower glucose',imp:'Could reduce your level by 1–2 mmol/L'});
+      a.push({id:'water',i:'&#128167;',t:'Drink a glass of water',s:'Staying hydrated helps your body process glucose',imp:'A gentle but immediate benefit'});
+    }else if(v>CFG.BORDER){
+      a.push({id:'walk',i:'&#128694;',t:'A short walk or stretch',s:'Even 5 minutes helps flatten the rise',imp:'Could reduce by 0.5–1 mmol/L'});
+      a.push({id:'water',i:'&#128167;',t:'Have a glass of water',s:'Keep sipping steadily over the next hour',imp:'Supports natural regulation'});
+    }
   }else if(ev.t==='drop'){
     if(v<4.5)a.push({id:'carbs',i:'&#127818;',t:'Have some fast-acting carbs',s:'About 15g: a small juice, glucose tablets, or fruit',imp:'Should raise your level in about 15 minutes'});
     else a.push({id:'watch',i:'&#128065;',t:'Keep an eye on it',s:'You are easing down. Check again in 15 minutes',imp:'No action needed yet'});
   }
   return a.slice(0,2);
 }
+
+/* ── CHART ── */
+function drawC(entries){
+  const wrap=document.getElementById('cwrap');
+  wrap.innerHTML='';
+  if(!entries||!entries.length)return;
+
+  // Measure container after layout
+  const W=wrap.clientWidth||360;
+  // Height proportional: scale by width but respect CSS var range
+  const H=Math.round(Math.min(260,Math.max(160,W*0.44)));
+
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  svg.setAttribute('preserveAspectRatio','none');
+  svg.style.width='100%';
+  svg.style.height=H+'px';
+  svg.style.overflow='visible';
+  wrap.appendChild(svg);
+
+  const so=[...entries].sort((a,b)=>a.date-b.date);
+  const ts=so.map(e=>e.date),vs=so.map(e=>mm(e.sgv));
+  const tMn=ts[0],tMx=ts[ts.length-1]||tMn+1;
+
+  // Padding: left for y-labels, bottom for x-labels
+  const PL=32,PR=10,PT=10,PB=26;
+  const cW=W-PL-PR,cH=H-PT-PB;
+  const vMn=1.5,vMx=18;
+  const tx=t=>PL+((t-tMn)/(tMx-tMn))*cW;
+  const ty=v=>PT+(1-((v-vMn)/(vMx-vMn)))*cH;
+  const el=(tag,attrs,txt)=>{const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(txt!==undefined)e.textContent=txt;return e;};
+
+  // DEFS
+  const defs=el('defs',{});
+  const gr=el('linearGradient',{id:'cg',x1:'0',y1:'0',x2:'0',y2:'1'});
+  gr.appendChild(el('stop',{offset:'0%','stop-color':'#4EC47A','stop-opacity':'0.20'}));
+  gr.appendChild(el('stop',{offset:'100%','stop-color':'#4EC47A','stop-opacity':'0'}));
+  defs.appendChild(gr);
+  svg.appendChild(defs);
+
+  // RANGE BAND
+  if(CFG.RANGEBAND){
+    svg.appendChild(el('rect',{x:PL,y:ty(CFG.HIGH),width:cW,height:Math.max(0,ty(CFG.LOW)-ty(CFG.HIGH)),fill:'rgba(78,196,122,0.07)',rx:'2'}));
+  }
+
+  // GRID LINES & Y LABELS
+  const gridVals=[2,4,6,8,10,12,14,16];
+  gridVals.forEach(gv=>{
+    const gy=ty(gv);
+    if(gy<PT-2||gy>PT+cH+2)return;
+    if(CFG.GRIDLINES){
+      svg.appendChild(el('line',{x1:PL,y1:gy,x2:W-PR,y2:gy,stroke:'rgba(255,255,255,0.05)','stroke-width':'1'}));
+    }
+    // Always draw y-axis label
+    const isTarget=gv===Math.round(CFG.LOW*2)/2||gv===Math.round(CFG.HIGH);
+    svg.appendChild(el('text',{x:PL-6,y:gy+3.5,'text-anchor':'end','font-family':'DM Mono,monospace','font-size':'9.5','font-weight':'500',fill:isTarget?'rgba(78,196,122,0.75)':'rgba(118,115,112,0.7)'},String(gv)));
+  });
+
+  // RANGE BOUNDARY LINES (dashed, always)
+  [CFG.LOW,CFG.HIGH].forEach(gv=>{
+    svg.appendChild(el('line',{x1:PL,y1:ty(gv),x2:W-PR,y2:ty(gv),stroke:'rgba(78,196,122,0.3)','stroke-width':'1','stroke-dasharray':'4 5'}));
+  });
+
+  // AREA FILL
+  if(so.length>=2){
+    const pts=so.map((_,i)=>tx(ts[i])+','+ty(vs[i]));
+    svg.appendChild(el('path',{d:'M'+pts[0]+' L'+pts.join(' L')+' L'+tx(tMx)+','+(PT+cH)+' L'+tx(tMn)+','+(PT+cH)+' Z',fill:'url(#cg)'}));
+  }
+
+  // LINE — coloured by zone, drawn as segments
+  for(let i=1;i<so.length;i++){
+    const v=vs[i],pv=vs[i-1];
+    // interpolate colour at midpoint
+    const mv=(v+pv)/2;
+    const col=mv<CFG.LOW?'#5AAAE8':mv>CFG.HIGH?'#E85858':mv>CFG.BORDER?'#F0B840':'#4EC47A';
+    svg.appendChild(el('line',{x1:tx(ts[i-1]),y1:ty(pv),x2:tx(ts[i]),y2:ty(v),stroke:col,'stroke-width':'2.4','stroke-linecap':'round'}));
+  }
+
+  // X AXIS LABELS
+  const xCount=5;
+  for(let i=0;i<=xCount;i++){
+    const t=tMn+(i/xCount)*(tMx-tMn);
+    const lbl=new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    svg.appendChild(el('text',{x:tx(t),y:H-6,'text-anchor':'middle','font-family':'DM Mono,monospace','font-size':'9','font-weight':'400',fill:'#767370'},lbl));
+  }
+
+  // CURRENT DOT
+  const lx=tx(tMx),ly=ty(vs[vs.length-1]);
+  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'10',fill:'#4EC47A',opacity:'0.15'}));
+  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'5',fill:'#4EC47A'}));
+  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'2.2',fill:'#fff'}));
+}
+
+/* ── SPARKLINE ── */
+function drawSp(cid,vals){
+  const c=document.getElementById(cid);if(!c||!vals||vals.length<2)return;
+  const W=320,H=48,PX=4,PY=4;
+  const mn=Math.min(...vals)-0.5,mx=Math.max(...vals)+0.5;
+  const tx=i=>PX+(i/(vals.length-1))*(W-PX*2),ty=v=>PY+(1-(v-mn)/(mx-mn))*(H-PY*2);
+  const ns='http://www.w3.org/2000/svg';
+  const el=(t,a)=>{const e=document.createElementNS(ns,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));return e;};
+  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','none');svg.style.cssText='width:100%;height:48px;';
+  for(let i=1;i<vals.length;i++){const v=vals[i],col=v<CFG.LOW?'#5AAAE8':v>CFG.HIGH?'#E85858':v>CFG.BORDER?'#F0B840':'#4EC47A';svg.appendChild(el('line',{x1:tx(i-1),y1:ty(vals[i-1]),x2:tx(i),y2:ty(v),stroke:col,'stroke-width':'1.6','stroke-linecap':'round'}));}
+  c.appendChild(svg);
+}
+
+/* ── RENDER HOME ── */
+function rHome(cur,tod,wk){
+  const v=mm(cur.sgv),st=sf(v),ev=de([cur,...tod]);
+
+  // Hero
+  const hero=document.getElementById('hero');
+  hero.className='hero s2'+(st.c==='in'?'':' '+st.c);
+  const dot=document.getElementById('hbadge-dot');
+  dot.style.background=st.c==='hi'?'var(--hi)':st.c==='lo'?'var(--lo)':st.c==='warn'?'var(--warn)':'var(--ok)';
+  document.getElementById('hword').textContent=st.w;
+  document.getElementById('gnum').textContent=f1(v);
+  document.getElementById('garr').innerHTML=arr(cur.direction);
+  document.getElementById('gdesc').textContent=es(ev,v);
+  document.getElementById('gtime').textContent=ago(cur.date);
+  if(tod.length>=2){const dv=v-mm(tod[1].sgv);document.getElementById('gdelta').textContent=(dv>=0?'+':'')+f1(dv)+' last reading';}
+
+  // Streak
+  const sk=document.getElementById('streak');
+  if(st.c==='in'){
+    sk.style.display='flex';
+    const inCount=tod.filter(e=>mm(e.sgv)>=CFG.LOW&&mm(e.sgv)<=CFG.HIGH).length,hrs=Math.round(inCount*5/60);
+    document.getElementById('stxt').textContent=hrs>1?'In your healthy range for about '+hrs+' hours today. Keep going!':'You are in your healthy range right now. Well done.';
+  }else sk.style.display='none';
+
+  // Actions
+  const acts=ga(ev,v),ac=document.getElementById('acard');
+  if(acts.length){
+    ac.style.display='block';
+    const al=document.getElementById('alist');al.innerHTML='';
+    acts.forEach(a=>{
+      const b=document.createElement('button');
+      b.className='abtn'+(done[a.id]?' done':'');
+      b.setAttribute('aria-label',a.t);
+      b.innerHTML='<div class="aico">'+a.i+'</div><div class="atxt"><div class="atit">'+a.t+'</div><div class="asub">'+(done[a.id]?a.imp:a.s)+'</div></div><div class="achk">'+(done[a.id]?'&#10003;':'&#8250;')+'</div>';
+      if(a.id!=='watch')b.onclick=()=>{done[a.id]=true;rHome(cur,tod,wk);};
+      al.appendChild(b);
+    });
+  }else ac.style.display='none';
+
+  // Chart
+  drawC(tod.slice(0,288));
+
+  // Inference
+  const inf=ic2(ev,wk),icard=document.getElementById('icrd');
+  if(inf&&ev.t!=='stable'&&CFG.INFERENCE){
+    icard.style.display='block';
+    document.getElementById('iico').innerHTML=inf.i;
+    document.getElementById('itxt').textContent=inf.tx;
+    document.getElementById('cfil').style.width=Math.round(inf.c*100)+'%';
+  }else icard.style.display='none';
+
+  // Goal
+  const ms=tod.map(e=>mm(e.sgv)),inr=ms.filter(v2=>v2>=CFG.LOW&&v2<=CFG.HIGH).length;
+  const tir=ms.length?Math.round((inr/ms.length)*100):0;
+  const ys=new Date();ys.setDate(ys.getDate()-1);ys.setHours(0,0,0,0);
+  const ye=new Date(ys);ye.setHours(23,59,59,999);
+  const yE=wk.filter(e=>e.date>=ys.getTime()&&e.date<=ye.getTime());
+  const yIR=yE.filter(e=>mm(e.sgv)>=CFG.LOW&&mm(e.sgv)<=CFG.HIGH).length;
+  const yT=yE.length?Math.round((yIR/yE.length)*100):tir;
+  const goal=Math.min(100,yT+CFG.GOALBOOST);
+  const gp=document.getElementById('gpct');
+  gp.textContent=tir+'%';
+  gp.style.color=tir>=70?'var(--ok)':tir>=50?'var(--warn)':'var(--hi)';
+  const tb=document.getElementById('tbar');
+  tb.style.width=tir+'%';
+  tb.style.background=tir>=70?'var(--ok)':tir>=50?'var(--warn)':'var(--hi)';
+  document.getElementById('tgoal').textContent='Goal: '+goal+'%';
+  document.getElementById('gtxt').textContent=tir>=goal?'&#127942; Goal reached today!':'Stay in range '+(goal-tir)+'% more today';
+
+  // Stats
+  if(ms.length){
+    const av=ms.reduce((a,b)=>a+b,0)/ms.length,lo=Math.min(...ms),hi=Math.max(...ms);
+    document.getElementById('savg').textContent=f1(av);
+    document.getElementById('slow').textContent=f1(lo);
+    document.getElementById('shi').textContent=f1(hi);
+    document.getElementById('slow').style.color=lo<CFG.LOW?'var(--lo)':'var(--text)';
+    document.getElementById('shi').style.color=hi>CFG.HIGH?'var(--hi)':'var(--text)';
+  }
+}
+
+/* ── PATTERNS ── */
 function ap(entries){
   const ps=[];if(entries.length<24)return ps;
   const bh={};entries.forEach(e=>{const h=new Date(e.date).getHours();if(!bh[h])bh[h]=[];bh[h].push(mm(e.sgv));});
   const ha=Object.entries(bh).map(([h,v])=>({h:+h,a:v.reduce((a,b)=>a+b,0)/v.length,n:v.length})).filter(x=>x.n>=2);
   const pk=ha.sort((a,b)=>b.a-a.a)[0];
-  if(pk&&pk.a>HIGH*0.88){const h=pk.h,lbl=h<12?(h+'am'):h===12?'12pm':((h-12)+'pm');ps.push({i:'&#128200;',ti:'Your glucose peaks around '+lbl,su:'Average '+f1(pk.a)+' mmol/L at this time',bo:'Your levels tend to be highest around '+lbl+'. '+(h>=6&&h<10?'Morning rises often follow breakfast. Eating a lower-carb breakfast or walking afterwards can help.':h>=11&&h<15?'This is common after lunch. A short walk after eating can make a big difference.':'Evening rises can follow dinner. Consider what you eat and how much you move after.'),dt:Math.round(Math.min(5,pk.n/3))});}
+  if(pk&&pk.a>CFG.HIGH*0.88){const h=pk.h,lbl=h<12?(h+'am'):h===12?'12pm':((h-12)+'pm');ps.push({i:'&#128200;',ti:'Your glucose peaks around '+lbl,su:'Average '+f1(pk.a)+' mmol/L at this time',bo:'Your levels tend to be highest around '+lbl+'. '+(h>=6&&h<10?'Morning rises often follow breakfast. Eating a lower-carb breakfast or walking afterwards can help.':h>=11&&h<15?'This is common after lunch. A short walk after eating can make a big difference.':'Evening rises can follow dinner. Consider what you eat and how much you move after.'),dt:Math.round(Math.min(5,pk.n/3))});}
   const dawn=(bh[5]||[]).concat(bh[6]||[]).concat(bh[7]||[]);
   if(dawn.length>=3){const av=dawn.reduce((a,b)=>a+b,0)/dawn.length;if(av>7.5)ps.push({i:'&#127749;',ti:'Early morning rises detected',su:'Average '+f1(av)+' mmol/L between 5 and 7am',bo:'Your glucose tends to rise in the early morning before you wake. This is called the dawn effect. It is caused by natural hormones and is not something you caused.',dt:4});}
-  const inR=entries.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length,tir=Math.round((inR/entries.length)*100),days=Math.ceil(entries.length*5/60/24);
+  const inR=entries.filter(e=>mm(e.sgv)>=CFG.LOW&&mm(e.sgv)<=CFG.HIGH).length,tir=Math.round((inR/entries.length)*100),days=Math.ceil(entries.length*5/60/24);
   ps.push({i:'&#127919;',ti:tir+'% time in healthy range',su:'Over '+days+' day'+(days!==1?'s':'')+' of data',bo:tir>=70?'You are hitting the recommended target of 70% or more. This is excellent and reflects real effort.':tir>=50?'You are at '+tir+'% time in range. The target is 70%. You are making steady progress.':'You are at '+tir+'% time in range. Small daily changes around meals and movement can improve this over time.',dt:5});
-  const lws=entries.filter(e=>mm(e.sgv)<LOW).length,lp=Math.round((lws/entries.length)*100);
-  if(lp>3)ps.push({i:'&#128309;',ti:lp+'% of readings are low',su:lws+' readings below 3.9 mmol/L',bo:'You have had some readings below your healthy range. Lows can happen after exercise, a delayed meal, or medication timing. The app will always flag these immediately.',dt:4});
+  const lws=entries.filter(e=>mm(e.sgv)<CFG.LOW).length,lp=Math.round((lws/entries.length)*100);
+  if(lp>3)ps.push({i:'&#128309;',ti:lp+'% of readings are low',su:lws+' readings below '+f1(CFG.LOW)+' mmol/L',bo:'You have had some readings below your healthy range. Lows can happen after exercise, a delayed meal, or medication timing.',dt:4});
   return ps;
-}
-function bi(entries){
-  const ins=[];if(entries.length<12)return ins;
-  const bd={};entries.forEach(e=>{const d=new Date(e.date).toDateString();if(!bd[d])bd[d]=[];bd[d].push(e);});
-  const days=Object.values(bd);
-  if(days.length>=2){
-    const rk=days.map(d=>{const ir=d.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length;return{date:d[0].date,tir:ir/d.length,en:d};}).sort((a,b)=>b.tir-a.tir);
-    const best=rk[0],pct=Math.round(best.tir*100),name=new Date(best.date).toLocaleDateString([],{weekday:'long'});
-    ins.push({tag:'Best day',tc:'ok',h:name+' was your best day',b:'You were in your healthy range for '+pct+'% of that day. Think about what felt different on that day.',sp:best.en.sort((a,b)=>a.date-b.date).map(e=>mm(e.sgv))});
-  }
-  const ov=entries.filter(e=>{const h=new Date(e.date).getHours();return h>=22||h<6;});
-  if(ov.length>=6){
-    const vs=ov.map(e=>mm(e.sgv)),mn=vs.reduce((a,b)=>a+b,0)/vs.length,va=vs.reduce((a,b)=>a+(b-mn)**2,0)/vs.length,st=va<0.8;
-    ins.push({tag:st?'Overnight':'Watch: overnight',tc:st?'ok':'warn',h:st?'Your overnight glucose is steady':'Some overnight variation detected',b:st?'Your overnight average is '+f1(mn)+' mmol/L with low variation. Stable nights support better daytime control.':'Your overnight average is '+f1(mn)+' mmol/L with some variation. This could be the dawn effect, a late meal, or medication timing.',sp:vs.slice(0,20)});
-  }
-  const spt=[];const so=[...entries].sort((a,b)=>a.date-b.date);
-  for(let i=4;i<so.length;i++){const dl=mm(so[i].sgv)-mm(so[i-4].sgv),sp2=so[i].date-so[i-4].date;if(dl>=ST&&sp2<=SW*1.5)spt.push(new Date(so[i].date).getHours());}
-  if(spt.length>=2){const fr={};spt.forEach(h=>{fr[h]=(fr[h]||0)+1;});const top=Object.entries(fr).sort((a,b)=>b[1]-a[1])[0],h=+top[0],lbl=h<12?(h+'am'):h===12?'12pm':((h-12)+'pm');
-    ins.push({tag:'Pattern spotted',tc:'warn',h:'You often have a rise around '+lbl,b:top[1]+' rises detected around this time. '+(h>=6&&h<=10?'This is likely a breakfast response. A lower-carb breakfast or a short walk after eating can help.':h>=11&&h<=15?'This looks like a lunchtime response. Even 5 minutes of walking after lunch can help.':'Evening rises may follow dinner or stress. Light activity after your evening meal can help.'),sp:null});}
-  return ins;
-}
-function drawC(entries){
-  const svg=document.getElementById('csvg');svg.innerHTML='';
-  if(!entries||!entries.length)return;
-  const W=360,H=180,PX=40,PY=8,so=[...entries].sort((a,b)=>a.date-b.date);
-  const ts=so.map(e=>e.date),vs=so.map(e=>mm(e.sgv)),tMn=ts[0],tMx=ts[ts.length-1]||tMn+1;
-  const tx=t=>PX+((t-tMn)/(tMx-tMn))*(W-PX*2),ty=v=>PY+(1-(v-2)/(16-2))*(H-PY*2-18);
-  const ns='http://www.w3.org/2000/svg',el=(t,a,tx2)=>{const e=document.createElementNS(ns,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(tx2!==undefined)e.textContent=tx2;return e;};
-  svg.appendChild(el('rect',{x:PX,y:ty(HIGH),width:W-PX*2,height:ty(LOW)-ty(HIGH),fill:'rgba(91,201,138,0.08)',rx:'3'}));
-  const df=el('defs',{}),gr=el('linearGradient',{id:'cg',x1:'0',y1:'0',x2:'0',y2:'1'});
-  gr.appendChild(el('stop',{offset:'0%','stop-color':'#5BC98A','stop-opacity':'0.15'}));gr.appendChild(el('stop',{offset:'100%','stop-color':'#5BC98A','stop-opacity':'0'}));
-  df.appendChild(gr);svg.appendChild(df);
-  const pts=so.map((_,i)=>tx(ts[i])+','+ty(vs[i]));
-  svg.appendChild(el('path',{d:'M'+pts[0]+' L'+pts.join(' L')+' L'+tx(tMx)+','+(H-18)+' L'+tx(tMn)+','+(H-18)+' Z',fill:'url(#cg)'}));
-  for(let i=1;i<so.length;i++){const v=vs[i],c=v<LOW?'#60A8E8':v>HIGH?'#E86060':v>8.5?'#F0B840':'#5BC98A';svg.appendChild(el('line',{x1:tx(ts[i-1]),y1:ty(vs[i-1]),x2:tx(ts[i]),y2:ty(v),stroke:c,'stroke-width':'2.2','stroke-linecap':'round'}));}
-  // Horizontal dashed gridlines + Y-axis labels at 4,6,8,10,12,14
-  [4,6,8,10,12,14].forEach(gv=>{
-    const gy=ty(gv);
-    svg.appendChild(el('line',{x1:PX,y1:gy,x2:W-PX,y2:gy,stroke:'rgba(138,135,128,0.25)','stroke-width':'1','stroke-dasharray':'3,4'}));
-    svg.appendChild(el('text',{x:PX-4,y:gy+4,'text-anchor':'end','font-family':'Nunito,sans-serif','font-size':'10',fill:'rgba(138,135,128,0.7)'},String(gv)));
-  });
-  // Solid range boundary lines
-  svg.appendChild(el('line',{x1:PX,y1:ty(HIGH),x2:W-PX,y2:ty(HIGH),stroke:'rgba(91,201,138,0.55)','stroke-width':'1.5'}));
-  svg.appendChild(el('line',{x1:PX,y1:ty(LOW),x2:W-PX,y2:ty(LOW),stroke:'rgba(96,168,232,0.55)','stroke-width':'1.5'}));
-  // Time labels
-  for(let i=0;i<=4;i++){const t=tMn+(i/4)*(tMx-tMn);svg.appendChild(el('text',{x:tx(t),y:H-4,'text-anchor':'middle','font-family':'Nunito,sans-serif','font-size':'10',fill:'#8A8780'},new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})));}
-  // Current-value dot with pulsing outer ring
-  const lx=tx(tMx),ly=ty(vs[vs.length-1]),lastCol=vs[vs.length-1]<LOW?'#60A8E8':vs[vs.length-1]>HIGH?'#E86060':vs[vs.length-1]>8.5?'#F0B840':'#5BC98A';
-  const ring=el('circle',{cx:lx,cy:ly,r:'7',fill:'none',stroke:lastCol,'stroke-width':'2',opacity:'0.6'});
-  ring.setAttribute('class','chart-pulse');
-  svg.appendChild(ring);
-  svg.appendChild(el('circle',{cx:lx,cy:ly,r:'4',fill:lastCol}));
-}
-function drawSp(cid,vals){
-  const c=document.getElementById(cid);if(!c||!vals||vals.length<2)return;
-  const W=320,H=52,PX=4,PY=4,mn=Math.min(...vals)-0.5,mx=Math.max(...vals)+0.5;
-  const tx=i=>PX+(i/(vals.length-1))*(W-PX*2),ty=v=>PY+(1-(v-mn)/(mx-mn))*(H-PY*2);
-  const ns='http://www.w3.org/2000/svg',el=(t,a)=>{const e=document.createElementNS(ns,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));return e;};
-  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('preserveAspectRatio','none');svg.style.cssText='width:100%;height:52px;';
-  for(let i=1;i<vals.length;i++){const v=vals[i],col=v<LOW?'#60A8E8':v>HIGH?'#E86060':v>8.5?'#F0B840':'#5BC98A';svg.appendChild(el('line',{x1:tx(i-1),y1:ty(vals[i-1]),x2:tx(i),y2:ty(v),stroke:col,'stroke-width':'1.8','stroke-linecap':'round'}));}
-  c.appendChild(svg);
-}
-function rHome(cur,tod,wk){
-  const v=mm(cur.sgv),st=sf(v),ev=de([cur,...tod]);
-  const hero=document.getElementById('hero');hero.className='hero s2 '+st.c;
-  document.getElementById('hshape').innerHTML=st.s;document.getElementById('hshape').style.background=st.col;
-  document.getElementById('hword').textContent=st.w;document.getElementById('gnum').textContent=f1(v);
-  document.getElementById('garr').innerHTML=arr(cur.direction);document.getElementById('gdesc').textContent=es(ev,v);
-  document.getElementById('gtime').textContent=ago(cur.date);
-  if(tod.length>=2){const dv=v-mm(tod[1].sgv);document.getElementById('gdelta').textContent=(dv>=0?'+':'')+f1(dv)+' last reading';}
-  const sk=document.getElementById('streak');
-  if(st.c==='in'){sk.style.display='flex';const ic3=tod.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length,hr2=Math.round(ic3*5/60);document.getElementById('stxt').textContent=hr2>1?'You have been in your healthy range for about '+hr2+' hours today. Keep it up!':'You are in your healthy range right now. Well done.';}
-  else sk.style.display='none';
-  const acts=ga(ev,v),ac=document.getElementById('acard');
-  if(acts.length){ac.style.display='block';const al=document.getElementById('alist');al.innerHTML='';
-    acts.forEach(a=>{const b=document.createElement('button');b.className='abtn'+(done[a.id]?' done':'');b.setAttribute('aria-label',a.t);
-      b.innerHTML='<div class="aico">'+a.i+'</div><div class="atxt"><div class="atit">'+a.t+'</div><div class="asub">'+(done[a.id]?a.imp:a.s)+'</div></div><div class="achk">'+(done[a.id]?'&#10003;':'&#8250;')+'</div>';
-      if(a.id!=='watch')b.onclick=()=>{done[a.id]=true;rHome(cur,tod,wk);};
-      al.appendChild(b);});}
-  else ac.style.display='none';
-  drawC(tod.slice(0,288));
-  const inf=ic2(ev,wk),icard=document.getElementById('icrd');
-  if(inf&&ev.t!=='stable'){icard.style.display='block';document.getElementById('iico').innerHTML=inf.i;document.getElementById('itxt').textContent=inf.tx;document.getElementById('cfil').style.width=Math.round(inf.c*100)+'%';}
-  else icard.style.display='none';
-  const ms=tod.map(e=>mm(e.sgv)),inr=ms.filter(v2=>v2>=LOW&&v2<=HIGH).length,tir=ms.length?Math.round((inr/ms.length)*100):0;
-  const ys=new Date();ys.setDate(ys.getDate()-1);ys.setHours(0,0,0,0);const ye=new Date(ys);ye.setHours(23,59,59,999);
-  const yE=wk.filter(e=>e.date>=ys.getTime()&&e.date<=ye.getTime()),yIR=yE.filter(e=>mm(e.sgv)>=LOW&&mm(e.sgv)<=HIGH).length;
-  const yT=yE.length?Math.round((yIR/yE.length)*100):tir,goal=Math.min(100,yT+8);
-  const gp=document.getElementById('gpct');gp.textContent=tir+'%';gp.style.color=tir>=70?'var(--ok)':tir>=50?'var(--warn)':'var(--hi)';
-  const tb=document.getElementById('tbar');tb.style.width=tir+'%';tb.style.background=tir>=70?'var(--ok)':tir>=50?'var(--warn)':'var(--hi)';
-  document.getElementById('tgoal').textContent='Goal: '+goal+'%';
-  document.getElementById('gtxt').textContent=tir>=goal?'Goal reached today. Excellent work!':'Stay in range '+(goal-tir)+'% more today';
-  if(ms.length){const av=ms.reduce((a,b)=>a+b,0)/ms.length,lo=Math.min(...ms),hi=Math.max(...ms);
-    document.getElementById('savg').textContent=f1(av);document.getElementById('slow').textContent=f1(lo);document.getElementById('shi').textContent=f1(hi);
-    document.getElementById('slow').style.color=lo<LOW?'var(--lo)':'var(--text)';document.getElementById('shi').style.color=hi>HIGH?'var(--hi)':'var(--text)';}
 }
 function rPat(entries){
   const list=document.getElementById('plist'),days=Math.ceil(entries.length*5/60/24);
@@ -402,33 +695,88 @@ function rPat(entries){
     c.innerHTML='<div class="ptop"><div class="pico">'+p.i+'</div><div><div class="ptit">'+p.ti+'</div><div class="psub">'+p.su+'</div></div></div><div class="pbdy">'+p.bo+'</div><div class="cdots">'+dots+'<span class="cdotlbl">How confident we are</span></div>';
     list.appendChild(c);});
 }
+
+/* ── INSIGHTS ── */
+function bi(entries){
+  const ins=[];if(entries.length<12)return ins;
+  const bd={};entries.forEach(e=>{const d=new Date(e.date).toDateString();if(!bd[d])bd[d]=[];bd[d].push(e);});
+  const days2=Object.values(bd);
+  if(days2.length>=2){
+    const rk=days2.map(d=>{const ir=d.filter(e=>mm(e.sgv)>=CFG.LOW&&mm(e.sgv)<=CFG.HIGH).length;return{date:d[0].date,tir:ir/d.length,en:d};}).sort((a,b)=>b.tir-a.tir);
+    const best=rk[0],pct=Math.round(best.tir*100),name=new Date(best.date).toLocaleDateString([],{weekday:'long'});
+    ins.push({tag:'Best day',tc:'ok',h:name+' was your best day',b:'You were in your healthy range for '+pct+'% of that day. Think about what felt different on that day.',sp:best.en.sort((a,b)=>a.date-b.date).map(e=>mm(e.sgv))});
+  }
+  const ov=entries.filter(e=>{const h=new Date(e.date).getHours();return h>=22||h<6;});
+  if(ov.length>=6){
+    const vs=ov.map(e=>mm(e.sgv)),mn=vs.reduce((a,b)=>a+b,0)/vs.length,va=vs.reduce((a,b)=>a+(b-mn)**2,0)/vs.length,stable=va<0.8;
+    ins.push({tag:stable?'Overnight':'Watch: overnight',tc:stable?'ok':'warn',h:stable?'Your overnight glucose is steady':'Some overnight variation detected',b:stable?'Your overnight average is '+f1(mn)+' mmol/L with low variation. Stable nights support better daytime control.':'Your overnight average is '+f1(mn)+' mmol/L with some variation. This could be the dawn effect, a late meal, or medication timing.',sp:vs.slice(0,20)});
+  }
+  const spt=[];const so=[...entries].sort((a,b)=>a.date-b.date);
+  for(let i=4;i<so.length;i++){const dl=mm(so[i].sgv)-mm(so[i-4].sgv),sp2=so[i].date-so[i-4].date;if(dl>=CFG.ST&&sp2<=CFG.SW*1.5)spt.push(new Date(so[i].date).getHours());}
+  if(spt.length>=2){const fr={};spt.forEach(h=>{fr[h]=(fr[h]||0)+1;});const top=Object.entries(fr).sort((a,b)=>b[1]-a[1])[0],h=+top[0],lbl=h<12?(h+'am'):h===12?'12pm':((h-12)+'pm');
+    ins.push({tag:'Pattern spotted',tc:'warn',h:'You often have a rise around '+lbl,b:top[1]+' rises detected around this time. '+(h>=6&&h<=10?'This is likely a breakfast response. A lower-carb breakfast or a short walk after eating can help.':h>=11&&h<=15?'This looks like a lunchtime response. Even 5 minutes of walking after lunch can help.':'Evening rises may follow dinner or stress. Light activity after your evening meal can help.'),sp:null});}
+  return ins;
+}
 function rIns(entries){
   const list=document.getElementById('ilist'),ins=bi(entries);
   if(!ins.length){list.innerHTML='<div class="empty"><div class="eico">&#128161;</div><div class="etxt">More data needed for insights. Keep going!</div></div>';return;}
   list.innerHTML='';
   ins.forEach((n,i)=>{const c=document.createElement('div');c.className='inscrd cin';c.style.animationDelay=(i*0.07)+'s';
-    const ts=n.tc==='warn'?'background:var(--warn-bg);color:var(--warn-text);border-color:var(--warn-border)':'background:var(--ok-bg);color:var(--ok-text);border-color:var(--ok-border)';
-    c.innerHTML='<div class="itag" style="'+ts+'">'+n.tag+'</div><div class="ihed">'+n.h+'</div><div class="ibdy">'+n.b+'</div>'+(n.sp?'<div class="ispark" id="sp'+i+'"></div>':'');
+    const ts2=n.tc==='warn'?'background:var(--warn-bg);color:var(--warn-text);border-color:var(--warn-border)':'background:var(--ok-bg);color:var(--ok-text);border-color:var(--ok-border)';
+    c.innerHTML='<div class="itag" style="'+ts2+'">'+n.tag+'</div><div class="ihed">'+n.h+'</div><div class="ibdy">'+n.b+'</div>'+(n.sp?'<div class="ispark" id="sp'+i+'"></div>':'');
     list.appendChild(c);if(n.sp)setTimeout(()=>drawSp('sp'+i,n.sp),60);});
 }
+
+/* ── PAGE ROUTING ── */
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
   document.getElementById('sbody').scrollTo(0,0);
 }
+
+/* ── GREETING ── */
 const hr=new Date().getHours();
 document.getElementById('greeting').textContent=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+
+/* ── REFRESH ── */
+function triggerRefresh(){
+  const btn=document.getElementById('refresh-btn');
+  btn.classList.remove('spin-once');
+  void btn.offsetWidth;
+  btn.classList.add('spin-once');
+  loadData();
+}
+
+/* ── LOAD ── */
 async function loadData(){
   try{
-    const mid=new Date();mid.setHours(0,0,0,0);const wa=new Date(Date.now()-7*86400000);
-    const[cr,tr,wr]=await Promise.all([ng('/api/v1/entries/current.json'),ng('/api/v1/entries.json?find[dateString][$gte]='+mid.toISOString()+'&count=300'),ng('/api/v1/entries.json?find[dateString][$gte]='+wa.toISOString()+'&count=2016')]);
+    const mid=new Date();mid.setHours(0,0,0,0);
+    const wa=new Date(Date.now()-7*86400000);
+    const[cr,tr,wr]=await Promise.all([
+      ng('/api/v1/entries/current.json'),
+      ng('/api/v1/entries.json?find[dateString][$gte]='+mid.toISOString()+'&count=300'),
+      ng('/api/v1/entries.json?find[dateString][$gte]='+wa.toISOString()+'&count=2016')
+    ]);
     const cur=sa(cr)[0],tod=sa(tr).sort((a,b)=>b.date-a.date),wk=sa(wr).sort((a,b)=>b.date-a.date);
     if(!cur)throw new Error('No reading found');
+    lastData=[cur,tod,wk];
+    readSettings();
     rHome(cur,tod,wk);rPat(wk);rIns(wk);
-  }catch(e){console.error(e);document.getElementById('gdesc').textContent='Could not load: '+e.message;document.getElementById('gnum').textContent='?';}
+  }catch(e){
+    console.error(e);
+    document.getElementById('gdesc').textContent='Could not load: '+e.message;
+    document.getElementById('gnum').textContent='?';
+  }
 }
-loadData();setInterval(loadData,5*60*1000);
+
+// Redraw chart on resize
+let rsz;
+window.addEventListener('resize',()=>{clearTimeout(rsz);rsz=setTimeout(()=>{if(lastData)drawC(lastData[1].slice(0,288));},150);});
+
+loadData();
+setInterval(loadData,5*60*1000);
 </script>
 </body>
 </html>
