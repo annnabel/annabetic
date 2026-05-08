@@ -760,8 +760,13 @@ async function loadData(){
       ng('/api/v1/entries.json?find[dateString][$gte]='+mid.toISOString()+'&count=300'),
       ng('/api/v1/entries.json?find[dateString][$gte]='+wa.toISOString()+'&count=2016')
     ]);
-    const cur=sa(cr)[0],tod=sa(tr).sort((a,b)=>b.date-a.date),wk=sa(wr).sort((a,b)=>b.date-a.date);
-    if(!cur)throw new Error('No reading found');
+    let cur=sa(cr)[0];
+    const tod=sa(tr).sort((a,b)=>b.date-a.date),wk=sa(wr).sort((a,b)=>b.date-a.date);
+    if(!cur){
+      if(tod.length>0)cur=tod[0];
+      else if(wk.length>0)cur=wk[0];
+      else throw new Error('No reading found');
+    }
     lastData=[cur,tod,wk];
     readSettings();
     rHome(cur,tod,wk);rPat(wk);rIns(wk);
